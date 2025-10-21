@@ -1,0 +1,8 @@
+laravel-talentstream Database
+
+user:sharmino_talentstream
+
+database: sharmino_talentstream
+
+
+password:  +Zkq@3;jvdKC)92y
