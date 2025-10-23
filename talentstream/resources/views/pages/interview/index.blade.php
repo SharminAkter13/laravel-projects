@@ -8,8 +8,8 @@
   <div class="container-fluid d-flex align-items-center">
     <div class="row align-items-center">
     <div class="col-lg-12 col-md-10 text-center">
-        <h1 class="display-2 text-white text-center"> Users List</h1>
-        <a href="{{ route('userCreate') }}" class="btn btn-info">Add Users</a>
+        <h1 class="display-2 text-white text-center"> Interview List</h1>
+        <a href="{{ route('userCreate') }}" class="btn btn-info">Add Interview</a>
     </div>
 </div>
     </div>
