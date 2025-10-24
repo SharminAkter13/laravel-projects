@@ -115,7 +115,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link {{ request()->is('job-alerts*') ? 'active' : '' }}" href="{{ url('/job-alerts') }}">
+          <a class="nav-link {{ request()->is('job-alerts*') ? 'active' : '' }}" href="{{ url('/job_alerts') }}">
             <i class="ni ni-bell-55 text-info"></i> Job Alerts
           </a>
         </li>

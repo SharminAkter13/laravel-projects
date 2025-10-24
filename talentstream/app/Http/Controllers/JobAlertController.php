@@ -26,7 +26,7 @@ class JobAlertController extends Controller
 
     public function create()
     {
-        return view('job_alerts.create');
+        return view('pages.job_alerts.create');
     }
 
     public function store(Request $request)
@@ -52,7 +52,7 @@ class JobAlertController extends Controller
         // Ensure the user owns this alert
         $this->authorize('update', $jobAlert);
 
-        return view('job_alerts.edit', compact('jobAlert'));
+        return view('pages.job_alerts.edit', compact('jobAlert'));
     }
 
     public function update(Request $request, JobAlert $jobAlert)

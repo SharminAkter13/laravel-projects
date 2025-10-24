@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Candidate;
 use App\Models\Employer;
+use App\Models\jobAlert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -108,4 +109,10 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
+
+    public function jobAlerts()
+{
+    return $this->hasMany(JobAlert::class);
+}
+
 }
