@@ -21,12 +21,12 @@ class JobAlertController extends Controller
                              ->orderBy('created_at', 'desc')
                              ->paginate(10);
 
-        return view('pages.job_alerts.index', compact('jobAlerts'));
+        return view('pages.job-alerts.index', compact('jobAlerts'));
     }
 
     public function create()
     {
-        return view('pages.job_alerts.create');
+        return view('pages.job-alerts.create');
     }
 
     public function store(Request $request)
@@ -43,7 +43,7 @@ class JobAlertController extends Controller
 
         JobAlert::create($data);
 
-        return redirect()->route('job_alerts.index')
+        return redirect()->route('job-alerts.index')
                          ->with('success', 'Job alert created successfully.');
     }
 
@@ -52,7 +52,7 @@ class JobAlertController extends Controller
         // Ensure the user owns this alert
         $this->authorize('update', $jobAlert);
 
-        return view('pages.job_alerts.edit', compact('jobAlert'));
+        return view('pages.job-alerts.edit', compact('jobAlert'));
     }
 
     public function update(Request $request, JobAlert $jobAlert)
@@ -69,7 +69,7 @@ class JobAlertController extends Controller
 
         $jobAlert->update($data);
 
-        return redirect()->route('job_alerts.index')
+        return redirect()->route('job-alerts.index')
                          ->with('success', 'Job alert updated successfully.');
     }
 
@@ -79,7 +79,7 @@ class JobAlertController extends Controller
 
         $jobAlert->delete();
 
-        return redirect()->route('job_alerts.index')
+        return redirect()->route('job-alerts.index')
                          ->with('success', 'Job alert deleted.');
     }
 }
