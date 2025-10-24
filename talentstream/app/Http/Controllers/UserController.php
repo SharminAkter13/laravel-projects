@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Role;
 use App\Models\Candidate;
 use App\Models\Employer;
 use Illuminate\Http\Request;
@@ -19,11 +20,12 @@ class UserController extends Controller
     }
 
     // Show create form
-    public function create()
-    {
-        $roles = ['admin', 'candidate', 'employer']; // from enum
-        return view('pages.users.create', compact('roles'));
-    }
+   public function create()
+{
+    $roles = Role::all(); // 👈 not just ['admin','employer','candidate']
+    return view('pages.users.create', compact('roles'));
+}
+
 
     // Store new user
     public function store(Request $request)
