@@ -34,13 +34,11 @@
                 </div>
                 <div class="mb-3">
                     <label>Role</label>
-                    <select name="role_id" class="form-control" required>
-                        @foreach($roles as $role)
-                            <option value="{{ $role->id }}" {{ old('role_id', $user->role_id) == $role->id ? 'selected' : '' }}>
-                                {{ ucfirst($role->name) }}
-                            </option>
-                        @endforeach
-                    </select>
+                        <select name="role" class="form-control">
+                            <option value="admin" {{ old('role', $user->role ?? '') == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="candidate" {{ old('role', $user->role ?? '') == 'candidate' ? 'selected' : '' }}>Candidate</option>
+                            <option value="employer" {{ old('role', $user->role ?? '') == 'employer' ? 'selected' : '' }}>Employer</option>
+                        </select>
                 </div>
                 <div class="text-end">
                     <button type="submit" class="btn btn-success">Update User</button>

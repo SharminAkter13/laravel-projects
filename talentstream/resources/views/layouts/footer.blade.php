@@ -1,17 +1,17 @@
       <!-- Footer -->
       <footer class="footer">
         <div class="row align-items-center justify-content-xl-between">
-          <div class="col-xl-6">
+          <div class="col-xl-4">
             <div class="copyright text-center text-xl-left text-muted">
               <a href="#" class="font-weight-bold ml-1" target="_blank">All Right Reserve To
                    &copy; TalentStream
               </a>
             </div>
           </div>
-          <div class="col-xl-6">
+          <div class="col-xl-8 pr-4">
             <ul class="nav nav-footer justify-content-center justify-content-xl-end">
               <li class="nav-item">
-                <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
+                <a href="https://www.creative-tim.com" class="nav-link" target="_blank">TalentStream</a>
               </li>
               <li class="nav-item">
                 <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>

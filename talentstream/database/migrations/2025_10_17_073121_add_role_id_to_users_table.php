@@ -4,21 +4,19 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-   public function up()
+public function up()
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->enum('role', ['admin', 'candidate', 'employer'])->default('candidate');
+        $table->foreignId('role_id')->after('id')->constrained('roles')->onDelete('cascade');
     });
 }
 
+public function down()
+{
+    Schema::table('users', function (Blueprint $table) {
+        $table->dropForeign(['role_id']);
+        $table->dropColumn('role_id');
+    });
+}
 
-    public function down(): void
-    {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['role_id']);
-            $table->dropColumn('role_id');
-        });
-    }
-
-    
 };
