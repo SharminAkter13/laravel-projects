@@ -140,7 +140,13 @@
                                     <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm Password" required autocomplete="new-password">
                                 </div>
                             </div>
-                            
+                            <div class="form-group">
+                            <select id="role" name="role" class="form-control" required>
+                                <option value="" disabled selected>Register as</option>
+                                <option value="candidate">Candidate</option>
+                                <option value="employer">Employer</option>
+                            </select>
+                            </div>                            
                             <button type="submit" class="btn btn-common log-btn">{{ __('Register') }}</button> 
                         </form>
                     </div>

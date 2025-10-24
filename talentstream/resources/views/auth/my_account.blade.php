@@ -86,6 +86,13 @@
                           <input type="password" class="form-control" placeholder="Repeat Password">
                         </div>
                       </div>
+                      <div class="form-group">
+                        <select id="role" name="role" class="form-control" placeholder=" Register as" required>
+                            <option value="candidate">Candidate</option>
+                            <option value="employer">Employer</option>
+                        </select>
+                      </div>
+
                       
                       <button class="btn btn-common log-btn">Register</button> 
                     </form>

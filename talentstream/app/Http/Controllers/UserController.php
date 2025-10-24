@@ -10,6 +10,7 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -36,6 +37,11 @@ class UserController extends Controller
             'password' => 'required|string|min:6',
             'role_id' => 'required|exists:roles,id',
         ]);
+
+        // ✅ Prevent non-admin users from creating admin accounts
+        if (Auth::check() && Auth::user()->role !== 'admin' && $request->role_id == 1) {
+            abort(403, 'Unauthorized to create admins.');
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -85,9 +91,11 @@ class UserController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
+
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
+
         $user->role_id = $request->role_id;
         $user->save();
 
@@ -102,9 +110,8 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
 
-    
-public function profile()
-{
-    return $this->hasOne(Profile::class);
-}
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
 }

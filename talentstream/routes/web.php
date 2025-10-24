@@ -86,27 +86,25 @@ Route::get('/my-account', function () {
     return view('auth.my_account');
 })->name('my-account');
 
-// Route::get('/my-account', [AuthController::class, 'index'])->name('my-account');
-
-// Route::get('/my-account/login', fn() => view('auth.my_account'))->name('login.show');
-// Route::get('/my-account/register', fn() => view('auth.my_account'))->name('register.show');
-
-// Route::post('/login', [AuthController::class, 'login'])->name('login.perform');
-// Route::post('/register', [AuthController::class, 'register'])->name('register.perform');
-// Route::post('/logout', [AuthController::class, 'logout'])->name('logout.perform');
-
-// Route::get('/password/reset', [AuthController::class, 'showPasswordResetForm'])->name('password.request');
-// Route::post('/password/email', [AuthController::class, 'sendResetLink'])->name('password.email');
-
 
 Route::get('/post-job', function () {
     return view('portal_pages.post_job');
 })->name('post-job');
 
+// Admin Dashboard
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+});
+
+// Portal Dashboard (Candidates + Employers)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/portal', [App\Http\Controllers\PortalController::class, 'index'])->name('portal.dashboard');
+});
+
+
 
 Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 Route::get('/profile', [ProfileController::class, 'index']);
-// Route::get('/my-account', [AuthController::class, 'index'])->name('my-account');
 
 
 // """"""",,,,,,""""' Categories"""""",,,,,"""""""

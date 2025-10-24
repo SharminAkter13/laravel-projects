@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+use Illuminate\Http\Request; 
 
 use App\Http\Controllers\Controller;
+
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -32,6 +34,20 @@ class LoginController extends Controller
      *
      * @return void
      */
+    
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->role === 'admin') {
+            return redirect()->route('pages.dashboard');
+        } elseif ($user->role === 'employer') {
+            return redirect()->route('home'); // portal homepage
+        } elseif ($user->role === 'candidate') {
+            return redirect()->route('home'); // portal homepage
+        } else {
+            return redirect('/'); // fallback
+        }
+    }
+    
     public function __construct()
     {
         $this->middleware('guest')->except('logout');

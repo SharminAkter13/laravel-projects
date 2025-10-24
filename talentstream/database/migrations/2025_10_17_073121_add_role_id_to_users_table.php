@@ -4,12 +4,13 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void
-    {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('role_id')->nullable()->after('id')->constrained('roles')->onDelete('set null');
-        });
-    }
+   public function up()
+{
+    Schema::table('users', function (Blueprint $table) {
+        $table->enum('role', ['admin', 'candidate', 'employer'])->default('candidate');
+    });
+}
+
 
     public function down(): void
     {
@@ -18,4 +19,6 @@ return new class extends Migration {
             $table->dropColumn('role_id');
         });
     }
+
+    
 };
