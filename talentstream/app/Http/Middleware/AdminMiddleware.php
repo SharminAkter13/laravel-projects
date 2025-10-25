@@ -12,6 +12,6 @@ class AdminMiddleware
             return $next($request);
         }
 
-        return redirect()->route('portal_pages.home');
+        return redirect()->route('/');
     }
 }

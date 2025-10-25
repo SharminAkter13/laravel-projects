@@ -12,6 +12,7 @@ use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\JobAlertController;
+use App\Http\Controllers\PortalController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -92,6 +93,8 @@ Route::get('/post-job', function () {
 })->name('post-job');
 
 // Admin Dashboard
+
+// Use an array to pass multiple middleware keys.
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 });
