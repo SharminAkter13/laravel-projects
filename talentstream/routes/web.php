@@ -93,17 +93,17 @@ Route::get('/post-job', function () {
 
 // Admin Dashboard
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 });
 
 // Portal Dashboard (Candidates + Employers)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/portal', [App\Http\Controllers\PortalController::class, 'index'])->name('portal.dashboard');
+    Route::get('/portal', [PortalController::class, 'index'])->name('portal.dashboard');
 });
 
 
 
-Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+// Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 Route::get('/profile', [ProfileController::class, 'index']);
 
 

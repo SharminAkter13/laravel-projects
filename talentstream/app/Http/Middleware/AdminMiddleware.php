@@ -12,6 +12,6 @@ class AdminMiddleware
             return $next($request);
         }
 
-        abort(403, 'Unauthorized access');
+        return redirect()->route('portal_pages.home');
     }
 }
