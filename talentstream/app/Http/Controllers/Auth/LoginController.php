@@ -37,15 +37,16 @@ class LoginController extends Controller
     
 protected function authenticated(Request $request, $user)
 {
-    if ($user->role === 'admin') {
-        return redirect()->route('admin.dashboard'); // ✅ correct route name
-    } elseif ($user->role === 'employer') {
-        return redirect()->route('portal.dashboard'); // ✅ correct route for employer
-    } elseif ($user->role === 'candidate') {
-        return redirect()->route('portal.dashboard'); // ✅ correct route for candidate
+    // Safe null-check with ?-> (PHP 8+)
+    $roleName = $user->role?->name;
+
+    if ($roleName === 'admin') {
+        return redirect()->route('admin.dashboard'); // Admin dashboard
+    } elseif ($roleName === 'employer' || $roleName === 'candidate') {
+        return redirect()->route('portal.dashboard'); // Portal dashboard
     }
 
-    return redirect()->route('portal.home'); // fallback for guests or others
+    return redirect()->route('portal.home'); // fallback
 }
     
     public function __construct()

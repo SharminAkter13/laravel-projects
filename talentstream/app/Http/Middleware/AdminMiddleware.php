@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -9,13 +8,13 @@ class AdminMiddleware
 {
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        if (Auth::check() && Auth::user()->role?->name === 'admin') {
             return $next($request);
         }
 
         if (Auth::check()) {
             // Logged in but not admin → send to user portal
-            return redirect()->route('portal.home');
+            return redirect()->route('portal.dashboard');
         }
 
         // Guest → send to public homepage

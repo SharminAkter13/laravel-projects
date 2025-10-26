@@ -2,7 +2,7 @@
 @section('content')
 
       <!-- Page Header Start -->
-      <div class="page-header" style="background: url(portal/assets/img/banner1.jpg);">
+      <div class="page-header" style="background:url('{{ asset('portal/assets/img/banner1.jpg') }}');">
         <div class="container">
           <div class="row">         
             <div class="col-md-12">
@@ -74,11 +74,11 @@
                   <p class="note">Comma separate tags, such as required skills or technologies, for this job.</p>
                 </div>  
                 <div class="form-group">
-                  <label class="control-label">Description</label>                                    
-                </div> 
-                <section id="editor">
-                  <div id="summernote"><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem quia aut modi fugit, ratione saepe perferendis odio optio repellat dolorum voluptas excepturi possimus similique veritatis nobis. Provident cupiditate delectus, optio?</p></div>
-                </section>
+                  <label class="control-label">Description</label>
+                  <textarea id="summernote" name="description" class="form-control" rows="10">
+                    Your Description Here .....
+                  </textarea>
+                </div>                
                 <div class="form-group">
                   <label class="control-label">Application email / URL</label>
                   <input type="text" class="form-control" placeholder="Enter an email address or website URL">

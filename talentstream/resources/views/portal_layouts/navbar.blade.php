@@ -23,9 +23,9 @@
 
               {{-- Candidate Menu --}}
               @auth
-                @if(auth()->user()->role === 'candidate')
+                @if(auth()->user()->role?->name === 'candidate')
                   <li>
-                    <a href="#">Candidates Menu</a>
+                    <a href="#">Services </a>
                     <ul class="dropdown">
                       <li><a href="{{ route('browse-jobs') }}">Browse Jobs</a></li>
                       <li><a href="{{ route('browse-categories') }}">Job Categories</a></li>
@@ -40,9 +40,9 @@
 
               {{-- Employer Menu --}}
               @auth
-                @if(auth()->user()->role === 'employer')
+                @if(auth()->user()->role?->name === 'employer')
                   <li>
-                    <a href="#">Employers Menu</a>
+                    <a href="#">Services</a>
                     <ul class="dropdown">
                       <li><a href="{{ route('add-job') }}">Post New Job</a></li>
                       <li><a href="{{ route('manage-job') }}">Manage Jobs</a></li>
