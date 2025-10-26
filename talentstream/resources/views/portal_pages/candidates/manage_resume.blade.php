@@ -1,7 +1,7 @@
 @extends('main')
 @section('content')
       <!-- Page Header Start -->
-      <div class="page-header" style="background: url(portal/assets/img/banner1.jpg);">
+      <div class="page-header" style="background: url('{{ asset('portal/assets/img/banner1.jpg') }}');">
         <div class="container">
           <div class="row">         
             <div class="col-md-12">
