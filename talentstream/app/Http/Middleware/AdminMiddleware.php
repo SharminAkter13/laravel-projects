@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -12,6 +13,12 @@ class AdminMiddleware
             return $next($request);
         }
 
-        return redirect()->route('/');
+        if (Auth::check()) {
+            // Logged in but not admin → send to user portal
+            return redirect()->route('portal.home');
+        }
+
+        // Guest → send to public homepage
+        return redirect()->route('portal.home');
     }
 }

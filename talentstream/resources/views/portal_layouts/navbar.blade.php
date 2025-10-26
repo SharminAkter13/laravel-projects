@@ -10,17 +10,18 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand d-flex align-items-center mt-2" href="{{ route('home') }}">
+
+            <a class="navbar-brand d-flex align-items-center mt-2" href="{{ route('portal.home') }}">
               <img src="{{ asset('portal/assets/img/favicon.ico') }}" alt="TalentStream Logo" class="me-2 logo-img">
               <h2 class="fw-bold text-dark mb-0">TalentStream</h2>
             </a>
           </div>
+
           <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav">
-              <li>
-                <a class="active" href="{{ route('home') }}">Home</a>
-              </li>
+              <li><a class="active" href="{{ route('portal.home') }}">Home</a></li>
 
+              {{-- Candidate Menu --}}
               @auth
                 @if(auth()->user()->role === 'candidate')
                   <li>
@@ -37,6 +38,7 @@
                 @endif
               @endauth
 
+              {{-- Employer Menu --}}
               @auth
                 @if(auth()->user()->role === 'employer')
                   <li>
@@ -51,6 +53,7 @@
                 @endif
               @endauth
 
+              {{-- Guest Menu --}}
               @guest
                 <li>
                   <a href="#">Explore</a>
@@ -62,15 +65,12 @@
                 </li>
               @endguest
 
-              <li>
-                <a href="{{ route('about') }}"> About</a>
-              </li>
-              <li>
-                <a href="{{ route('contact') }}"> Contact</a>
-              </li>
+              <li><a href="{{ route('about') }}">About</a></li>
+              <li><a href="{{ route('contact') }}">Contact</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right float-right">
+              {{-- Post Job Button --}}
               @auth
                 @if(auth()->user()->role === 'employer')
                   <li class="left"><a href="{{ route('post-job') }}"><i class="ti-pencil-alt"></i> Post A Job</a></li>
@@ -79,6 +79,7 @@
                 <li class="left"><a href="{{ route('post-job') }}"><i class="ti-pencil-alt"></i> Post A Job</a></li>
               @endauth
 
+              {{-- Authentication Links --}}
               @guest
                 <li class="right"><a href="{{ route('login') }}"><i class="ti-lock"></i> Log In</a></li>
                 <li class="right"><a href="{{ route('register') }}"><i class="ti-user"></i> Register</a></li>
@@ -86,10 +87,16 @@
                 <li class="right">
                   <a href="{{ route('my-account') }}"><i class="ti-user"></i> My Account</a>
                   <ul class="dropdown">
-                    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="right">
+                    {{-- ✅ Role-Based Dashboard --}}
+                      @if(auth()->user()->role?->name === 'admin')
+                          <li><a href="{{ route('admin.dashboard') }}">Admin Dashboard</a></li>
+                      @else
+                          <li><a href="{{ route('portal.dashboard') }}">Portal Dashboard</a></li>
+                      @endif
+
+                    <li>
                       <a href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="ti-power-off"></i> {{ __('Logout') }}
                       </a>
                       <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

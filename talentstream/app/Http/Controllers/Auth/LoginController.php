@@ -27,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    // protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -35,18 +35,18 @@ class LoginController extends Controller
      * @return void
      */
     
-    protected function authenticated(Request $request, $user)
-    {
-        if ($user->role === 'admin') {
-            return redirect()->route('pages.dashboard');
-        } elseif ($user->role === 'employer') {
-            return redirect()->route('home'); // portal homepage
-        } elseif ($user->role === 'candidate') {
-            return redirect()->route('home'); // portal homepage
-        } else {
-            return redirect('/'); // fallback
-        }
+protected function authenticated(Request $request, $user)
+{
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard'); // ✅ correct route name
+    } elseif ($user->role === 'employer') {
+        return redirect()->route('portal.dashboard'); // ✅ correct route for employer
+    } elseif ($user->role === 'candidate') {
+        return redirect()->route('portal.dashboard'); // ✅ correct route for candidate
     }
+
+    return redirect()->route('portal.home'); // fallback for guests or others
+}
     
     public function __construct()
     {
