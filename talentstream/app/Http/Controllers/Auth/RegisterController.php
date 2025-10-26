@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Candidate;
+use App\Models\Employer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -59,16 +61,30 @@ class RegisterController extends Controller
     {
         // Map role name to role_id from your `roles` table
         $roleId = match ($data['role']) {
-            'candidate' => 2, // e.g., 2 = Candidate
-            'employer' => 3,  // e.g., 3 = Employer
+            'candidate' => 2, // Example: 2 = Candidate
+            'employer' => 3,  // Example: 3 = Employer
             default => 2,     // fallback
         };
 
-        return User::create([
+        // Create the user
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role_id' => $roleId, // ✅ correct column
+            'role_id' => $roleId,
         ]);
+
+        // Create related record based on role
+        if ($data['role'] === 'candidate') {
+            Candidate::create([
+                'user_id' => $user->id,
+            ]);
+        } elseif ($data['role'] === 'employer') {
+            Employer::create([
+                'user_id' => $user->id,
+            ]);
+        }
+
+        return $user;
     }
 }

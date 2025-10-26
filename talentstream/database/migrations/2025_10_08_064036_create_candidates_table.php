@@ -9,6 +9,8 @@ return new class extends Migration {
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+             $table->string('name', 50);
+            $table->string('email', 100)->unique();
             $table->string('resume')->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
