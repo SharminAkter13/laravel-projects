@@ -21,7 +21,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('auth.register'); // adjust view if different
+        return view('auth.register');
     }
 
     /**
@@ -35,8 +35,7 @@ class RegisterController extends Controller
         // Create user
         event(new Registered($user = $this->create($request->all())));
 
-        // Do NOT log in the user automatically
-        // Redirect to login page with a success message
+        // Redirect to login with success message
         return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
     }
 
@@ -49,7 +48,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'in:candidate,employer'], // only candidate or employer
+            'role' => ['required', 'in:candidate,employer'],
         ]);
     }
 
@@ -58,11 +57,18 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // Map role name to role_id from your `roles` table
+        $roleId = match ($data['role']) {
+            'candidate' => 2, // e.g., 2 = Candidate
+            'employer' => 3,  // e.g., 3 = Employer
+            default => 2,     // fallback
+        };
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => $data['role'],
+            'role_id' => $roleId, // ✅ correct column
         ]);
     }
 }
