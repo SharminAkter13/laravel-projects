@@ -89,9 +89,9 @@
                   <ul class="dropdown">
                     {{-- ✅ Role-Based Dashboard --}}
                       @if(auth()->user()->role?->name === 'admin')
-                          <li><a href="{{ route('admin.dashboard') }}">Admin Dashboard</a></li>
+                          <li><a href="{{ route('admin.dashboard') }}"> Dashboard</a></li>
                       @else
-                          <li><a href="{{ route('portal.dashboard') }}">Portal Dashboard</a></li>
+                          <li><a href="{{ route('portal.dashboard') }}"> Dashboard</a></li>
                       @endif
 
                     <li>
