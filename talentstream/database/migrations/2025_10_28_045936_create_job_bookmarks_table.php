@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_bookmarks', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+            Schema::create('job_locations', function (Blueprint $table) 
+            {
+                $table->id();
+                $table->string('country', 100)->nullable();
+                $table->string('state', 100)->nullable();
+                $table->string('city', 100)->nullable();
+                $table->text('address')->nullable();
+                $table->string('postal_code', 20)->nullable();
+                $table->timestamps();
+            });
     }
 
     /**
