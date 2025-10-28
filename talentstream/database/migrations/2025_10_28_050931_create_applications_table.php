@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('job_id')->constrained('jobs')->cascadeOnDelete();
+            $table->foreignId('seeker_id')->constrained('candidates')->cascadeOnDelete();
+            $table->dateTime('applied_date');
+            $table->enum('status', ['active', 'expired', 'closed'])->default('active');
+            $table->dateTime('resume_submitted');
+            $table->text('cover_letter')->nullable();
             $table->timestamps();
+
+            // ✅ Check Constraint (MySQL 8.0.16+)
+            $table->check('resume_submitted <= applied_date');
         });
     }
 
