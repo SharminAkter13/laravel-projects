@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('packages', function (Blueprint $table) {
+        Schema::create('job_locations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->decimal('price', 10, 2)->nullable();
-            $table->integer('duration_days')->nullable();
-            $table->text('features')->nullable();
+            $table->string('country', 100)->nullable();
+            $table->string('state', 100)->nullable();
+            $table->string('city', 100)->nullable();
+            $table->text('address')->nullable();
+            $table->string('postal_code', 20)->nullable();
             $table->timestamps();
         });
+
     }
 
     /**
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('packages');
+        Schema::dropIfExists('job_locations');
     }
 };

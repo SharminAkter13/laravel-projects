@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_views', function (Blueprint $table) {
+
+        Schema::create('job_bookmarks', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('seeker_id')->constrained('candidates')->cascadeOnDelete();
+            $table->foreignId('job_id')->constrained('jobs')->cascadeOnDelete();
+            $table->dateTime('saved_date')->nullable();
         });
     }
 

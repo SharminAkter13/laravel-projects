@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('employer_packages', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('employer_id')->constrained('employers')->cascadeOnDelete();
+            $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete();
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
+            $table->string('status', 50)->nullable();
             $table->timestamps();
         });
     }
