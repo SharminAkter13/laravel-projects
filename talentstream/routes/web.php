@@ -19,7 +19,9 @@ use App\Http\Controllers\{
     UserController,
     AdminDashboardController,
     CandidateDashboardController,
-    EmployerDashboardController
+    EmployerDashboardController,
+    JobBookmarkController
+
 };
 
 /*
@@ -143,4 +145,16 @@ Route::resource('employers', EmployerController::class)->except(['show']);
 */
 Route::middleware(['auth'])->group(function () {
     Route::resource('job_alerts', JobAlertController::class)->except(['show']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Job Bookmark (Requires Auth)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/bookmarks', [JobBookmarkController::class, 'index'])->name('bookmarks.index');
+    Route::post('/bookmarks/{jobId}', [JobBookmarkController::class, 'store'])->name('bookmarks.store');
+    Route::delete('/bookmarks/{id}', [JobBookmarkController::class, 'destroy'])->name('bookmarks.destroy');
 });

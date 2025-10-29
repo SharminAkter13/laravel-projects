@@ -121,8 +121,8 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link {{ request()->is('interviews*') ? 'active' : '' }}" href="{{ url('/interviews') }}">
-            <i class="ni ni-calendar-grid-58 text-purple"></i> Interviews
+          <a class="nav-link {{ request()->is('bookmarks*') ? 'active' : '' }}" href="{{ url('/bookmarks') }}">
+            <i class="ni ni-calendar-grid-58 text-purple"></i> Job Bookmark
           </a>
         </li>
 

@@ -1,46 +1,49 @@
 @extends('master')
 
 @section('page')
-<div class="container mt-4 p-5">
-    <h2>Jobs</h2>
-    <a href="{{ route('jobs.create') }}" class="btn btn-primary mb-3">+ Add Job</a>
+
+<div class="container">
+    <h2 class="mb-4">My Saved Jobs</h2>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
+    @elseif(session('info'))
+        <div class="alert alert-info">{{ session('info') }}</div>
     @endif
 
-    <table class="table table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Company</th>
-                <th>Location</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($jobs as $job)
-            <tr>
-                <td>{{ $job->id }}</td>
-                <td>{{ $job->title }}</td>
-                <td>{{ $job->category->name ?? 'N/A' }}</td>
-                <td>{{ $job->company_name }}</td>
-                <td>{{ $job->location }}</td>
-                <td>{{ $job->status }}</td>
-                <td>
-                    <a href="{{ route('jobs.edit', $job->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                    <form action="{{ route('jobs.destroy', $job->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this job?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    @if($bookmarks->count() > 0)
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Saved Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($bookmarks as $bookmark)
+                    <tr>
+                        <td>{{ $bookmark->job->title }}</td>
+                        <td>{{ $bookmark->job->company_name ?? 'N/A' }}</td>
+                        <td>{{ $bookmark->saved_date ? $bookmark->saved_date->format('Y-m-d H:i') : 'N/A' }}</td>
+                        <td>
+                            <a href="{{ route('jobs.show', $bookmark->job->id) }}" class="btn btn-sm btn-primary">View</a>
+
+                            <form action="{{ route('bookmarks.destroy', $bookmark->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Remove this bookmark?')">
+                                    Remove
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <p>No jobs bookmarked yet.</p>
+    @endif
 </div>
 @endsection
