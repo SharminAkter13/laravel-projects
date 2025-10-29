@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request; 
+use Illuminate\Support\Facades\Auth;
+
 
 use App\Http\Controllers\Controller;
 
@@ -37,16 +39,14 @@ class LoginController extends Controller
     
 protected function authenticated(Request $request, $user)
 {
-    // Safe null-check with ?-> (PHP 8+)
     $roleName = $user->role?->name;
 
-    if ($roleName === 'admin') {
-        return redirect()->route('admin.dashboard'); // Admin dashboard
-    } elseif ($roleName === 'employer' || $roleName === 'candidate') {
-        return redirect()->route('portal.dashboard'); // Portal dashboard
-    }
-
-    return redirect()->route('portal.home'); // fallback
+    return match ($roleName) {
+        'admin' => redirect()->route('admin.dashboard'),
+        'candidate' => redirect()->route('candidate.dashboard'),
+        'employer' => redirect()->route('employer.dashboard'),
+        default => redirect()->route('portal.home'),
+    };
 }
     
     public function __construct()

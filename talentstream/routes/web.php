@@ -16,7 +16,10 @@ use App\Http\Controllers\{
     PortalController,
     ProfileController,
     ResumeController,
-    UserController
+    UserController,
+    AdminDashboardController,
+    CandidateDashboardController,
+    EmployerDashboardController
 };
 
 /*
@@ -25,13 +28,14 @@ use App\Http\Controllers\{
 |--------------------------------------------------------------------------
 */
 
+// ✅ Public pages
 Route::view('/welcome', 'welcome')->name('welcome');
 Route::view('/about', 'portal_pages.about')->name('about');
 Route::view('/contact', 'portal_pages.contact')->name('contact');
-Route::view('/master', 'master')->name('master');
 
-// Public portal home page
-Route::view('/', 'portal_pages.home')->name('portal.home');
+// ✅ Portal homepage now handled by PortalController
+Route::get('/', [PortalController::class, 'home'])->name('portal.home');
+Route::view('/master', 'master')->name('master');
 
 /*
 |--------------------------------------------------------------------------
@@ -39,12 +43,14 @@ Route::view('/', 'portal_pages.home')->name('portal.home');
 |--------------------------------------------------------------------------
 */
 Route::prefix('portal_pages')->group(function () {
+    // Candidate Views
     Route::view('/add-resume', 'portal_pages.candidates.add_resume')->name('add-resume');
     Route::view('/browse-categories', 'portal_pages.candidates.browse_categories')->name('browse-categories');
     Route::view('/browse-jobs', 'portal_pages.candidates.browse_jobs')->name('browse-jobs');
     Route::view('/job-alert', 'portal_pages.candidates.job_alert')->name('job-alert');
     Route::view('/manage-resume', 'portal_pages.candidates.manage_resume')->name('manage-resume');
 
+    // Employer Views
     Route::view('/add-job', 'portal_pages.employers.add_job')->name('add-job');
     Route::view('/browse-resume', 'portal_pages.employers.browse_resume')->name('browse-resume');
     Route::view('/manage-application', 'portal_pages.employers.manage_application')->name('manage-application');
@@ -62,18 +68,23 @@ Auth::routes();
 
 /*
 |--------------------------------------------------------------------------
-| Dashboards
+| Dashboards (Role Protected)
 |--------------------------------------------------------------------------
 */
 
-// 🧩 Admin Dashboard
+// 🧭 Admin Dashboard — protected by 'admin' middleware
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 });
 
-// 🧩 Portal Dashboard (Candidates + Employers)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/portal', [PortalController::class, 'index'])->name('portal.dashboard');
+// 🎯 Candidate Dashboard — protected by 'candidate' middleware
+Route::middleware(['auth', 'candidate'])->group(function () {
+    Route::get('/candidate/dashboard', [CandidateDashboardController::class, 'index'])->name('candidate.dashboard');
+});
+
+// 💼 Employer Dashboard — protected by 'employer' middleware
+Route::middleware(['auth', 'employer'])->group(function () {
+    Route::get('/employer/dashboard', [EmployerDashboardController::class, 'index'])->name('employer.dashboard');
 });
 
 /*
@@ -102,13 +113,7 @@ Route::resource('users', UserController::class)->except(['show']);
 | Resumes CRUD
 |--------------------------------------------------------------------------
 */
-Route::get('/resumes', [ResumeController::class, 'index'])->name('resumes.index');
-Route::get('/resumes/create', [ResumeController::class, 'create'])->name('resumes.create');
-Route::post('/resumes', [ResumeController::class, 'store'])->name('resumes.store');
-Route::get('/resumes/{id}', [ResumeController::class, 'show'])->name('resumes.show');
-Route::get('/resumes/{id}/edit', [ResumeController::class, 'edit'])->name('resumes.edit');
-Route::put('/resumes/{id}', [ResumeController::class, 'update'])->name('resumes.update');
-Route::delete('/resumes/{id}', [ResumeController::class, 'destroy'])->name('resumes.destroy');
+Route::resource('resumes', ResumeController::class);
 
 /*
 |--------------------------------------------------------------------------
