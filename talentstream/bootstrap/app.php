@@ -15,11 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         //
     })
-     ->withMiddleware(function (Middleware $middleware) {
-            $middleware->alias([
-                'admin' => AdminMiddleware::class,
-            ]);
-        })
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'candidate' => \App\Http\Middleware\CandidateMiddleware::class,
+            'employer' => \App\Http\Middleware\EmployerMiddleware::class,
+        ]);
+    })
+
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
