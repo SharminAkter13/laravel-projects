@@ -37,7 +37,12 @@
                 <img alt="User Avatar" src="{{ asset('assets/img/theme/team-4-800x800.jpg') }}">
               </span>
               <div class="media-body ml-2 d-none d-lg-block">
-                <span class="mb-0 text-sm font-weight-bold">{{ Auth::user()->name }}</span>
+                <span class="mb-0 text-sm font-weight-bold">
+                  {{ Auth::user()->name }}
+                  <small class="text-muted">
+                    ({{ Auth::user()->role->name ?? 'No Role' }})
+                  </small>
+                </span>
               </div>
             </div>
           </a>

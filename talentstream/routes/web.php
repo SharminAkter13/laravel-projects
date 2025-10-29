@@ -34,7 +34,7 @@ Route::view('/about', 'portal_pages.about')->name('about');
 Route::view('/contact', 'portal_pages.contact')->name('contact');
 
 // ✅ Portal homepage now handled by PortalController
-Route::get('/', [PortalController::class, 'home'])->name('portal.home');
+Route::get('/', [PortalController::class, 'index'])->name('portal.home');
 Route::view('/master', 'master')->name('master');
 
 /*
@@ -72,17 +72,17 @@ Auth::routes();
 |--------------------------------------------------------------------------
 */
 
-// 🧭 Admin Dashboard — protected by 'admin' middleware
+//  Admin Dashboard 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 });
 
-// 🎯 Candidate Dashboard — protected by 'candidate' middleware
+// Candidate Dashboard 
 Route::middleware(['auth', 'candidate'])->group(function () {
     Route::get('/candidate/dashboard', [CandidateDashboardController::class, 'index'])->name('candidate.dashboard');
 });
 
-// 💼 Employer Dashboard — protected by 'employer' middleware
+//  Employer Dashboard 
 Route::middleware(['auth', 'employer'])->group(function () {
     Route::get('/employer/dashboard', [EmployerDashboardController::class, 'index'])->name('employer.dashboard');
 });

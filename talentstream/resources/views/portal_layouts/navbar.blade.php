@@ -88,12 +88,13 @@
                   <a href="{{ route('my-account') }}"><i class="ti-user"></i> My Account</a>
                   <ul class="dropdown">
                     {{-- ✅ Role-Based Dashboard --}}
-                      @if(auth()->user()->role?->name === 'admin')
-                          <li><a href="{{ route('admin.dashboard') }}"> Dashboard</a></li>
-                      @else
-                          <li><a href="{{ route('portal.dashboard') }}"> Dashboard</a></li>
-                      @endif
-
+                    @if(auth()->user()->role?->name === 'admin')
+                        <li><a href="{{ route('admin.dashboard') }}"> Dashboard</a></li>
+                    @elseif(auth()->user()->role?->name === 'candidate')
+                        <li><a href="{{ route('candidate.dashboard') }}"> Dashboard</a></li>
+                    @elseif(auth()->user()->role?->name === 'employer')
+                        <li><a href="{{ route('employer.dashboard') }}"> Dashboard</a></li>
+                    @endif
                     <li>
                       <a href="{{ route('logout') }}"
                          onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
