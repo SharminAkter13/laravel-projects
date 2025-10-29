@@ -20,8 +20,6 @@ return new class extends Migration
             $table->dateTime('resume_submitted');
             $table->text('cover_letter')->nullable();
             $table->timestamps();
-
-            // ✅ Check Constraint (MySQL 8.0.16+)
             $table->check('resume_submitted <= applied_date');
         });
     }
