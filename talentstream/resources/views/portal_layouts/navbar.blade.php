@@ -82,7 +82,6 @@
               {{-- Authentication Links --}}
               @guest
                 <li class="right"><a href="{{ route('login') }}"><i class="ti-lock"></i> Log In</a></li>
-                <li class="right"><a href="{{ route('register') }}"><i class="ti-user"></i> Register</a></li>
               @else
                 <li class="right">
                   <a href="{{ route('my-account') }}"><i class="ti-user"></i> My Account</a>
