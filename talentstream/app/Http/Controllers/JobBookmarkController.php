@@ -19,10 +19,10 @@ class JobBookmarkController extends Controller
 
         $bookmarks = JobBookmark::with('job')
             ->where('candidate_id', $user->candidate->id)
-            ->latest()
+            ->orderByDesc('saved_date') // Use saved_date instead of created_at
             ->get();
 
-        return view('bookmarks.index', compact('bookmarks'));
+        return view('pages.job_bookmarks.index', compact('bookmarks'));
     }
 
     // Store a new bookmark

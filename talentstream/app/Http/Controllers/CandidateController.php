@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 class CandidateController extends Controller
 {
@@ -21,32 +23,26 @@ class CandidateController extends Controller
         return view('pages.candidates.create');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'resume' => 'nullable|string',
-            'phone' => 'nullable|string',
-            'address' => 'nullable|string',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'resume' => 'nullable|string',
+        'phone'  => 'nullable|string',
+        'address'=> 'nullable|string',
+    ]);
 
-        // Create User with candidate role
-        $role = Role::where('name', 'candidate')->first();
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => $role->id,
-        ]);
+    $user = Auth::user(); // get logged-in user
 
-        // Create Candidate profile
-        $user->candidate()->create($request->only(['resume','phone','address']));
-
-        return redirect()->route('candidates.index')->with('success', 'Candidate created successfully!');
+    // Check if user already has candidate profile
+    if ($user->candidate) {
+        return redirect()->route('candidates.index')->with('error', 'Candidate profile already exists!');
     }
 
+    // Create candidate profile
+    $user->candidate()->create($request->only(['resume', 'phone', 'address']));
+
+    return redirect()->route('candidates.index')->with('success', 'Candidate profile created successfully!');
+}
     public function edit(Candidate $candidate)
     {
         return view('pages.candidates.edit', compact('candidate'));
