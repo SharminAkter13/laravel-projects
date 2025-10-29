@@ -20,7 +20,9 @@ use App\Http\Controllers\{
     AdminDashboardController,
     CandidateDashboardController,
     EmployerDashboardController,
-    JobBookmarkController
+    JobBookmarkController,
+    JobViewController
+
 
 };
 
@@ -157,4 +159,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bookmarks', [JobBookmarkController::class, 'index'])->name('bookmarks.index');
     Route::post('/bookmarks/{jobId}', [JobBookmarkController::class, 'store'])->name('bookmarks.store');
     Route::delete('/bookmarks/{id}', [JobBookmarkController::class, 'destroy'])->name('bookmarks.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Job Views (Requires Auth)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/jobs/{job}/view', [JobViewController::class, 'store'])->name('jobs.view');
+    Route::get('/job-views', [JobViewController::class, 'index'])->name('job_views.index'); // admin
 });

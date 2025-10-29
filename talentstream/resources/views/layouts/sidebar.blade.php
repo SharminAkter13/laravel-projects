@@ -126,6 +126,12 @@
           </a>
         </li>
 
+         <li class="nav-item">
+          <a class="nav-link {{ request()->is('job-views*') ? 'active' : '' }}" href="{{ url('/job-views') }}">
+            <i class="ni ni-calendar-grid-58 text-purple"></i> Job Views
+          </a>
+        </li>
+
         <li class="nav-item">
           <a class="nav-link {{ request()->is('profile*') ? 'active' : '' }}" href="{{ url('/profile') }}">
             <i class="ni ni-single-02 text-pink"></i> User Profile
