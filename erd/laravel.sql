@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 21, 2025 at 08:36 AM
+-- Generation Time: Oct 29, 2025 at 08:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,6 +29,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `applications` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `job_id` bigint(20) UNSIGNED NOT NULL,
+  `seeker_id` bigint(20) UNSIGNED NOT NULL,
+  `applied_date` datetime NOT NULL,
+  `status` enum('active','expired','closed') NOT NULL DEFAULT 'active',
+  `resume_submitted` datetime NOT NULL,
+  `cover_letter` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -44,6 +50,14 @@ CREATE TABLE `cache` (
   `value` mediumtext NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cache`
+--
+
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('laravel-cache-ayaan@gmail.com|127.0.0.1', 'i:1;', 1761707106),
+('laravel-cache-ayaan@gmail.com|127.0.0.1:timer', 'i:1761707106;', 1761707106);
 
 -- --------------------------------------------------------
 
@@ -66,6 +80,8 @@ CREATE TABLE `cache_locks` (
 CREATE TABLE `candidates` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
   `resume` varchar(255) DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
@@ -77,8 +93,9 @@ CREATE TABLE `candidates` (
 -- Dumping data for table `candidates`
 --
 
-INSERT INTO `candidates` (`id`, `user_id`, `resume`, `phone`, `address`, `created_at`, `updated_at`) VALUES
-(1, 2, 'john.pdf', '021457454', '4/78 Los Angle, USA', '2025-10-19 22:02:15', '2025-10-19 22:02:41');
+INSERT INTO `candidates` (`id`, `user_id`, `name`, `email`, `resume`, `phone`, `address`, `created_at`, `updated_at`) VALUES
+(1, 2, 'john', '', 'john.pdf', '021457454', '4/78 Los Angle, USA', '2025-10-19 22:02:15', '2025-10-19 22:02:41'),
+(2, 5, 'johhn', '', 'john.pdf', '0148586356', '4/78 los angle,usa', '2025-10-21 23:59:15', '2025-10-21 23:59:15');
 
 -- --------------------------------------------------------
 
@@ -99,7 +116,30 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `icon`, `created_at`, `updated_at`) VALUES
-(1, 'Finances', 'portal/assets/img/banner1.jpg', '2025-10-19 21:57:00', '2025-10-19 21:58:08');
+(1, 'Finances', 'portal/assets/img/banner1.jpg', '2025-10-19 21:57:00', '2025-10-19 21:58:08'),
+(3, 'HRM', 'portal/assets/img/banner1.jpg', '2025-10-22 00:07:56', '2025-10-22 00:07:56');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `companies`
+--
+
+CREATE TABLE `companies` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `industry` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `contact_email` varchar(255) DEFAULT NULL,
+  `contact_phone` varchar(50) DEFAULT NULL,
+  `logo` varchar(255) DEFAULT NULL,
+  `established_year` int(11) DEFAULT NULL,
+  `size` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -151,7 +191,26 @@ CREATE TABLE `employers` (
 --
 
 INSERT INTO `employers` (`id`, `user_id`, `company_name`, `website`, `phone`, `address`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, '2025-10-19 21:51:46', '2025-10-19 21:51:46');
+(1, 1, NULL, NULL, NULL, NULL, '2025-10-19 21:51:46', '2025-10-19 21:51:46'),
+(2, 6, 'TechWorld', 'http://mishel.online', '0148586356', '4/78 los angle,usa', '2025-10-22 00:00:22', '2025-10-22 00:00:22'),
+(3, 9, NULL, NULL, NULL, NULL, '2025-10-26 21:01:14', '2025-10-26 21:01:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employer_packages`
+--
+
+CREATE TABLE `employer_packages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `employer_id` bigint(20) UNSIGNED NOT NULL,
+  `package_id` bigint(20) UNSIGNED NOT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -211,7 +270,8 @@ CREATE TABLE `jobs` (
 --
 
 INSERT INTO `jobs` (`id`, `user_email`, `title`, `location`, `category_id`, `tags`, `description`, `application_email`, `application_url`, `closing_date`, `company_name`, `website`, `tagline`, `cover_image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'sharmin@gmail.com', 'Financial Manager', 'USA', 1, 'Finance, Manager', 'Finance  Manager', 'sharmin@gmail.com', 'http://127.0.0.1:8000/job-apply', '2025-10-25', 'it world', 'http://127.0.0.1:8000/', 'Finance', 'job_covers/exbVCq7YvjK01bJe6jjfZjCVe1Uzle7fS0iruEPp.jpg', 'active', '2025-10-19 22:54:25', '2025-10-19 22:54:25');
+(1, 'sharmin@gmail.com', 'Financial Manager', 'USA', 1, 'Finance, Manager', 'Finance  Manager', 'sharmin@gmail.com', 'http://127.0.0.1:8000/job-apply', '2025-10-25', 'it world', 'http://127.0.0.1:8000/', 'Finance', 'job_covers/exbVCq7YvjK01bJe6jjfZjCVe1Uzle7fS0iruEPp.jpg', 'active', '2025-10-19 22:54:25', '2025-10-19 22:54:25'),
+(2, 'sharmin@gmail.com', 'HRM', 'USA', 3, 'HRM, Manager', 'HRM', 'sharmin@gmail.com', 'http://127.0.0.1:8000/job-apply', '2025-10-25', 'World Tech', 'http://127.0.0.1:8000/', 'HRM', 'job_covers/5DgvW0vkZzSIzwFBqnIKbNppfb1KSde6rg47huFw.jpg', 'active', '2025-10-22 00:09:16', '2025-10-22 00:09:16');
 
 -- --------------------------------------------------------
 
@@ -229,6 +289,80 @@ CREATE TABLE `job_alerts` (
   `frequency` varchar(255) NOT NULL DEFAULT 'daily',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_bookmarks`
+--
+
+CREATE TABLE `job_bookmarks` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `candidate_id` bigint(20) UNSIGNED NOT NULL,
+  `job_id` bigint(20) UNSIGNED NOT NULL,
+  `saved_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_locations`
+--
+
+CREATE TABLE `job_locations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `postal_code` varchar(20) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_types`
+--
+
+CREATE TABLE `job_types` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_views`
+--
+
+CREATE TABLE `job_views` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `job_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `viewed_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `sender_id` bigint(20) UNSIGNED NOT NULL,
+  `receiver_id` bigint(20) UNSIGNED NOT NULL,
+  `application_id` bigint(20) UNSIGNED NOT NULL,
+  `content` text NOT NULL,
+  `sent_at` datetime NOT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -262,6 +396,38 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (12, '2025_10_17_073121_add_role_id_to_users_table', 1),
 (13, '2025_10_17_073342_create_employers_table', 1),
 (14, '2025_10_19_062347_create_job_alerts_table', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `packages`
+--
+
+CREATE TABLE `packages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  `duration_days` int(11) DEFAULT NULL,
+  `features` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -390,7 +556,11 @@ INSERT INTO `users` (`id`, `role_id`, `name`, `email`, `email_verified_at`, `pas
 (1, 3, 'Ayaan Mohammad', 'ayaan@gmail.com', NULL, '$2y$12$Mpiv7uYEqpGBccbih/IoK.5KjamaLbRd1YyxnlhDmwESYyMUkRzf6', NULL, '2025-10-19 21:51:46', '2025-10-19 21:51:46'),
 (2, 2, 'john', 'john@gmail.com', NULL, '$2y$12$HRl39J0ZBYgi2R9WxHLpI.vf5npMTI99DLxpl5VeKYQ5pSzRMewgu', NULL, '2025-10-19 22:02:15', '2025-10-19 22:02:15'),
 (3, 1, 'admin', 'admin@gmail.com', NULL, '$2y$12$kdygzVd7OYgxBaQJcnDKquvf7DtB1cuEUCYWFPV4nNdeHqOEg.50e', NULL, '2025-10-20 21:52:54', '2025-10-20 21:56:13'),
-(4, NULL, 'Lima Akter', 'lima@gmail.com', NULL, '$2y$12$aOgncbY.xHdSjTYqCRjhUuWjaa7Mstuiq7kpNLrPmCpMxu60SascW', NULL, '2025-10-20 22:33:20', '2025-10-20 22:33:20');
+(4, 3, 'Lima Akter', 'lima@gmail.com', NULL, '$2y$12$aOgncbY.xHdSjTYqCRjhUuWjaa7Mstuiq7kpNLrPmCpMxu60SascW', NULL, '2025-10-20 22:33:20', '2025-10-20 22:33:20'),
+(5, 2, 'johny', 'johny@gmail.com', NULL, '$2y$12$7MghmmvTpeTDO.esMmwl.uiQdaYs/I0oaPQMpJRzbOJByW7GQO07W', NULL, '2025-10-21 23:59:15', '2025-10-21 23:59:15'),
+(6, 3, 'mishel', 'mishel@gmail.com', NULL, '$2y$12$dPyqIcRu3KLt6XmVd/bM0uJqYOH/QFSm/K3ODYLcxuO4m8GOoaz3e', NULL, '2025-10-22 00:00:22', '2025-10-22 00:00:22'),
+(8, 2, 'Nusrat', 'nusrat@gmail.com', NULL, '$2y$12$wLZaD0HYeJwFJiR1iQT6Z.D1AsnD.zQWtUQB8CIFhmUK.q6fLuWEO', NULL, '2025-10-26 20:54:07', '2025-10-26 20:54:07'),
+(9, 3, 'Nihal', 'nihal@gmail.com', NULL, '$2y$12$ESw5fcuew8ZcZaCMb9vqOOPJxq5V7rvVy3aAPOqy30/MGOvFKKNG2', NULL, '2025-10-26 21:01:14', '2025-10-26 21:01:14');
 
 --
 -- Indexes for dumped tables
@@ -400,7 +570,9 @@ INSERT INTO `users` (`id`, `role_id`, `name`, `email`, `email_verified_at`, `pas
 -- Indexes for table `applications`
 --
 ALTER TABLE `applications`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `applications_job_id_foreign` (`job_id`),
+  ADD KEY `applications_seeker_id_foreign` (`seeker_id`);
 
 --
 -- Indexes for table `cache`
@@ -429,6 +601,13 @@ ALTER TABLE `categories`
   ADD UNIQUE KEY `categories_name_unique` (`name`);
 
 --
+-- Indexes for table `companies`
+--
+ALTER TABLE `companies`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
 -- Indexes for table `educations`
 --
 ALTER TABLE `educations`
@@ -441,6 +620,14 @@ ALTER TABLE `educations`
 ALTER TABLE `employers`
   ADD PRIMARY KEY (`id`),
   ADD KEY `employers_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `employer_packages`
+--
+ALTER TABLE `employer_packages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `employer_packages_employer_id_foreign` (`employer_id`),
+  ADD KEY `employer_packages_package_id_foreign` (`package_id`);
 
 --
 -- Indexes for table `experiences`
@@ -464,9 +651,60 @@ ALTER TABLE `job_alerts`
   ADD KEY `job_alerts_user_id_foreign` (`user_id`);
 
 --
+-- Indexes for table `job_bookmarks`
+--
+ALTER TABLE `job_bookmarks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `job_bookmarks_seeker_id_foreign` (`candidate_id`),
+  ADD KEY `job_bookmarks_job_id_foreign` (`job_id`);
+
+--
+-- Indexes for table `job_locations`
+--
+ALTER TABLE `job_locations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_types`
+--
+ALTER TABLE `job_types`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `job_views`
+--
+ALTER TABLE `job_views`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `job_views_job_id_foreign` (`job_id`),
+  ADD KEY `job_views_viewer_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `messages_sender_id_foreign` (`sender_id`),
+  ADD KEY `messages_receiver_id_foreign` (`receiver_id`),
+  ADD KEY `messages_application_id_foreign` (`application_id`);
+
+--
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notifications_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `packages`
+--
+ALTER TABLE `packages`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -525,13 +763,19 @@ ALTER TABLE `applications`
 -- AUTO_INCREMENT for table `candidates`
 --
 ALTER TABLE `candidates`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `companies`
+--
+ALTER TABLE `companies`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `educations`
@@ -543,7 +787,13 @@ ALTER TABLE `educations`
 -- AUTO_INCREMENT for table `employers`
 --
 ALTER TABLE `employers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `employer_packages`
+--
+ALTER TABLE `employer_packages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `experiences`
@@ -555,7 +805,7 @@ ALTER TABLE `experiences`
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `job_alerts`
@@ -564,10 +814,52 @@ ALTER TABLE `job_alerts`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `job_bookmarks`
+--
+ALTER TABLE `job_bookmarks`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `job_locations`
+--
+ALTER TABLE `job_locations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `job_types`
+--
+ALTER TABLE `job_types`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `job_views`
+--
+ALTER TABLE `job_views`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `packages`
+--
+ALTER TABLE `packages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `resumes`
@@ -591,11 +883,18 @@ ALTER TABLE `skills`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `applications`
+--
+ALTER TABLE `applications`
+  ADD CONSTRAINT `applications_job_id_foreign` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `applications_seeker_id_foreign` FOREIGN KEY (`seeker_id`) REFERENCES `candidates` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `candidates`
@@ -616,6 +915,13 @@ ALTER TABLE `employers`
   ADD CONSTRAINT `employers_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `employer_packages`
+--
+ALTER TABLE `employer_packages`
+  ADD CONSTRAINT `employer_packages_employer_id_foreign` FOREIGN KEY (`employer_id`) REFERENCES `employers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `employer_packages_package_id_foreign` FOREIGN KEY (`package_id`) REFERENCES `packages` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `experiences`
 --
 ALTER TABLE `experiences`
@@ -632,6 +938,34 @@ ALTER TABLE `jobs`
 --
 ALTER TABLE `job_alerts`
   ADD CONSTRAINT `job_alerts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `job_bookmarks`
+--
+ALTER TABLE `job_bookmarks`
+  ADD CONSTRAINT `job_bookmarks_job_id_foreign` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `job_bookmarks_seeker_id_foreign` FOREIGN KEY (`candidate_id`) REFERENCES `candidates` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `job_views`
+--
+ALTER TABLE `job_views`
+  ADD CONSTRAINT `job_views_job_id_foreign` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `job_views_viewer_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `messages`
+--
+ALTER TABLE `messages`
+  ADD CONSTRAINT `messages_application_id_foreign` FOREIGN KEY (`application_id`) REFERENCES `applications` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `messages_receiver_id_foreign` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `messages_sender_id_foreign` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD CONSTRAINT `notifications_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `resumes`
