@@ -11,4 +11,8 @@ class Employer extends Model
     {
         return $this->belongsTo(User::class);
     }
+      public function employerPackages()
+    {
+        return $this->hasMany(EmployerPackage::class);
+    }
 }

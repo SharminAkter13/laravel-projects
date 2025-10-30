@@ -38,4 +38,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Employer::class);
     }
+    public function notifications()
+{
+    return $this->hasMany(Notification::class);
+}
+public function viewedJobs()
+{
+    return $this->hasMany(JobView::class);
+}
+
+
 }

@@ -132,6 +132,23 @@
           </a>
         </li>
 
+         <li class="nav-item">
+          <a class="nav-link {{ request()->is('job-locations*') ? 'active' : '' }}" href="{{ url('/job_locations') }}">
+            <i class="ni ni-calendar-grid-58 text-purple"></i> Job Location
+          </a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link {{ request()->is('packages*') ? 'active' : '' }}" href="{{ url('/packages') }}">
+            <i class="ni ni-calendar-grid-58 text-purple"></i> Packages
+          </a>
+        </li>
+
+         <li class="nav-item">
+          <a class="nav-link {{ request()->is('employer_packages*') ? 'active' : '' }}" href="{{ url('/employer_packages') }}">
+            <i class="ni ni-calendar-grid-58 text-purple"></i>Employer Packages
+          </a>
+        </li>
+
         <li class="nav-item">
           <a class="nav-link {{ request()->is('profile*') ? 'active' : '' }}" href="{{ url('/profile') }}">
             <i class="ni ni-single-02 text-pink"></i> User Profile

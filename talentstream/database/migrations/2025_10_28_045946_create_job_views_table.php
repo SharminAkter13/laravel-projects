@@ -17,8 +17,10 @@ return new class extends Migration
             $table->foreignId('job_id')->constrained('jobs')->cascadeOnDelete();
             $table->foreignId('viewer_id')->constrained('users')->cascadeOnDelete();
             $table->dateTime('viewed_at')->nullable();
+            $table->timestamps();
+
         });
-    }
+    }                                    
 
     /**
      * Reverse the migrations.

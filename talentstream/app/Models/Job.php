@@ -22,4 +22,9 @@ class Job extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function viewers()
+{
+    return $this->hasMany(JobView::class);
+}
+
 }

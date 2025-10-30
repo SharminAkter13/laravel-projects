@@ -20,10 +20,12 @@ use App\Http\Controllers\{
     AdminDashboardController,
     CandidateDashboardController,
     EmployerDashboardController,
+    EmployerPackageController,
     JobBookmarkController,
-    JobViewController
-
-
+    JobViewController,
+    NotificationController,
+    JobLocationController,
+    PackageController
 };
 
 /*
@@ -170,4 +172,47 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::post('/jobs/{job}/view', [JobViewController::class, 'store'])->name('jobs.view');
     Route::get('/job-views', [JobViewController::class, 'index'])->name('job_views.index'); // admin
+});
+
+/*
+|--------------------------------------------------------------------------
+| Job Notification (Requires Auth)
+|--------------------------------------------------------------------------
+*/
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Job location (Requires Auth)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::resource('job_locations', JobLocationController::class);
+});
+/*
+|--------------------------------------------------------------------------
+| Packages (Requires Auth)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+    Route::resource('packages', PackageController::class);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Employer Packages (Requires Auth)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+    Route::resource('employer_packages', EmployerPackageController::class);
 });

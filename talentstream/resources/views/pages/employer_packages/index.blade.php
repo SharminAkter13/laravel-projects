@@ -1,11 +1,11 @@
 @extends('master')
 
 @section('page')
-<div class="container mt-5 p-5">
+<div class="container p-5">
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="mb-0">Job Locations</h3>
-            <a href="{{ route('job_locations.create') }}" class="btn btn-primary">Add New Location</a>
+            <h3 class="mb-0">Employer Packages</h3>
+            <a href="{{ route('employer_packages.create') }}" class="btn btn-primary">Add Package to Employer</a>
         </div>
 
         <div class="card-body">
@@ -17,27 +17,27 @@
                 <table class="table table-bordered table-striped mb-0">
                     <thead class="thead-light">
                         <tr>
-                            <th>Country</th>
-                            <th>State</th>
-                            <th>City</th>
-                            <th>Address</th>
-                            <th>Postal Code</th>
+                            <th>Employer</th>
+                            <th>Package</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($locations as $location)
+                        @forelse($employerPackages as $ep)
                         <tr>
-                            <td>{{ $location->country }}</td>
-                            <td>{{ $location->state }}</td>
-                            <td>{{ $location->city }}</td>
-                            <td>{{ $location->address }}</td>
-                            <td>{{ $location->postal_code }}</td>
+                            <td>{{ $ep->employer->name ?? 'N/A' }}</td>
+                            <td>{{ $ep->package->name ?? 'N/A' }}</td>
+                            <td>{{ $ep->start_date }}</td>
+                            <td>{{ $ep->end_date }}</td>
+                            <td>{{ $ep->status }}</td>
                             <td>
-                                <a href="{{ route('job_locations.edit', $location->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{{ route('employer_packages.edit', $ep->id) }}" class="btn btn-sm btn-warning">Edit</a>
 
-                                <form action="{{ route('job_locations.destroy', $location->id) }}" method="POST" class="d-inline"
-                                      onsubmit="return confirm('Are you sure you want to delete this location?');">
+                                <form action="{{ route('employer_packages.destroy', $ep->id) }}" method="POST" class="d-inline"
+                                      onsubmit="return confirm('Are you sure?');">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-danger">Delete</button>
@@ -46,7 +46,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="text-center">No job locations found.</td>
+                            <td colspan="6" class="text-center">No employer packages found.</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -54,7 +54,7 @@
             </div>
 
             <div class="mt-3">
-                {{ $locations->links() }}
+                {{ $employerPackages->links() }}
             </div>
         </div>
     </div>

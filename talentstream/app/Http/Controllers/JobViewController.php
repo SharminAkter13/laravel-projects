@@ -31,6 +31,6 @@ class JobViewController extends Controller
     public function index()
     {
         $views = JobView::with(['job', 'viewer'])->latest()->get();
-        return view('job_views.index', compact('views'));
+        return view('pages.job_views.index', compact('views'));
     }
 }
