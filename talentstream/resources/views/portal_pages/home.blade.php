@@ -156,27 +156,30 @@
     <!-- Find Job Section End -->
 
     <!-- Category Section Start -->
-    <section class="category section">
-      <div class="container">
+<section class="category section">
+    <div class="container">
         <h2 class="section-title">Browse Categories</h2>
         <div class="row">
-          <div class="col-md-12">
-            @foreach($categories as $cat)
-            <div class="col-md-3 col-sm-3 col-xs-12 f-category">
-              <a href="#">
-                <div class="icon">
-                  <img src="{{ asset($cat->icon) }}" alt="{{ $cat->name }}" width="50">
+            <div class="col-md-12">
+                @foreach($categories as $cat)
+                <div class="col-md-3 col-sm-3 col-xs-12 f-category">
+                    <a href="#">
+                        <div class="icon">
+                            @if($cat->image_path)
+                                <img src="{{ asset('storage/' . $cat->image_path) }}" alt="{{ $cat->name }}" width="50">
+                            @else
+                                <img src="{{ asset('images/default-icon.png') }}" alt="No Image" width="50"> 
+                            @endif
+                        </div>
+                        <h3>{{ strtoupper($cat->name) }}</h3> 
+                        <p>{{ \App\Models\Job::where('category_id', $cat->id)->count() }} jobs</p>
+                    </a>
                 </div>
-                <h3>{{ $cat->name }}</h3>
-                <p>{{ \App\Models\Job::where('category_id', $cat->id)->count() }} jobs</p>
-              </a>
+                @endforeach
             </div>
-            @endforeach
-          </div>
         </div>
-      </div>
-    </section>
-    <!-- Category Section End -->
+    </div>
+</section>    <!-- Category Section End -->
 
     <!-- Featured Jobs Section Start -->
     <section class="featured-jobs section">

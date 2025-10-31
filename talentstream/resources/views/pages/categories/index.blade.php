@@ -17,7 +17,9 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Icon</th>
+                        <th>Image</th> {{-- Changed from Icon --}}
+                        <th>Active</th> {{-- New column: Is Active --}}
+                        <th>Order</th> {{-- New column: Sort Order --}}
                         <th>Jobs Count</th>
                         <th>Actions</th>
                     </tr>
@@ -27,7 +29,26 @@
                     <tr>
                         <td>{{ $category->id }}</td>
                         <td>{{ $category->name }}</td>
-                        <td>{{ $category->icon }}</td>
+                        {{-- New: Display the image if image_path is set --}}
+                        <td>
+                            @if($category->image_path)
+                                {{-- Assuming public storage link. Adjust asset() or storage::url() as needed --}}
+                                <img src="{{ asset('storage/' . $category->image_path) }}" alt="{{ $category->name }}" style="max-height: 50px; width: auto;">
+                            @else
+                                N/A
+                            @endif
+                        </td>
+                        {{-- New: Display Is Active status --}}
+                        <td>
+                            @if($category->is_active)
+                                <span class="badge bg-success">Yes</span>
+                            @else
+                                <span class="badge bg-danger">No</span>
+                            @endif
+                        </td>
+                        {{-- New: Display Sort Order --}}
+                        <td>{{ $category->sort_order }}</td>
+                        
                         <td>{{ $category->jobs->count() }}</td>
                         <td>
                             <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-sm btn-warning">Edit</a>
