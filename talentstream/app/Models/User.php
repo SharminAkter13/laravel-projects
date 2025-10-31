@@ -10,7 +10,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role_id'
+        'name', 'email', 'password', 'role_id','status'
     ];
 
     protected $hidden = [
@@ -21,6 +21,29 @@ class User extends Authenticatable
     'email_verified_at' => 'datetime',
     'password' => 'hashed',
 ];
+
+// User.php
+
+public function createRoleProfileIfNeeded()
+{
+    if ($this->role->name === 'candidate' && !$this->candidate) {
+        $this->candidate()->create([
+            'name'    => $this->name,
+            'resume'  => null,
+            'phone'   => null,
+            'address' => null,
+        ]);
+    } elseif ($this->role->name === 'employer' && !$this->employer) {
+        $this->employer()->create([
+            'name'         => $this->name,
+            'company_name' => null,
+            'website'      => null,
+            'phone'        => null,
+            'address'      => null,
+        ]);
+    }
+}
+
 
 
     // Relationships

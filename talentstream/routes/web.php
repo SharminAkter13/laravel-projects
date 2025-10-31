@@ -114,6 +114,9 @@ Route::resource('categories', CategoryController::class)->except(['show']);
 */
 Route::resource('users', UserController::class)->except(['show']);
 
+// Approve user
+Route::post('users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
+
 /*
 |--------------------------------------------------------------------------
 | Resumes CRUD

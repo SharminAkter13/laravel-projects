@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('page')
-<div class="container">
+<div class="container mt-5 p-5">
     <h2 class="mb-4">Notifications</h2>
 
     @if(session('success'))

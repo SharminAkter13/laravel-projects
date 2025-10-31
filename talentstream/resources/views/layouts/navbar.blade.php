@@ -57,8 +57,8 @@ if (Auth::check()) {
             @endif
           </a>
 
-          <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow shadow-sm"
-               aria-labelledby="navbarDropdownNotifications" style="width: 320px;">
+          <div class="dropdown-menu dropdown-menu-end  shadow-sm"
+               aria-labelledby="navbarDropdownNotifications" style="width: 450px;">
 
             <h6 class="dropdown-header">Notifications</h6>
 

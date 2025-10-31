@@ -13,13 +13,14 @@
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
-            <table class="table table-bordered">
-                <thead>
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -31,7 +32,15 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->role->name ?? 'N/A' }}</td>
                         <td>
+                            @if($user->status === 'active')
+                                <span class="badge bg-success">Active</span>
+                            @else
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            @endif
+                        </td>
+                        <td>
                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning">Edit</a>
+
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
@@ -40,6 +49,16 @@
                                     Delete
                                 </button>
                             </form>
+
+                            @if($user->status !== 'active')
+                            <form action="{{ route('users.approve', $user->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-success"
+                                    onclick="return confirm('Approve this user?')">
+                                    Approve
+                                </button>
+                            </form>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

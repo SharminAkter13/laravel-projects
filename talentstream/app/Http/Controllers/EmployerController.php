@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Employer;
@@ -7,6 +6,7 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class EmployerController extends Controller
 {
@@ -33,19 +33,19 @@ class EmployerController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        // Create User with employer role
         $role = Role::where('name', 'employer')->first();
+
+        // Create User with status pending
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => $role->id,
+            'status' => 'pending', // must be approved by admin
         ]);
 
-        // Create Employer profile
-        $user->employer()->create($request->only(['company_name','website','phone','address']));
-
-        return redirect()->route('employers.index')->with('success', 'Employer created successfully!');
+        // Employer profile will be created only after admin approval
+        return redirect()->route('employers.index')->with('success', 'Employer created successfully. Awaiting admin approval.');
     }
 
     public function edit(Employer $employer)
@@ -78,7 +78,7 @@ class EmployerController extends Controller
 
     public function destroy(Employer $employer)
     {
-        $employer->user()->delete(); // deletes employer profile too
+        $employer->user()->delete(); // deletes employer profile automatically
         return redirect()->route('employers.index')->with('success', 'Employer deleted successfully!');
     }
 }

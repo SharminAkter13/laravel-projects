@@ -39,6 +39,12 @@ class LoginController extends Controller
     
 protected function authenticated(Request $request, $user)
 {
+      // Check if user is approved
+    if ($user->status !== 'active' && $user->role?->name !== 'admin') {
+    Auth::logout();
+    return redirect()->route('login')->with('error', 'Your account is pending approval by admin.');
+}
+
     $roleName = $user->role?->name;
 
     return match ($roleName) {

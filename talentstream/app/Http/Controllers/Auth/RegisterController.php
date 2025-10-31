@@ -74,6 +74,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role_id' => $roleId,
+            'status' => 'pending',
         ]);
 
         // Create related record based on role
