@@ -1,21 +1,7 @@
 @extends('master')
 @section('page')
-<div class="card">
-  <div class="header pb-5 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 50px; background-image: url(../assets/img/theme/profile-cover.jpg); background-size: cover; background-position: center top;">
-    <!-- Mask -->
-    <span class="mask bg-gradient-default opacity-8"></span>
-    <!-- Header container -->
-    <div class="container-fluid d-flex align-items-center">
-      <div class="row align-items-center">
-        <div class="col-lg-12 col-md-10 text-center">
-            <h1 class="display-2 text-white text-center"> Resume List</h1>
-            <a href="{{ route('resumes.create') }}" class="btn btn-info">Add Resume</a>
-        </div>
-      </div>
-</div>
-</div>
 
-<div class="container mt-4">
+<div class="container mt-4 p-5">
   <div class="card shadow-sm">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">All Resumes</h4>
