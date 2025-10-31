@@ -15,6 +15,13 @@ class JobController extends Controller
         return view('pages.jobs.index', compact('jobs'));
     }
 
+    public function show($id)
+{
+    $job = Job::with('category')->findOrFail($id);
+    return view('pages.jobs.show', compact('job'));
+}
+
+
     public function create()
     {
         $categories = Category::all();

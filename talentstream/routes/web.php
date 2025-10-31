@@ -129,7 +129,7 @@ Route::resource('resumes', ResumeController::class);
 | Jobs CRUD
 |--------------------------------------------------------------------------
 */
-Route::resource('jobs', JobController::class)->except(['show']);
+Route::resource('jobs', JobController::class);
 
 /*
 |--------------------------------------------------------------------------

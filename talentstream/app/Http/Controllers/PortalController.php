@@ -2,13 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Job;
+use App\Models\Category;
+use App\Models\Package;
+use App\Models\Employer;
 
 class PortalController extends Controller
-{     
-   
+{
     public function index()
     {
-        return view('portal_pages.home');
+        // Load latest jobs
+        $hotJobs = Job::with('category')->where('status', 'active')->latest()->take(5)->get();
+
+        // Load featured jobs (you can later add an 'is_featured' column)
+        $featuredJobs = Job::where('status', 'active')->latest()->take(6)->get();
+
+        // Load categories
+        $categories = Category::all();
+
+        // Load pricing packages
+        $packages = Package::all();
+
+        // Load employers as clients
+        $clients = Employer::latest()->take(6)->get();
+
+        return view('portal_pages.home', compact('hotJobs', 'featuredJobs', 'categories', 'packages', 'clients'));
     }
 }

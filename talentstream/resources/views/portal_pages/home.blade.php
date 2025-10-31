@@ -127,127 +127,29 @@
         <h2 class="section-title">Hot Jobs</h2>
         <div class="row">
           <div class="col-md-12">
-            <div class="job-list">
-              <div class="thumb">
-                <a href="job-details.html"><img src="portal/assets/img/jobs/img-1.jpg" alt=""></a>
-              </div>
-              <div class="job-list-content">
-                <h4><a href="job-details.html">Need a web designer</a><span class="full-time">Full-Time</span></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum quaerat aut veniam molestiae atque
-                  dolorum omnis temporibus consequuntur saepe. Nemo atque consectetur saepe corporis odit in dicta
-                  reprehenderit, officiis, praesentium?</p>
-                <div class="job-tag">
-                  <div class="pull-left">
-                    <div class="meta-tag">
-                      <span><a href="browse-categories.html"><i class="ti-brush"></i>Art/Design</a></span>
-                      <span><i class="ti-location-pin"></i>Washington, USA</span>
-                      <span><i class="ti-time"></i>60/Hour</span>
-                    </div>
-                  </div>
-                  <div class="pull-right">
-                    <div class="icon">
-                      <i class="ti-heart"></i>
-                    </div>
-                    <a href="job-details.html" class="btn btn-common btn-rm">Apply Job</a>
-                  </div>
-                </div>
-              </div>
+          @foreach($hotJobs as $job)
+          <div class="job-list">
+            <div class="thumb">
+              <a href="{{ route('jobs.show', $job->id) }}">
+                <img src="{{ asset('storage/' . $job->cover_image) }}" alt="{{ $job->title }}">
+              </a>
             </div>
-            <div class="job-list">
-              <div class="thumb">
-                <a href="job-details.html"><img src="portal/assets/img/jobs/img-2.jpg" alt=""></a>
-              </div>
-              <div class="job-list-content">
-                <h4><a href="job-details.html">Front-end developer needed</a><span class="full-time">Full-Time</span>
-                </h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum quaerat aut veniam molestiae atque
-                  dolorum omnis temporibus consequuntur saepe. Nemo atque consectetur saepe corporis odit in dicta
-                  reprehenderit, officiis, praesentium?</p>
-                <div class="job-tag">
-                  <div class="pull-left">
-                    <div class="meta-tag">
-                      <span><a href="browse-categories.html"><i class="ti-desktop"></i>Technologies</a></span>
-                      <span><i class="ti-location-pin"></i>Cupertino, CA, USA</span>
-                      <span><i class="ti-time"></i>60/Hour</span>
-                    </div>
-                  </div>
-                  <div class="pull-right">
-                    <div class="icon">
-                      <i class="ti-heart"></i>
-                    </div>
-                    <a href="job-details.html" class="btn btn-common btn-rm">Apply Job</a>
-                  </div>
+            <div class="job-list-content">
+              <h4>
+                <a href="{{ route('jobs.show', $job->id) }}">{{ $job->title }}</a>
+                <span class="full-time">Active</span>
+              </h4>
+              <p>{{ Str::limit($job->description, 120) }}</p>
+              <div class="job-tag">
+                <div class="meta-tag">
+                  <span><i class="ti-location-pin"></i> {{ $job->location }}</span>
+                  <span><i class="ti-briefcase"></i> {{ $job->company_name }}</span>
                 </div>
-              </div>
-            </div>
-            <div class="job-list">
-              <div class="thumb">
-                <a href="job-details.html"><img src="portal/assets/img/jobs/img-3.jpg" alt=""></a>
-              </div>
-              <div class="job-list-content">
-                <h4><a href="job-details.html">Senior Accountant</a><span class="part-time">Part-Time</span></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum quaerat aut veniam molestiae atque
-                  dolorum omnis temporibus consequuntur saepe. Nemo atque consectetur saepe corporis odit in dicta
-                  reprehenderit, officiis, praesentium?</p>
-                <div class="job-tag">
-                  <div class="pull-left">
-                    <div class="meta-tag">
-                      <span><a href="browse-categories.html"><i class="ti-home"></i>Finance</a></span>
-                      <span><i class="ti-location-pin"></i>Delaware, USA</span>
-                      <span><i class="ti-time"></i>60/Hour</span>
-                    </div>
-                  </div>
-                  <div class="pull-right">
-                    <div class="icon">
-                      <i class="ti-heart"></i>
-                    </div>
-                    <a href="job-details.html" class="btn btn-common btn-rm">Apply Job</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="job-list">
-              <div class="thumb">
-                <a href="job-details.html"><img src="portal/assets/img/jobs/img-4.jpg" alt=""></a>
-              </div>
-              <div class="job-list-content">
-                <h4><a href="job-details.html">Fullstack web developer needed</a><span
-                    class="full-time">Full-Time</span></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum quaerat aut veniam molestiae atque
-                  dolorum omnis temporibus consequuntur saepe. Nemo atque consectetur saepe corporis odit in dicta
-                  reprehenderit, officiis, praesentium?</p>
-                <div class="job-tag">
-                  <div class="pull-left">
-                    <div class="meta-tag">
-                      <span><a href="browse-categories.html"><i class="ti-desktop"></i>Technologies</a></span>
-                      <span><i class="ti-location-pin"></i>New York, USA</span>
-                      <span><i class="ti-time"></i>60/Hour</span>
-                    </div>
-                  </div>
-                  <div class="pull-right">
-                    <div class="icon">
-                      <i class="ti-heart"></i>
-                    </div>
-                    <a href="job-details.html" class="btn btn-common btn-rm">Apply Job</a>
-                  </div>
-                </div>
+                <a href="{{ route('jobs.show', $job->id) }}" class="btn btn-common btn-rm">Apply Job</a>
               </div>
             </div>
           </div>
-          <div class="col-md-12">
-            <div class="showing pull-left">
-              <a href="#">Showing <span>6-10</span> Of 24 Jobs</a>
-            </div>
-            <ul class="pagination pull-right">
-              <li class="active"><a href="#" class="btn btn-common"><i class="ti-angle-left"></i> prev</a></li>
-              <li><a href="#">1</a></li>
-              <li><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#">4</a></li>
-              <li><a href="#">5</a></li>
-              <li class="active"><a href="#" class="btn btn-common">Next <i class="ti-angle-right"></i></a></li>
-            </ul>
-          </div>
+          @endforeach
         </div>
       </div>
     </section>
@@ -259,78 +161,17 @@
         <h2 class="section-title">Browse Categories</h2>
         <div class="row">
           <div class="col-md-12">
+            @foreach($categories as $cat)
             <div class="col-md-3 col-sm-3 col-xs-12 f-category">
-              <a href="browse-categories.html">
+              <a href="#">
                 <div class="icon">
-                  <i class="ti-home"></i>
+                  <img src="{{ asset($cat->icon) }}" alt="{{ $cat->name }}" width="50">
                 </div>
-                <h3>Finance</h3>
-                <p>4286 jobs</p>
+                <h3>{{ $cat->name }}</h3>
+                <p>{{ \App\Models\Job::where('category_id', $cat->id)->count() }} jobs</p>
               </a>
             </div>
-            <div class="col-md-3 col-sm-3 col-xs-12 f-category">
-              <a href="browse-categories.html">
-                <div class="icon">
-                  <i class="ti-world"></i>
-                </div>
-                <h3>Sale/Markting</h3>
-                <p>2000 jobs</p>
-              </a>
-            </div>
-            <div class="col-md-3 col-sm-3 col-xs-12 f-category">
-              <a href="browse-categories.html">
-                <div class="icon">
-                  <i class="ti-book"></i>
-                </div>
-                <h3>Education/Training</h3>
-                <p>1450 jobs</p>
-              </a>
-            </div>
-            <div class="col-md-3 col-sm-3 col-xs-12 f-category">
-              <a href="browse-categories.html">
-                <div class="icon">
-                  <i class="ti-desktop"></i>
-                </div>
-                <h3>Technologies</h3>
-                <p>5100 jobs</p>
-              </a>
-            </div>
-            <div class="col-md-3 col-sm-3 col-xs-12 f-category">
-              <a href="browse-categories.html">
-                <div class="icon">
-                  <i class="ti-brush"></i>
-                </div>
-                <h3>Art/Design</h3>
-                <p>5079 jobs</p>
-              </a>
-            </div>
-            <div class="col-md-3 col-sm-3 col-xs-12 f-category">
-              <a href="browse-categories.html">
-                <div class="icon">
-                  <i class="ti-heart"></i>
-                </div>
-                <h3>Healthcare</h3>
-                <p>3235 jobs</p>
-              </a>
-            </div>
-            <div class="col-md-3 col-sm-3 col-xs-12 f-category">
-              <a href="browse-categories.html">
-                <div class="icon">
-                  <i class="ti-filter"></i>
-                </div>
-                <h3>Science</h3>
-                <p>1800 jobs</p>
-              </a>
-            </div>
-            <div class="col-md-3 col-sm-3 col-xs-12 f-category">
-              <a href="browse-categories.html">
-                <div class="icon">
-                  <i class="ti-cup"></i>
-                </div>
-                <h3>Food Services</h3>
-                <p>4286 jobs</p>
-              </a>
-            </div>
+            @endforeach
           </div>
         </div>
       </div>
@@ -497,60 +338,25 @@
     <section id="pricing-table" class="section">
       <div class="container">
         <div class="row">
+          @foreach($packages as $pkg)
           <div class="col-sm-4">
             <div class="table">
               <div class="title">
-                <h3>Pricing Plan 1</h3>
+                <h3>{{ $pkg->name }}</h3>
               </div>
               <div class="pricing-header">
-                <p class="price-value"> <sup>$</sup>0</p>
-                <p class="price-quality">/forever</p>
+                <p class="price-value">${{ $pkg->price }}</p>
+                <p class="price-quality">/{{ $pkg->duration_days }} days</p>
               </div>
               <ul class="description">
-                <li>Post 1 Job</li>
-                <li>No Featured Job</li>
-                <li>Edit Your Job Listing</li>
-                <li>Manage Application</li>
+                @foreach(explode(',', $pkg->features) as $feature)
+                  <li>{{ $feature }}</li>
+                @endforeach
               </ul>
-              <button class="btn btn-common" type="submit">Get Started</button>
+              <button class="btn btn-common" type="button">Get Started</button>
             </div>
           </div>
-          <div class="col-sm-4">
-            <div class="table" id="active-tb">
-              <div class="title">
-                <h3>Pricing Plan 2</h3>
-              </div>
-              <div class="pricing-header">
-                <p class="price-value"> <sup>$</sup>99</p>
-                <p class="price-quality">/90 DAYS</p>
-              </div>
-              <ul class="description">
-                <li>Post 3 Jobs</li>
-                <li>No Featured Job</li>
-                <li>Edit Your Job Listing</li>
-                <li>Manage Application</li>
-              </ul>
-              <button class="btn btn-common" type="submit">Get Started</button>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="table">
-              <div class="title">
-                <h3>Pricing Plan 3</h3>
-              </div>
-              <div class="pricing-header">
-                <p class="price-value"> <sup>$</sup>199</p>
-                <p class="price-quality">/180 DAYS</p>
-              </div>
-              <ul class="description">
-                <li>Post 10 Jobs</li>
-                <li>3 Featured Jobs</li>
-                <li>Edit Your Job Listing</li>
-                <li>Manage Applications</li>
-              </ul>
-              <button class="btn btn-common" type="submit">Get Started</button>
-            </div>
-          </div>
+          @endforeach
         </div>
       </div>
     </section>
@@ -695,30 +501,11 @@
         </h2>
         <div class="row">
           <div id="clients-scroller">
+            @foreach($clients as $client)
             <div class="items">
-              <img src="portal/assets/img/clients/img1.png" alt="">
+              <img src="{{ asset('storage/' . $client->logo) }}" alt="{{ $client->company_name }}">
             </div>
-            <div class="items">
-              <img src="portal/assets/img/clients/img2.png" alt="">
-            </div>
-            <div class="items">
-              <img src="portal/assets/img/clients/img3.png" alt="">
-            </div>
-            <div class="items">
-              <img src="portal/assets/img/clients/img4.png" alt="">
-            </div>
-            <div class="items">
-              <img src="portal/assets/img/clients/img5.png" alt="">
-            </div>
-            <div class="items">
-              <img src="portal/assets/img/clients/img6.png" alt="">
-            </div>
-            <div class="items">
-              <img src="portal/assets/img/clients/img6.png" alt="">
-            </div>
-            <div class="items">
-              <img src="portal/assets/img/clients/img6.png" alt="">
-            </div>
+            @endforeach
           </div>
         </div>
       </div>
