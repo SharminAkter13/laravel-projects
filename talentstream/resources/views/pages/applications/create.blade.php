@@ -1,92 +1,46 @@
-@extends('master')
+@extends('main')
 
-@section('page')
-<div class="container mt-4 p-5">
-    <h2>Create Job</h2>
+@section('content')
 
-    <form action="{{ route('jobs.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
+<div class="container-fluid p-4"> <!-- Added padding around the card -->
+    <div class="card shadow p-8 m-8"> <!-- Increased padding inside the card -->
+        <h2 class="mb-4">Apply for Job: {{ $job->title }}</h2>
+        <p><strong>Company:</strong> {{ $job->company_name ?? 'N/A' }}</p>
+        <p class="mb-4"><strong>Location:</strong> {{ $job->location ?? 'Not specified' }}</p>
 
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" name="user_email" class="form-control" required>
-        </div>
+        @if(session('error'))
+        <div class="alert alert-danger mt-3">{{ session('error') }}</div>
+        @endif
+        @if(session('success'))
+        <div class="alert alert-success mt-3">{{ session('success') }}</div>
+        @endif
 
-        <div class="mb-3">
-            <label>Title</label>
-            <input type="text" name="title" class="form-control" required>
-        </div>
+        <form action="{{ route('applications.store', ['job' => $job->id]) }}" method="POST" class="mt-4 p-3 border rounded-3 bg-light">
+            @csrf
+            <input type="hidden" name="job_id" value="{{ $job->id }}">
 
-        <div class="mb-3">
-            <label>Category</label>
-            <select name="category_id" class="form-control" required>
-                <option value="">Select Category</option>
-                @foreach($categories as $cat)
-                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                @endforeach
-            </select>
-        </div>
+            <div class="mb-3">
+                <label for="resume_submitted" class="form-label">Resume Submission Date</label>
+                <input type="datetime-local" name="resume_submitted" id="resume_submitted" class="form-control" value="{{ old('resume_submitted') }}" required>
+                @error('resume_submitted')
+                <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
 
-        <div class="mb-3">
-            <label>Company Name</label>
-            <input type="text" name="company_name" class="form-control">
-        </div>
+            <div class="mb-3">
+                <label for="cover_letter" class="form-label">Cover Letter (optional)</label>
+                <textarea name="cover_letter" id="cover_letter" class="form-control" rows="4">{{ old('cover_letter') }}</textarea>
+                @error('cover_letter')
+                <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
 
-        <div class="mb-3">
-            <label>Website</label>
-            <input type="url" name="website" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label>Location</label>
-            <input type="text" name="location" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label>Tagline</label>
-            <input type="text" name="tagline" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label>Tags (comma-separated)</label>
-            <input type="text" name="tags" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label>Description</label>
-            <textarea name="description" class="form-control" rows="5" required></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label>Application Email</label>
-            <input type="email" name="application_email" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label>Application URL</label>
-            <input type="url" name="application_url" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label>Closing Date</label>
-            <input type="date" name="closing_date" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label>Status</label>
-            <select name="status" class="form-control">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label>Cover Image</label>
-            <input type="file" name="cover_image" class="form-control">
-        </div>
-
-        <button class="btn btn-success">Create Job</button>
-        <a href="{{ route('jobs.index') }}" class="btn btn-secondary">Cancel</a>
-    </form>
+            <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                <a href="{{ route('jobs.show', $job->id) }}" class="btn btn-primary me-2">Back to Job Details</a>
+                <button type="submit" class="btn btn-success">Submit Application</button>
+            </div>
+        </form>
+    </div>
 </div>
+
 @endsection

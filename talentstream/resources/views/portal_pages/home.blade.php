@@ -172,7 +172,7 @@
                   >
                     <i class="ti-heart"></i>
                   </button>
-                  <a href="{{ route('jobs.show', $job->id) }}" class="btn btn-danger apply-job-btn">APPLY JOB</a>
+                  <a href="{{ route('applications.create', $job->id) }}" class="btn btn-danger apply-job-btn">APPLY JOB</a>
                 </div>
               </div>
             @endforeach
@@ -445,7 +445,7 @@
                 </div>
                 <a href="single-post.html">
                   <h3>
-                    Let's explore 5 cool new features in JobBoard theme
+                    Let's explore 5 cool new features in TalentStream theme
                   </h3>
                 </a>
                 <p>
@@ -528,75 +528,69 @@
 
     <!-- Clients Section -->
     <section class="clients section">
-      <div class="container">
+    <div class="container">
         <h2 class="section-title">
-          Clients & Partners
+            Clients &amp; Partners
         </h2>
         <div class="row">
-          <div id="clients-scroller">
-            @foreach($clients as $client)
-            <div class="items">
-              <img src="{{ asset('storage/' . $client->logo) }}" alt="{{ $client->company_name }}">
+            <div id="clients-scroller" class="owl-carousel owl-theme">
+                {{-- Each client item --}}
+                <div class="items">
+                    <img src="{{ asset('portal/assets/img/clients/img1.png') }}" alt="Client 1">
+                </div>
+                <div class="items">
+                    <img src="{{ asset('portal/assets/img/clients/img2.png') }}" alt="Client 2">
+                </div>
+                <div class="items">
+                    <img src="{{ asset('portal/assets/img/clients/img3.png') }}" alt="Client 3">
+                </div>
+                <div class="items">
+                    <img src="{{ asset('portal/assets/img/clients/img4.png') }}" alt="Client 4">
+                </div>
+                <div class="items">
+                    <img src="{{ asset('portal/assets/img/clients/img5.png') }}" alt="Client 5">
+                </div>
+                <div class="items">
+                    <img src="{{ asset('portal/assets/img/clients/img6.png') }}" alt="Client 6">
+                </div>
             </div>
-            @endforeach
-          </div>
         </div>
-      </div>
-    </section>
+    </div>
+</section>
+
     <!-- Client Section End -->
 
     <!-- Counter Section Start -->
-    <section id="counter">
-      <div class="container">
+   <section id="counter">
+    <div class="container">
         <div class="row">
-          <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="counting">
-              <div class="icon">
-                <i class="ti-briefcase"></i>
-              </div>
-              <div class="desc">
-                <h2>Jobs</h2>
-                <h1 class="counter">12050</h1>
-              </div>
+            @php
+                $counterItems = [
+                    ['icon' => 'ti-briefcase', 'title' => 'Jobs', 'value' => $counters['jobs']],
+                    ['icon' => 'ti-user', 'title' => 'Members', 'value' => $counters['members']],
+                    ['icon' => 'ti-write', 'title' => 'Resume', 'value' => $counters['resumes']],
+                    ['icon' => 'ti-heart', 'title' => 'Company', 'value' => $counters['companies']],
+                ];
+            @endphp
+
+            @foreach($counterItems as $item)
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="counting">
+                    <div class="icon">
+                        <i class="{{ $item['icon'] }}"></i>
+                    </div>
+                    <div class="desc">
+                        <h2>{{ $item['title'] }}</h2>
+                        <h1 class="counter">{{ $item['value'] }}</h1>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="counting">
-              <div class="icon">
-                <i class="ti-user"></i>
-              </div>
-              <div class="desc">
-                <h2>Members</h2>
-                <h1 class="counter">10890</h1>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="counting">
-              <div class="icon">
-                <i class="ti-write"></i>
-              </div>
-              <div class="desc">
-                <h2>Resume</h2>
-                <h1 class="counter">700</h1>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="counting">
-              <div class="icon">
-                <i class="ti-heart"></i>
-              </div>
-              <div class="desc">
-                <h2>Company</h2>
-                <h1 class="counter">9050</h1>
-              </div>
-            </div>
-          </div>
+            @endforeach
         </div>
-      </div>
-    </section>
-    <!-- Counter Section End -->
+    </div>
+</section>
+
+  <!-- Counter Section End -->
 
     <!-- Infobox Section Start -->
     <section class="infobox section">

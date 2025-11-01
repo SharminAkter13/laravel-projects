@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Job;
 use App\Models\Category;
+use App\Models\Company;
 use App\Models\Package;
 use App\Models\Employer;
+use App\Models\Resume;
+use App\Models\User;
 
 class PortalController extends Controller
 {
@@ -25,7 +28,14 @@ class PortalController extends Controller
 
         // Load employers as clients
         $clients = Employer::latest()->take(6)->get();
+         $counters = [
+            'jobs' => Job::count(),
+            'members' => User::count(),
+            'resumes' => Resume::count(),
+            'companies' => Company::count(),
+        ];
 
-        return view('portal_pages.home', compact('hotJobs', 'featuredJobs', 'categories', 'packages', 'clients'));
+
+            return view('portal_pages.home', compact('hotJobs', 'featuredJobs', 'categories', 'packages', 'clients', 'counters'));
     }
 }

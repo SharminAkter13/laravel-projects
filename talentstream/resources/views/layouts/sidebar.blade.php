@@ -103,6 +103,11 @@
         </li>
 
         <li class="nav-item">
+          <a class="nav-link {{ request()->is('applications*') ? 'active' : '' }}" href="{{ url('/applications') }}">
+            <i class="ni ni-folder-17 text-indigo"></i> Application
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link {{ request()->is('resumes*') ? 'active' : '' }}" href="{{ url('/resumes') }}">
             <i class="ni ni-folder-17 text-indigo"></i> Resumes
           </a>

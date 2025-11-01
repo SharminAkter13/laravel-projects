@@ -1,13 +1,16 @@
 <!-- Footer Section Start -->
 <footer>
   <!-- Footer Area Start -->
-  <section class="footer-Content">
-    <div class="container">
+  <section class="footer-Content mt-5">
+    <div class="container mt-5">
       <div class="row">
         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="widget">
             <h3 class="block-title">
-              <img src="{{ asset('portal/assets/img/logo.png') }}" class="img-responsive" alt="Footer Logo">
+            <a class="navbar-brand d-flex align-items-center mt-2" href="{{ route('portal.home') }}">
+              <img src="{{ asset('portal/assets/img/favicon.ico') }}" alt="TalentStream Logo" class="me-2 logo-img">
+              <h2 class="fw-bold text-danger mb-0">TalentStream</h2>
+            </a>
             </h3>
             <div class="textwidget">
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque lobortis tincidunt est, et euismod

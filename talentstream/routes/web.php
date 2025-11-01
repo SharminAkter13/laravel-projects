@@ -18,6 +18,7 @@ use App\Http\Controllers\{
     ResumeController,
     UserController,
     AdminDashboardController,
+    ApplicationController,
     CandidateDashboardController,
     EmployerDashboardController,
     EmployerPackageController,
@@ -218,4 +219,14 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('employer_packages', EmployerPackageController::class);
+});
+
+
+// Application 
+
+Route::middleware('auth')->group(function () {
+    Route::get('applications', [ApplicationController::class, 'index'])->name('applications.index');
+    Route::get('applications/create/{jobId}', [ApplicationController::class, 'create'])->name('applications.create');
+    Route::get('applications/{id}', [ApplicationController::class, 'show'])->name('applications.show');
+      Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('applications.store');
 });

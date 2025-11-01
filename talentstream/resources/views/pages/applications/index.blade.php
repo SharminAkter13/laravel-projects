@@ -2,45 +2,46 @@
 
 @section('page')
 <div class="container mt-4 p-5">
-    <h2>Jobs</h2>
-    <a href="{{ route('jobs.create') }}" class="btn btn-primary mb-3">+ Add Job</a>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <table class="table table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Company</th>
-                <th>Location</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($jobs as $job)
-            <tr>
-                <td>{{ $job->id }}</td>
-                <td>{{ $job->title }}</td>
-                <td>{{ $job->category->name ?? 'N/A' }}</td>
-                <td>{{ $job->company_name }}</td>
-                <td>{{ $job->location }}</td>
-                <td>{{ $job->status }}</td>
-                <td>
-                    <a href="{{ route('jobs.edit', $job->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                    <form action="{{ route('jobs.destroy', $job->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this job?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Applications</h3>
+        </div>
+        <div class="card-body">
+          @if($applications->count())
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Job</th>
+                            <th>Candidate</th>
+                            <th>Status</th>
+                            <th>Resume Submitted</th>
+                            <th>Applied Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($applications as $app)
+                        <tr>
+                            <td>{{ $app->id }}</td>
+                            <td>{{ $app->job->title }}</td>
+                            <td>{{ $app->candidate->name }}</td>
+                            <td>{{ ucfirst($app->status) }}</td>
+                            <td>{{ \Carbon\Carbon::parse($app->resume_submitted)->format('Y-m-d H:i') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($app->applied_date)->format('Y-m-d H:i') }}</td>
+                            <td>
+                                <a href="{{ route('applications.show', $app->id) }}" class="btn btn-sm btn-primary">View</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @else
+            <p class="text-center mb-0">No applications found.</p>
+            @endif
+        </div>
+    </div>
 </div>
 @endsection
