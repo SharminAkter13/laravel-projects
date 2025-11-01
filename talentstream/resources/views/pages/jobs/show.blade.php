@@ -115,9 +115,9 @@
                                         @endforeach
                                     </ul>
                                 @endif
-
+                                <br>
                                 {{-- Apply Button --}}
-                                <a href="{{ route('applications.create', $job->id) }}" class="btn btn-common">Apply for this Job Now</a>
+                                <a href="{{ route('applications.create', $job->id) }}" class="btn btn-common">Apply Now</a>
                             </div>
                         </div>
                     </div>

@@ -172,6 +172,7 @@
                   >
                     <i class="ti-heart"></i>
                   </button>
+                  <a href="{{ route('jobs.show', $job->id) }}" class="btn btn-danger apply-job-btn"> See Details</a>
                   <a href="{{ route('applications.create', $job->id) }}" class="btn btn-danger apply-job-btn">APPLY JOB</a>
                 </div>
               </div>
