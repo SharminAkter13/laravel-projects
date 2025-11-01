@@ -122,64 +122,97 @@
     <!-- Service Main Section Ends -->
 
     <!-- Find Job Section Start -->
-    <section class="find-job section">
-      <div class="container">
-        <h2 class="section-title">Hot Jobs</h2>
-        <div class="row">
-          <div class="col-md-12">
-          @foreach($hotJobs as $job)
-          <div class="job-list">
-            <div class="thumb">
-              <a href="{{ route('jobs.show', $job->id) }}">
-                <img src="{{ asset('storage/' . $job->cover_image) }}" alt="{{ $job->title }}">
-              </a>
-            </div>
-            <div class="job-list-content">
-              <h4>
-                <a href="{{ route('jobs.show', $job->id) }}">{{ $job->title }}</a>
-                <span class="full-time">Active</span>
-              </h4>
-              <p>{{ Str::limit($job->description, 120) }}</p>
-              <div class="job-tag">
-                <div class="meta-tag">
-                  <span><i class="ti-location-pin"></i> {{ $job->location }}</span>
-                  <span><i class="ti-briefcase"></i> {{ $job->company_name }}</span>
-                </div>
-                <a href="{{ route('jobs.show', $job->id) }}" class="btn btn-common btn-rm">Apply Job</a>
+<section class="find-job section">
+  <div class="container">
+    <h2 class="section-title">Hot Jobs</h2>
+    <div class="row">
+      <div class="col-md-12">
+        @foreach($hotJobs as $job)
+        <div class="job-list">
+          <div class="thumb">
+            <a href="{{ route('jobs.show', $job->id) }}">
+              <img src="{{ $job->cover_image ? asset('storage/' . $job->cover_image) : asset('images/default-job.png') }}"
+                   alt="{{ $job->title }}">
+            </a>
+          </div>
+
+          <div class="job-list-content">
+            <h4>
+              <a href="{{ route('jobs.show', $job->id) }}">{{ $job->title }}</a>
+              <span class="full-time">Full-Time</span>
+            </h4>
+
+            <p>{{ Str::limit($job->description, 120) }}</p>
+
+            <div class="job-tag">
+              <div class="meta-tag">
+
+                <span>
+                  <i class="ti-location-pin"></i>
+                  {{ $job->location ?? 'Location not specified' }}
+                </span>
+
+                <span>
+                  <i class="ti-time"></i>
+                  @if($job->closing_date)
+                    @if(\Carbon\Carbon::parse($job->closing_date)->isPast())
+                      <strong class="text-danger">Expired</strong>
+                    @else
+                      Expires on {{ \Carbon\Carbon::parse($job->closing_date)->format('M d, Y') }}
+                    @endif
+                  @else
+                    No closing date
+                  @endif
+                </span>
               </div>
             </div>
           </div>
+
+      <div class="apply-button-section">
+              
+              <button 
+                  type="button" 
+                  class="btn-favorite @if($job->is_bookmarked) bookmarked @endif"
+                  data-job-id="{{ $job->id }}"
+              >
+                  <i class="ti-heart"></i> 
+              </button>
+              
+              <a href="{{ route('jobs.show', $job->id) }}" class="btn btn-danger apply-job-btn">APPLY JOB</a>
+          </div>      
           @endforeach
-        </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
+
     <!-- Find Job Section End -->
 
     <!-- Category Section Start -->
-<section class="category section">
-    <div class="container">
-        <h2 class="section-title">Browse Categories</h2>
-        <div class="row">
-            <div class="col-md-12">
-                @foreach($categories as $cat)
-                <div class="col-md-3 col-sm-3 col-xs-12 f-category">
-                    <a href="#">
-                        <div class="icon">
-                            @if($cat->image_path)
-                                <img src="{{ asset('storage/' . $cat->image_path) }}" alt="{{ $cat->name }}" width="50">
-                            @else
-                                <img src="{{ asset('images/default-icon.png') }}" alt="No Image" width="50"> 
-                            @endif
-                        </div>
-                        <h3>{{ strtoupper($cat->name) }}</h3> 
-                        <p>{{ \App\Models\Job::where('category_id', $cat->id)->count() }} jobs</p>
-                    </a>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</section>    <!-- Category Section End -->
+      <section class="category section">
+          <div class="container">
+              <h2 class="section-title">Browse Categories</h2>
+              <div class="row">
+                  <div class="col-md-12">
+                      @foreach($categories as $cat)
+                      <div class="col-md-3 col-sm-3 col-xs-12 f-category">
+                          <a href="#">
+                              <div class="icon">
+                                  @if($cat->image_path)
+                                      <img src="{{ asset('storage/' . $cat->image_path) }}" alt="{{ $cat->name }}" width="50">
+                                  @else
+                                      <img src="{{ asset('images/default-icon.png') }}" alt="No Image" width="50"> 
+                                  @endif
+                              </div>
+                              <h3>{{ strtoupper($cat->name) }}</h3> 
+                              <p>{{ \App\Models\Job::where('category_id', $cat->id)->count() }} jobs</p>
+                          </a>
+                      </div>
+                      @endforeach
+                  </div>
+              </div>
+          </div>
+      </section>    <!-- Category Section End -->
 
     <!-- Featured Jobs Section Start -->
     <section class="featured-jobs section">

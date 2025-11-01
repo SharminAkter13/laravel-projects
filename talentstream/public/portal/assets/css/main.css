@@ -1486,6 +1486,29 @@ label {
   font-size: 14px;
   line-height: 40px;
 }
+
+
+/* customize */
+
+/* Base style for the heart icon button (from previous answer) */
+.btn-favorite {
+    background: none;
+    border: 1px solid #ccc;
+    color: #888; /* Default grey outline color */
+    padding: 8px 10px;
+    margin-right: 10px; 
+    border-radius: 50%;
+    cursor: pointer;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+/* Style when the job IS bookmarked */
+.btn-favorite.bookmarked {
+    border-color: #ff5e62; /* Red border */
+    background-color: #fff0f0; /* Light pink background */
+    color: #ff5e62; /* **Red/Coral solid color for the heart** */
+}
 /* ==========================================================================
    Clients Section
    ========================================================================== */
