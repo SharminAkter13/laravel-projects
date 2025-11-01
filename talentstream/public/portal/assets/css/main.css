@@ -2704,6 +2704,25 @@ fieldset p {
 #pricing-table #active-tb .pricing-header .price-quality {
   color: #ffffff;
 }
+#pricing-table {
+    background-color: #ffffff; /* white background for the section */
+    padding: 50px 0;
+}
+
+#pricing-table .table {
+    background-color: #ffffff; /* white background for each card */
+    border: 1px solid #ddd;    /* thin, light gray border */
+    border-radius: 8px;        /* optional: slightly rounded corners */
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease;
+}
+
+#pricing-table .table:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.158); /* subtle hover effect */
+}
+
 /* ==========================================================================
    Account Archived ADS pages style
    ========================================================================== */

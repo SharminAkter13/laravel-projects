@@ -122,69 +122,64 @@
     <!-- Service Main Section Ends -->
 
     <!-- Find Job Section Start -->
-<section class="find-job section">
-  <div class="container">
-    <h2 class="section-title">Hot Jobs</h2>
-    <div class="row">
-      <div class="col-md-12">
-        @foreach($hotJobs as $job)
-        <div class="job-list">
-          <div class="thumb">
-            <a href="{{ route('jobs.show', $job->id) }}">
-              <img src="{{ $job->cover_image ? asset('storage/' . $job->cover_image) : asset('images/default-job.png') }}"
-                   alt="{{ $job->title }}">
-            </a>
-          </div>
+    <section class="find-job section">
+      <div class="container">
+        <h2 class="section-title">Hot Jobs</h2>
+        <div class="row p-5">
+          <div class="col-md-12">
+            @foreach($hotJobs as $job)
+              <div class="job-list d-flex align-items-start flex-wrap border rounded p-3 mb-4">
+                <div class="thumb me-3">
+                  <a href="{{ route('jobs.show', $job->id) }}">
+                    <img src="{{ $job->cover_image ? asset('storage/' . $job->cover_image) : asset('images/default-job.png') }}"
+                        alt="{{ $job->title }}" class="job-thumb">
+                  </a>
+                </div>
 
-          <div class="job-list-content">
-            <h4>
-              <a href="{{ route('jobs.show', $job->id) }}">{{ $job->title }}</a>
-              <span class="full-time">Full-Time</span>
-            </h4>
+                <div class="job-list-content flex-grow-1">
+                  <h4>
+                    <a href="{{ route('jobs.show', $job->id) }}">{{ $job->title }}</a>
+                    <span class="full-time">Full-Time</span>
+                  </h4>
 
-            <p>{{ Str::limit($job->description, 120) }}</p>
+                  <p>{{ Str::limit($job->description, 120) }}</p>
 
-            <div class="job-tag">
-              <div class="meta-tag">
+                  <div class="job-tag">
+                    <div class="meta-tag">
+                      <span><i class="ti-location-pin"></i> {{ $job->location ?? 'Location not specified' }}</span>
 
-                <span>
-                  <i class="ti-location-pin"></i>
-                  {{ $job->location ?? 'Location not specified' }}
-                </span>
+                      <span>
+                        <i class="ti-time"></i>
+                        @if($job->closing_date)
+                          @if(\Carbon\Carbon::parse($job->closing_date)->isPast())
+                            <strong class="text-danger">Expired</strong>
+                          @else
+                            Expires on {{ \Carbon\Carbon::parse($job->closing_date)->format('M d, Y') }}
+                          @endif
+                        @else
+                          No closing date
+                        @endif
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-                <span>
-                  <i class="ti-time"></i>
-                  @if($job->closing_date)
-                    @if(\Carbon\Carbon::parse($job->closing_date)->isPast())
-                      <strong class="text-danger">Expired</strong>
-                    @else
-                      Expires on {{ \Carbon\Carbon::parse($job->closing_date)->format('M d, Y') }}
-                    @endif
-                  @else
-                    No closing date
-                  @endif
-                </span>
+                <div class="apply-button-section text-end mt-3 mt-md-0">
+                  <button 
+                    type="button" 
+                    class="btn-favorite @if($job->is_bookmarked) bookmarked @endif"
+                    data-job-id="{{ $job->id }}"
+                  >
+                    <i class="ti-heart"></i>
+                  </button>
+                  <a href="{{ route('jobs.show', $job->id) }}" class="btn btn-danger apply-job-btn">APPLY JOB</a>
+                </div>
               </div>
-            </div>
+            @endforeach
           </div>
-
-      <div class="apply-button-section">
-              
-              <button 
-                  type="button" 
-                  class="btn-favorite @if($job->is_bookmarked) bookmarked @endif"
-                  data-job-id="{{ $job->id }}"
-              >
-                  <i class="ti-heart"></i> 
-              </button>
-              
-              <a href="{{ route('jobs.show', $job->id) }}" class="btn btn-danger apply-job-btn">APPLY JOB</a>
-          </div>      
-          @endforeach
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
     <!-- Find Job Section End -->
 
@@ -212,7 +207,9 @@
                   </div>
               </div>
           </div>
-      </section>    <!-- Category Section End -->
+      </section>  
+        
+      <!-- Category Section End -->
 
     <!-- Featured Jobs Section Start -->
     <section class="featured-jobs section">
@@ -371,11 +368,11 @@
     <!-- Featured Jobs Section End -->
 
     <!-- Pricing Table Section -->
-    <section id="pricing-table" class="section">
+    <section id="pricing-table" class="section" style="background-color: #ffffff;">
       <div class="container">
         <div class="row">
           @foreach($packages as $pkg)
-          <div class="col-sm-4">
+          <div class="col-sm-3">
             <div class="table">
               <div class="title">
                 <h3>{{ $pkg->name }}</h3>

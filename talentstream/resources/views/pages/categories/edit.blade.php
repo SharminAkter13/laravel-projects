@@ -8,7 +8,6 @@
             <a href="{{ route('categories.index') }}" class="btn btn-secondary btn-sm">Back to Categories</a>
         </div>
         <div class="card-body">
-            {{-- UPDATED: Added enctype for file upload --}}
             <form action="{{ route('categories.update', $category->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -22,7 +21,6 @@
                     @enderror
                 </div>
                 
-                {{-- NEW: Image Path (File Upload and Current Image Display) --}}
                 <div class="mb-3">
                     <label for="image_path" class="form-label">Category Image (Optional)</label>
                     <input type="file" name="image_path" id="image_path" class="form-control @error('image_path') is-invalid @enderror">
@@ -44,14 +42,12 @@
                     @endif
                 </div>
 
-                {{-- NEW: Is Active (Checkbox) --}}
                 <div class="mb-3 form-check">
                     <input type="hidden" name="is_active" value="0"> {{-- Hidden field ensures a value is sent if unchecked --}}
                     <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1" {{ old('is_active', $category->is_active) ? 'checked' : '' }}>
                     <label class="form-check-label" for="is_active">Is Active</label>
                 </div>
 
-                {{-- NEW: Sort Order (Numeric Input) --}}
                 <div class="mb-3">
                     <label for="sort_order" class="form-label">Sort Order</label>
                     <input type="number" name="sort_order" id="sort_order" class="form-control @error('sort_order') is-invalid @enderror" value="{{ old('sort_order', $category->sort_order) }}" min="0" required>
