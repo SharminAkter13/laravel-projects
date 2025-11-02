@@ -15,6 +15,13 @@ return new class extends Migration
 Schema::create('jobs', function (Blueprint $table) {
     $table->id();
     $table->string('user_email');
+            $table->unsignedBigInteger('employer_id')->after('id');
+
+            // Add foreign key
+            $table->foreign('employer_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
     $table->string('title');
     $table->string('location')->nullable();
     $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();

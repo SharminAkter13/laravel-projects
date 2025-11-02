@@ -9,7 +9,7 @@ class PortalJobController extends Controller
 {
     // Show form
     public function create() {
-        return view('portal.post-job'); // Your blade file
+        return view('portal_pages.employers.add_job'); // Your blade file
     }
 
     // Store job

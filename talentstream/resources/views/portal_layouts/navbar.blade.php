@@ -44,7 +44,7 @@
                   <li>
                     <a href="#">Services</a>
                     <ul class="dropdown">
-                      <li><a href="{{ route('add-job') }}">Post New Job</a></li>
+                      <li><a href="{{ route('portal.job.create') }}">Post New Job</a></li>
                       <li><a href="{{ route('manage-job') }}">Manage Jobs</a></li>
                       <li><a href="{{ route('manage-application') }}">View Applications</a></li>
                       <li><a href="{{ route('browse-resume') }}">Browse Resumes</a></li>
@@ -73,10 +73,10 @@
               {{-- Post Job Button --}}
               @auth
                 @if(auth()->user()->role === 'employer')
-                  <li class="left"><a href="{{ route('post-job') }}"><i class="ti-pencil-alt"></i> Post A Job</a></li>
+                  <li class="left"><a href="{{ route('portal.job.create') }}"><i class="ti-pencil-alt"></i> Post A Job</a></li>
                 @endif
               @else
-                <li class="left"><a href="{{ route('post-job') }}"><i class="ti-pencil-alt"></i> Post A Job</a></li>
+                <li class="left"><a href="{{ route('portal.job.create') }}"><i class="ti-pencil-alt"></i> Post A Job</a></li>
               @endauth
 
               {{-- Authentication Links --}}

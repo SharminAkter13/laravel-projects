@@ -8,7 +8,7 @@ use App\Models\Category;
 class Job extends Model
 {
     protected $fillable = [
-        'user_email', 'title', 'location', 'category_id', 'tags',
+        'user_email','employer_id', 'title', 'location', 'category_id', 'tags',
         'description', 'application_email', 'application_url',
         'closing_date', 'company_name', 'website', 'tagline',
         'cover_image', 'status'
@@ -25,6 +25,10 @@ class Job extends Model
     public function viewers()
 {
     return $this->hasMany(JobView::class);
+}
+public function employers()
+{
+    return $this->belongsTo(Employer::class);
 }
 
 }

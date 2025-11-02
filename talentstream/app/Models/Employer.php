@@ -15,4 +15,8 @@ class Employer extends Model
     {
         return $this->hasMany(EmployerPackage::class);
     }
+    public function jobs()
+{
+    return $this->hasMany(Job::class);
+}
 }

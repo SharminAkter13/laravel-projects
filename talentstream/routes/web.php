@@ -26,7 +26,8 @@ use App\Http\Controllers\{
     JobViewController,
     NotificationController,
     JobLocationController,
-    PackageController
+    PackageController,
+    PortalJobController
 };
 
 /*
@@ -58,11 +59,9 @@ Route::prefix('portal_pages')->group(function () {
     Route::view('/manage-resume', 'portal_pages.candidates.manage_resume')->name('manage-resume');
 
     // Employer Views
-    Route::view('/add-job', 'portal_pages.employers.add_job')->name('add-job');
     Route::view('/browse-resume', 'portal_pages.employers.browse_resume')->name('browse-resume');
     Route::view('/manage-application', 'portal_pages.employers.manage_application')->name('manage-application');
     Route::view('/manage-job', 'portal_pages.employers.manage_job')->name('manage-job');
-    Route::view('/post-job', 'portal_pages.post_job')->name('post-job');
 });
 
 /*
@@ -229,4 +228,11 @@ Route::middleware('auth')->group(function () {
     Route::get('applications/create/{jobId}', [ApplicationController::class, 'create'])->name('applications.create');
     Route::get('applications/{id}', [ApplicationController::class, 'show'])->name('applications.show');
       Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('applications.store');
+});
+
+
+
+Route::middleware(['auth', 'employer'])->group(function () {
+    Route::get('/post-job', [PortalJobController::class, 'create'])->name('portal.job.create');
+    Route::post('/post-job', [PortalJobController::class, 'store'])->name('portal.job.store');
 });
