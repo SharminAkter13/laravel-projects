@@ -30,5 +30,9 @@ public function employers()
 {
     return $this->belongsTo(Employer::class);
 }
+   public function applications()
+    {
+        return $this->hasMany(Application::class, 'job_id');
+    }
 
 }

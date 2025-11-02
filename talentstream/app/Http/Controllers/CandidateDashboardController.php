@@ -1,29 +1,32 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Application;
+use Illuminate\Support\Facades\Auth;
+
 
 class CandidateDashboardController extends Controller
 {
-        /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
-        return view('candidate_dashboard');
-    }
+        $user = auth()->user();
+        $candidateId = $user->id;
 
+        $applications = Application::with('job.employer')
+            ->where('candidate_id', $user->id)
+            ->latest()
+            ->get();
+
+        $totalApplications = $applications->count();
+        $totalInterviews = $applications->where('status', 'interview')->count();
+        $totalOffers = $applications->where('status', 'accepted')->count();
+
+        return view('candidate_dashboard', compact(
+            'applications', 
+            'totalApplications', 
+            'totalInterviews', 
+            'totalOffers'
+        ));
+    }
 }

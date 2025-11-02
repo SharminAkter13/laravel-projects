@@ -11,4 +11,10 @@ class Candidate extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
+    public function application()
+    {
+        return $this->hasMany(application::class);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo; // Import the relationship type
 
 class Application extends Model
 {
@@ -14,7 +15,7 @@ class Application extends Model
         'candidate_id',
         'applied_date',
         'status',
-        'resume_submitted',
+        'resume', 
         'cover_letter',
     ];
 
@@ -24,6 +25,7 @@ class Application extends Model
     {
         return $this->belongsTo(Job::class);
     }
+
 
     public function candidate()
     {

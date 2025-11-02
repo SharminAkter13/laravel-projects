@@ -1,8 +1,8 @@
 @extends('master')
 
 @section('page')
-<div class="container mt-5 p-3">
-    <div class="card shadow p-4">
+<div class="container mt-5 p-8">
+    <div class="card shadow m-4">
         <h2>Application #{{ $application->id }}</h2>
         <p><strong>Job:</strong> {{ $application->job->title }}</p>
         <p><strong>Candidate:</strong> {{ $application->candidate->name }}</p>

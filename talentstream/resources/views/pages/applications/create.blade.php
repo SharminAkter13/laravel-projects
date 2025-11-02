@@ -44,13 +44,17 @@
             </div>
           @endif
 
-          <form class="form-ad" action="{{ route('applications.store', ['job' => $job->id]) }}" method="POST" enctype="multipart/form-data">
+          <form class="form-ad" 
+                action="{{ route('applications.store', ['job' => $job->id]) }}" 
+                method="POST" 
+                enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="job_id" value="{{ $job->id }}">
 
             <div class="divider mb-3">
               <h3>Job Details</h3>
             </div>
+
             <div class="form-group">
               <label class="control-label">Job Title</label>
               <input type="text" class="form-control" value="{{ $job->title }}" disabled>
@@ -71,11 +75,12 @@
             </div>
 
             <div class="form-group">
-              <label class="control-label">Upload Resume <span>(PDF, DOC, or DOCX)</span></label>
+              <label class="control-label">Upload Resume <span>(PDF, DOC, DOCX)</span></label>
               <div class="upload-button">
-                <button type="button" class="btn btn-common btn-sm">Browse</button>
-                <input id="resume_file" type="file" name="resume" accept=".pdf,.doc,.docx" required>
+                <button type="button" id="resumeTrigger" class="btn btn-common btn-sm">Browse</button>
+                <input id="resume_file" type="file" name="resume" accept=".pdf,.doc,.docx" style="display:none" required>
               </div>
+              <p id="resumeName" class="mt-2 text-muted">No file chosen</p>
               @error('resume')
                 <small class="text-danger">{{ $message }}</small>
               @enderror
@@ -105,6 +110,18 @@
     </div>
   </div>
 </section>
-<!-- Content Section End -->
+
+<script>
+  // make custom button open file selector
+  document.getElementById('resumeTrigger').addEventListener('click', function() {
+    document.getElementById('resume_file').click();
+  });
+
+  // show selected file name
+  document.getElementById('resume_file').addEventListener('change', function() {
+    const fileName = this.files[0]?.name || 'No file chosen';
+    document.getElementById('resumeName').textContent = 'Selected: ' + fileName;
+  });
+</script>
 
 @endsection

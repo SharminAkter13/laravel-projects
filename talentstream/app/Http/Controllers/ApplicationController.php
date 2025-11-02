@@ -10,14 +10,25 @@ use Illuminate\Support\Facades\Storage;
 
 class ApplicationController extends Controller
 {
-    // Display applications (admin sees all, candidate sees own)
+    /**
+     * Display a listing of the applications.
+     * Admin: sees all
+     * Candidate: sees only their own
+     * Employer (optional): sees applications for their jobs
+     */
     public function index()
     {
-        if (Auth::user()->role === 'admin') {
-            $applications = Application::with(['job', 'candidate'])->latest()->paginate(10);
-        } else {
-            // Use candidate_id from candidate table (not user id directly)
-            $candidate = Auth::user()->candidate;
+        $user = Auth::user();
+
+        // Admin: can see all applications
+        if ($user->role?->name === 'admin') {
+            $applications = Application::with(['job', 'candidate'])
+                ->latest()
+                ->paginate(10);
+        }
+        // Candidate: can see only their own
+        elseif ($user->role?->name === 'candidate') {
+            $candidate = $user->candidate;
 
             if (!$candidate) {
                 return back()->with('error', 'No candidate profile found.');
@@ -28,18 +39,39 @@ class ApplicationController extends Controller
                 ->latest()
                 ->paginate(10);
         }
+        // Employer (optional): see applications for their jobs
+        elseif ($user->role?->name === 'employer') {
+            $employer = $user->employer;
+
+            if (!$employer) {
+                return back()->with('error', 'No employer profile found.');
+            }
+
+            $applications = Application::with(['job', 'candidate'])
+                ->whereHas('job', fn($q) => $q->where('employer_id', $employer->id))
+                ->latest()
+                ->paginate(10);
+        }
+        // Anyone else — deny access
+        else {
+            abort(403, 'Unauthorized access.');
+        }
 
         return view('pages.applications.index', compact('applications'));
     }
 
-    // Show the form to apply for a job
+    /**
+     * Show the form for creating a new application.
+     */
     public function create($jobId)
     {
         $job = Job::findOrFail($jobId);
         return view('pages.applications.create', compact('job'));
     }
 
-    // Store a new application
+    /**
+     * Store a newly created application.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -48,7 +80,6 @@ class ApplicationController extends Controller
             'cover_letter' => 'nullable|string',
         ]);
 
-        // Get candidate record
         $candidate = Auth::user()->candidate;
 
         if (!$candidate) {
@@ -64,10 +95,10 @@ class ApplicationController extends Controller
             return back()->with('error', 'You have already applied to this job.');
         }
 
-        // Handle resume upload
+        // Upload resume
         $resumePath = $request->file('resume')->store('resumes', 'public');
 
-        // Create the application
+        // Create new application
         Application::create([
             'job_id' => $request->job_id,
             'candidate_id' => $candidate->id,
@@ -82,15 +113,29 @@ class ApplicationController extends Controller
             ->with('success', 'Your application has been submitted successfully!');
     }
 
-    // Show details of a single application
+    /**
+     * Display a specific application.
+     */
     public function show($id)
     {
         $application = Application::with(['job', 'candidate'])->findOrFail($id);
+        $user = Auth::user();
 
-        // Restrict candidates to see only their own applications
-        if (Auth::user()->role === 'candidate' && $application->candidate_id !== Auth::user()->candidate->id) {
+        // Candidate: can only see their own
+        if ($user->role?->name === 'candidate' && $application->candidate_id !== $user->candidate->id) {
             abort(403, 'Unauthorized access.');
         }
+
+        // Employer: can only see applications for their jobs
+        if ($user->role?->name === 'employer') {
+            $employer = $user->employer;
+
+            if (!$employer || $application->job->employer_id !== $employer->id) {
+                abort(403, 'Unauthorized access.');
+            }
+        }
+
+        // Admin: full access — no restriction
 
         return view('pages.applications.show', compact('application'));
     }
