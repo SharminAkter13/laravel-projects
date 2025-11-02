@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('candidate_id')->constrained('candidates')->cascadeOnDelete();
             $table->dateTime('applied_date');
             $table->enum('status', ['active', 'expired', 'closed'])->default('active');
-            $table->dateTime('resume_submitted');
+            $table->string('resume')->nullable();
             $table->text('cover_letter')->nullable();
             $table->timestamps();
             $table->check('resume_submitted <= applied_date');
