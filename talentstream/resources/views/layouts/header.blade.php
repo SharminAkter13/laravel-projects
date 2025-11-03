@@ -23,6 +23,18 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+
+  <style>
+        .main-content {
+            padding-left: 250px; 
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                padding-left: 0 !important; 
+            }
+        }
+    </style>
 </head>
 
 <body class="">

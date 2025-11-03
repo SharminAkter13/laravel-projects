@@ -1,8 +1,8 @@
 @extends('master')
 
 @section('page')
-<div class="container mt-4 p-8">
-    <div class="card shadow m-5">
+<div class="container mt-5 p-5 ">
+    <div class="card shadow ">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h3 class="mb-0">Applications</h3>
         </div>
