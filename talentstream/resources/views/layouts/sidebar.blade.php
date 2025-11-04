@@ -151,7 +151,6 @@
       </a>
      </li>
      <li class="nav-item">
-      {{-- This is where Applicants link goes (linking to all applications or a custom applicant list) --}}
       <a class="nav-link {{ request()->is('applicants*') ? 'active' : '' }}" href="{{ route('applications.index') }}">
        <i class="ni ni-single-02 text-pink"></i> Job Applicants
       </a>
