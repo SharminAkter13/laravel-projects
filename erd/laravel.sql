@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2025 at 04:15 AM
+-- Generation Time: Nov 04, 2025 at 07:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -127,7 +127,8 @@ INSERT INTO `categories` (`id`, `name`, `image_path`, `is_active`, `sort_order`,
 (1, 'Finances', 'category_images/RcoYCUhMhhrUnRsSvclyuFNnzBUW3r87Uwy0zauF.jpg', 1, 0, '2025-10-19 21:57:00', '2025-10-31 23:15:21'),
 (3, 'HRM', 'category_images/ioNLiDzWyiNKtamUVOmR89p2sPCvipURadCpFb6g.jpg', 1, 0, '2025-10-22 00:07:56', '2025-10-31 23:15:52'),
 (4, 'Technology', 'category_images/V02x0QZNtrjwFaQpXuCEdef4Q6MlawiPMHpFF3jR.jpg', 1, 0, '2025-10-31 23:10:48', '2025-10-31 23:15:59'),
-(5, 'Marketing', 'category_images/tkdvpE8sQNNOD1WZcYd561V8e2ryvhTVBYMGfk5r.jpg', 1, 4, '2025-11-01 20:46:22', '2025-11-01 20:46:22');
+(5, 'Marketing', 'category_images/tkdvpE8sQNNOD1WZcYd561V8e2ryvhTVBYMGfk5r.jpg', 1, 4, '2025-11-01 20:46:22', '2025-11-01 20:46:22'),
+(6, 'Marketinga', 'category_images/ayC178hhG9RJQVCd1RTjeEqzWTkUy197BWiXkEOg.jpg', 1, 0, '2025-11-01 23:44:03', '2025-11-01 23:44:03');
 
 -- --------------------------------------------------------
 
@@ -258,6 +259,7 @@ INSERT INTO `experiences` (`id`, `resume_id`, `company_name`, `title`, `exp_from
 CREATE TABLE `jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_email` varchar(255) NOT NULL,
+  `employer_id` bigint(20) UNSIGNED DEFAULT NULL,
   `title` varchar(255) NOT NULL,
   `location` varchar(255) DEFAULT NULL,
   `category_id` bigint(20) UNSIGNED DEFAULT NULL,
@@ -279,10 +281,11 @@ CREATE TABLE `jobs` (
 -- Dumping data for table `jobs`
 --
 
-INSERT INTO `jobs` (`id`, `user_email`, `title`, `location`, `category_id`, `tags`, `description`, `application_email`, `application_url`, `closing_date`, `company_name`, `website`, `tagline`, `cover_image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'sharmin@gmail.com', 'Financial Manager', 'USA', 1, 'Finance, Manager', 'Managing a company\'s financial health through activities like budgeting, financial reporting, and forecasting. Core duties include recording daily transactions, processing invoices, and reconciling accounts payable and receivable.Core duties include recording daily transactions, processing invoices, and reconciling accounts payable and receivable.', 'sharmin@gmail.com', 'http://127.0.0.1:8000/job-apply', '2025-10-25', 'it world', 'http://127.0.0.1:8000/', 'Finance', 'job_covers/DaBNigFJ6GbVb9dFzTL6slUPtJkgnh8hiH0uSqPi.jpg', 'active', '2025-10-19 22:54:25', '2025-10-31 23:39:46'),
-(2, 'sharmin@gmail.com', 'HRM', 'USA', 3, 'HRM, Manager', 'Developing and implementing HR policies and procedures\nCreating strategic HR plans\nAdministering compensation and benefits programs\nActing as a liaison between upper management and employees', 'sharmin@gmail.com', 'http://127.0.0.1:8000/job-apply', '2025-10-25', 'World Tech', 'http://127.0.0.1:8000/', 'HRM', 'job_covers/5DgvW0vkZzSIzwFBqnIKbNppfb1KSde6rg47huFw.jpg', 'active', '2025-10-22 00:09:16', '2025-10-22 00:09:16'),
-(3, 'mishel@gmail.com', 'Software Engineer', 'USA', 4, 'Engineer, Software Engineer', 'a professional who designs, develops, tests, and maintains software applications by applying engineering principles to create high-quality, dependable, and effective software.', 'mishel@gmail.com', 'http://127.0.0.1:8000/job-apply', '2025-11-22', 'TechWorld', 'http://127.0.0.1:8000/', 'TechWorld', 'job_covers/8nPNSIjF7HSMOsT5GeW48VEvXYecvK6Uo2U4mGUq.jpg', 'active', '2025-11-01 21:04:59', '2025-11-01 21:04:59');
+INSERT INTO `jobs` (`id`, `user_email`, `employer_id`, `title`, `location`, `category_id`, `tags`, `description`, `application_email`, `application_url`, `closing_date`, `company_name`, `website`, `tagline`, `cover_image`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'sharmin@gmail.com', 1, 'Financial Manager', 'USA', 1, 'Finance, Manager', 'Managing a company\'s financial health through activities like budgeting, financial reporting, and forecasting. Core duties include recording daily transactions, processing invoices, and reconciling accounts payable and receivable.Core duties include recording daily transactions, processing invoices, and reconciling accounts payable and receivable.', 'sharmin@gmail.com', 'http://127.0.0.1:8000/job-apply', '2025-10-25', 'it world', 'http://127.0.0.1:8000/', 'Finance', 'job_covers/DaBNigFJ6GbVb9dFzTL6slUPtJkgnh8hiH0uSqPi.jpg', 'active', '2025-10-19 22:54:25', '2025-10-31 23:39:46'),
+(2, 'sharmin@gmail.com', 1, 'HRM', 'USA', 3, 'HRM, Manager', 'Developing and implementing HR policies and procedures\nCreating strategic HR plans\nAdministering compensation and benefits programs\nActing as a liaison between upper management and employees', 'sharmin@gmail.com', 'http://127.0.0.1:8000/job-apply', '2025-10-25', 'World Tech', 'http://127.0.0.1:8000/', 'HRM', 'job_covers/5DgvW0vkZzSIzwFBqnIKbNppfb1KSde6rg47huFw.jpg', 'active', '2025-10-22 00:09:16', '2025-10-22 00:09:16'),
+(3, 'mishel@gmail.com', 2, 'Software Engineer', 'USA', 4, 'Engineer, Software Engineer', 'a professional who designs, develops, tests, and maintains software applications by applying engineering principles to create high-quality, dependable, and effective software.', 'mishel@gmail.com', 'http://127.0.0.1:8000/job-apply', '2025-11-22', 'TechWorld', 'http://127.0.0.1:8000/', 'TechWorld', 'job_covers/8nPNSIjF7HSMOsT5GeW48VEvXYecvK6Uo2U4mGUq.jpg', 'active', '2025-11-01 21:04:59', '2025-11-01 21:04:59'),
+(4, 'mishel@gmail.com', NULL, 'hgh', 'USA', 3, 'Engineer, Software Engineer', 'trrt', 'mishel@gmail.com', 'http://127.0.0.1:8000/job-apply', '2025-11-08', 'uyyu', 'http://127.0.0.1:8000/', 'hg', 'job_covers/AnJBzS8vluBtdDd1LBlrLhKbbbjYtgz9EHTEEDDW.jpg', 'active', '2025-11-01 23:45:31', '2025-11-01 23:45:31');
 
 -- --------------------------------------------------------
 
@@ -435,7 +438,7 @@ INSERT INTO `notifications` (`id`, `user_id`, `type`, `message`, `is_read`, `cre
 (2, 1, 'Profile', 'Your profile information was updated successfully.', 0, '2025-11-01 00:26:21', '2025-11-01 00:26:21'),
 (3, 2, 'Profile', 'Your profile information was updated successfully.', 0, '2025-11-01 00:26:23', '2025-11-01 00:26:23'),
 (4, 8, 'Profile', 'Your profile information was updated successfully.', 0, '2025-11-01 00:26:39', '2025-11-01 00:26:39'),
-(5, 6, 'Profile', 'Your profile information was updated successfully.', 0, '2025-11-01 21:01:10', '2025-11-01 21:01:10');
+(5, 6, 'Profile', 'Your profile information was updated successfully.', 1, '2025-11-01 21:01:10', '2025-11-02 00:33:28');
 
 -- --------------------------------------------------------
 
@@ -676,7 +679,8 @@ ALTER TABLE `experiences`
 --
 ALTER TABLE `jobs`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `jobs_category_id_foreign` (`category_id`);
+  ADD KEY `jobs_category_id_foreign` (`category_id`),
+  ADD KEY `jobs_employer_id_foreign` (`employer_id`);
 
 --
 -- Indexes for table `job_alerts`
@@ -804,7 +808,7 @@ ALTER TABLE `candidates`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `companies`
@@ -840,7 +844,7 @@ ALTER TABLE `experiences`
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `job_alerts`
@@ -966,7 +970,8 @@ ALTER TABLE `experiences`
 -- Constraints for table `jobs`
 --
 ALTER TABLE `jobs`
-  ADD CONSTRAINT `jobs_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `jobs_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `jobs_employer_id_foreign` FOREIGN KEY (`employer_id`) REFERENCES `employers` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `job_alerts`
