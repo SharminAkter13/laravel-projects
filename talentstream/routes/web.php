@@ -238,16 +238,12 @@ Route::middleware(['auth', 'employer'])->group(function () {
     Route::post('/post-job', [PortalJobController::class, 'store'])->name('portal.job.store');
 });
 
+// Message Route
 
-//  Message Routes 
-Route::middleware(['auth'])->group(function () {
-
-    // 📨 Inbox page (list of messages)
+Route::middleware('auth')->group(function () {
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
-
-    // 💬 View specific conversation with a user
     Route::get('/messages/{id}', [MessageController::class, 'show'])->name('messages.show');
-
-    // ✉️ Send a new message (form submit)
     Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+    Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');
+
 });

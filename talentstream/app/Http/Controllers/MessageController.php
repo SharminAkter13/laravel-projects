@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,20 +8,31 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
-    // Show inbox
+    // Show list of chats
     public function index()
     {
         $user = Auth::user();
-        $messages = Message::where('receiver_id', $user->id)
-            ->orWhere('sender_id', $user->id)
+
+        $messages = Message::where('sender_id', $user->id)
+            ->orWhere('receiver_id', $user->id)
             ->with(['sender', 'receiver'])
             ->latest()
-            ->get();
+            ->get()
+            ->unique(function ($msg) use ($user) {
+                return $msg->sender_id === $user->id ? $msg->receiver_id : $msg->sender_id;
+            });
 
-        return view('messages.index', compact('messages', 'user'));
+        return view('pages.messages.index', compact('messages', 'user'));
     }
 
-    // Show conversation with specific user
+    public function create()
+{
+    $users = User::where('id', '!=', auth()->id())->get(); // all other users
+    return view('pages.messages.create', compact('users'));
+}
+
+
+    // Show single chat
     public function show($id)
     {
         $user = Auth::user();
@@ -36,31 +46,30 @@ class MessageController extends Controller
                 $query->where('sender_id', $receiver->id)
                       ->where('receiver_id', $user->id);
             })
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at')
             ->get();
 
-        // Mark as read
         Message::where('receiver_id', $user->id)
             ->where('sender_id', $receiver->id)
             ->update(['is_read' => true]);
 
-        return view('messages.show', compact('messages', 'receiver'));
+        return view('pages.messages.show', compact('messages', 'receiver'));
     }
 
     // Send message
-    public function store(Request $request)
-    {
-        $request->validate([
-            'receiver_id' => 'required|exists:users,id',
-            'message' => 'required|string|max:5000',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'receiver_id' => 'required|exists:users,id',
+        'message' => 'required|string|max:5000',
+    ]);
 
-        Message::create([
-            'sender_id' => Auth::id(),
-            'receiver_id' => $request->receiver_id,
-            'message' => $request->message,
-        ]);
+    Message::create([
+        'sender_id' => auth()->id(),
+        'receiver_id' => $request->receiver_id,
+        'message' => $request->message,
+    ]);
 
-        return back()->with('success', 'Message sent successfully.');
-    }
+    return redirect()->route('messages.index')->with('success', 'Message sent!');
+}
 }
