@@ -26,6 +26,7 @@ use App\Http\Controllers\{
     JobViewController,
     NotificationController,
     JobLocationController,
+    MessageController,
     PackageController,
     PortalJobController
 };
@@ -235,4 +236,18 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'employer'])->group(function () {
     Route::get('/post-job', [PortalJobController::class, 'create'])->name('portal.job.create');
     Route::post('/post-job', [PortalJobController::class, 'store'])->name('portal.job.store');
+});
+
+
+//  Message Routes 
+Route::middleware(['auth'])->group(function () {
+
+    // 📨 Inbox page (list of messages)
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+
+    // 💬 View specific conversation with a user
+    Route::get('/messages/{id}', [MessageController::class, 'show'])->name('messages.show');
+
+    // ✉️ Send a new message (form submit)
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
 });

@@ -1,10 +1,29 @@
 @php
 use App\Models\Notification;
+use App\Models\Message;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 if (Auth::check()) {
-    $unreadCount = Notification::where('user_id', Auth::id())->where('is_read', false)->count();
-    $latestNotifications = Notification::where('user_id', Auth::id())->latest()->take(5)->get();
+    // 🔔 Notifications
+    $unreadCount = Notification::where('user_id', Auth::id())
+        ->where('is_read', false)
+        ->count();
+
+    $latestNotifications = Notification::where('user_id', Auth::id())
+        ->latest()
+        ->take(5)
+        ->get();
+
+    // 💬 Messages
+    $unreadMessages = Message::where('receiver_id', Auth::id())
+        ->where('is_read', false)
+        ->count();
+
+    $latestMessages = Message::where('receiver_id', Auth::id())
+        ->with('sender')
+        ->latest()
+        ->take(5);
 }
 @endphp
 
@@ -30,7 +49,6 @@ if (Auth::check()) {
 
     <!-- Right Side Navbar -->
     <ul class="navbar-nav align-items-center d-none d-md-flex">
-
       @guest
         <li class="nav-item">
           <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -41,6 +59,52 @@ if (Auth::check()) {
           </li>
         @endif
       @else
+
+        <!-- 💬 Message Icon -->
+        <li class="nav-item dropdown mx-2">
+          <a class="nav-link position-relative" href="#" id="navbarDropdownMessages" role="button"
+             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+             data-bs-placement="bottom" title="Messages">
+
+            <i class="fas fa-envelope fa-lg text-dark"></i>
+
+            @if($unreadMessages > 0)
+              <span class="badge bg-danger position-absolute top-0 start-100 translate-middle p-1 rounded-circle">
+                {{ $unreadMessages }}
+              </span>
+            @endif
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-end shadow-sm"
+               aria-labelledby="navbarDropdownMessages" style="width: 450px;">
+
+            <h6 class="dropdown-header">Messages</h6>
+
+            @forelse($latestMessages as $message)
+              <a href="{{ route('messages.show', $message->sender_id) }}"
+                 class="dropdown-item d-flex align-items-start message-mark-read {{ $message->is_read ? 'text-muted' : 'fw-bold' }}"
+                 data-id="{{ $message->id }}">
+                <div class="me-2">
+                  <i class="ni ni-chat-round text-primary"></i>
+                </div>
+                <div>
+                  <div class="small text-muted">{{ $message->created_at->diffForHumans() }}</div>
+                  <span>{{ Str::limit($message->message, 50) }}</span>
+                  <div class="small text-secondary">from {{ $message->sender->name ?? 'Unknown' }}</div>
+                </div>
+              </a>
+            @empty
+              <div class="dropdown-item text-center text-muted">
+                No new messages
+              </div>
+            @endforelse
+
+            <div class="dropdown-divider"></div>
+            <a href="{{ route('messages.index') }}" class="dropdown-item text-center text-primary fw-bold">
+              View all messages
+            </a>
+          </div>
+        </li>
 
         <!-- 🔔 Notification Bell -->
         <li class="nav-item dropdown mx-2">
@@ -57,7 +121,7 @@ if (Auth::check()) {
             @endif
           </a>
 
-          <div class="dropdown-menu dropdown-menu-end  shadow-sm"
+          <div class="dropdown-menu dropdown-menu-end shadow-sm"
                aria-labelledby="navbarDropdownNotifications" style="width: 450px;">
 
             <h6 class="dropdown-header">Notifications</h6>
@@ -154,7 +218,7 @@ if (Auth::check()) {
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<!-- Enable tooltips & AJAX mark as read -->
+<!-- Enable tooltips & AJAX mark-as-read -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     // Enable Bootstrap tooltip
@@ -163,11 +227,10 @@ document.addEventListener("DOMContentLoaded", function () {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 
-    // AJAX Mark As Read
+    // 🔔 AJAX Mark As Read (Notifications)
     document.querySelectorAll('.mark-as-read').forEach(function (item) {
         item.addEventListener('click', function (e) {
             e.preventDefault();
-
             let notificationId = this.getAttribute('data-id');
             let url = `/notifications/${notificationId}/read`;
 
@@ -179,11 +242,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
             }).then(response => {
                 if (response.ok) {
-                    // Remove bold for read notification
                     this.classList.remove('fw-bold');
                     this.querySelector('span').classList.add('text-muted');
-
-                    // Update badge count
                     let badge = document.querySelector('.badge.bg-danger');
                     if (badge) {
                         let count = parseInt(badge.textContent.trim());
@@ -191,9 +251,39 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (parseInt(badge.textContent) === 0) badge.remove();
                     }
                 }
-
-                // Optional redirect
                 window.location.href = "{{ route('notifications.index') }}";
+            });
+        });
+    });
+
+    // 💬 AJAX Mark As Read (Messages)
+    document.querySelectorAll('.message-mark-read').forEach(function (item) {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+            let messageId = this.getAttribute('data-id');
+            let url = `/messages/${messageId}/read`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                },
+            }).then(response => {
+                if (response.ok) {
+                    this.classList.remove('fw-bold');
+                    this.classList.add('text-muted');
+
+                    let badge = document.querySelector('#navbarDropdownMessages .badge.bg-danger');
+                    if (badge) {
+                        let count = parseInt(badge.textContent.trim());
+                        badge.textContent = Math.max(count - 1, 0);
+                        if (parseInt(badge.textContent) === 0) badge.remove();
+                    }
+
+                    // Redirect to conversation
+                    window.location.href = this.getAttribute('href');
+                }
             });
         });
     });
