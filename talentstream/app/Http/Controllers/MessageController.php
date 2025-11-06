@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\User;
@@ -33,30 +34,26 @@ class MessageController extends Controller
 
 
     // Show single chat
-    public function show($id)
-    {
-        $user = Auth::user();
-        $receiver = User::findOrFail($id);
+public function show($id)
+{
+    $receiver = User::findOrFail($id);
 
-        $messages = Message::where(function ($query) use ($user, $receiver) {
-                $query->where('sender_id', $user->id)
-                      ->where('receiver_id', $receiver->id);
-            })
-            ->orWhere(function ($query) use ($user, $receiver) {
-                $query->where('sender_id', $receiver->id)
-                      ->where('receiver_id', $user->id);
-            })
-            ->orderBy('created_at')
-            ->get();
+    $messages = Message::where(function ($q) use ($id) {
+        $q->where('sender_id', auth()->id())
+          ->where('receiver_id', $id);
+    })->orWhere(function ($q) use ($id) {
+        $q->where('sender_id', $id)
+          ->where('receiver_id', auth()->id());
+    })
+    ->orderBy('created_at', 'asc')
+    ->get();
 
-        Message::where('receiver_id', $user->id)
-            ->where('sender_id', $receiver->id)
-            ->update(['is_read' => true]);
-
-        return view('pages.messages.show', compact('messages', 'receiver'));
-    }
+    return view('messages.show', compact('messages', 'receiver'));
+}
 
     // Send message
+
+
 public function store(Request $request)
 {
     $request->validate([
@@ -64,12 +61,42 @@ public function store(Request $request)
         'message' => 'required|string|max:5000',
     ]);
 
-    Message::create([
+    $message = Message::create([
         'sender_id' => auth()->id(),
         'receiver_id' => $request->receiver_id,
         'message' => $request->message,
     ]);
 
-    return redirect()->route('messages.index')->with('success', 'Message sent!');
+    broadcast(new MessageSent($message))->toOthers();
+
+    return response()->json(['message' => $message->message]);
 }
+
+public function markAsRead(Message $message)
+{
+    // Ensure the current user is the receiver of the message
+    if ($message->receiver_id !== auth()->id()) {
+        return response()->json(['error' => 'Unauthorized'], 403);
+    }
+
+    // Mark the message as read
+    $message->update(['is_read' => true]);
+
+    return response()->json(['success' => true]);
+}
+public function send(Request $request)
+{
+    $message = Message::create([
+        'sender_id' => auth()->id(),
+        'receiver_id' => $request->receiver_id,
+        'message' => $request->message,
+        'is_read' => false,
+    ]);
+
+    broadcast(new \App\Events\MessageSent($message))->toOthers();
+
+    return response()->json(['message' => $message]);
+}
+
+
 }
