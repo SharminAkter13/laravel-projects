@@ -30,7 +30,8 @@ use App\Http\Controllers\{
     MessageController,
     PackageController,
     PortalJobController,
-    ResumePortalController
+    ResumePortalController,
+    BrowseCategoryController
 };
 
 /*
@@ -56,7 +57,6 @@ Route::view('/master', 'master')->name('master');
 Route::prefix('portal_pages')->group(function () {
     // Candidate Views
     Route::view('/add-resume', 'portal_pages.candidates.add_resume')->name('add-resume');
-    Route::view('/browse-categories', 'portal_pages.candidates.browse_categories')->name('browse-categories');
     Route::view('/browse-jobs', 'portal_pages.candidates.browse_jobs')->name('browse-jobs');
     Route::view('/job-alert', 'portal_pages.candidates.job_alert')->name('job-alert');
     Route::view('/manage-resume', 'portal_pages.candidates.manage_resume')->name('manage-resume');
@@ -246,9 +246,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat', Messenger::class)->name('chat.index');
     
 });
-// add resume
-Route::middleware(['auth', 'candidate'])->group(function () {
-    Route::get('/add-resume', [ResumePortalController::class, 'create'])->name('portal.add.resume');
-    Route::post('/add-resume', [ResumePortalController::class, 'store'])->name('portal.store.resume');
+
+// Resume
+
+Route::middleware('auth')->group(function() {
+    Route::get('/resume/create', [ResumePortalController::class, 'create'])->name('resume.create');
+    Route::post('/resume/store', [ResumePortalController::class, 'store'])->name('resume.store');
+});
+
+// browse category
+Route::middleware('auth')->group(function() {
+Route::get('/browse-categories', [BrowseCategoryController::class, 'index'])->name('browse.categories');
 });
 

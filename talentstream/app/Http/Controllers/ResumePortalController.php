@@ -1,86 +1,71 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\{Resume, Education, Experience, Skill};
+use Illuminate\Support\Facades\Auth;
 
 class ResumePortalController extends Controller
 {
     public function create()
     {
-        return view('portal_pages.candidate.add_resume');
+        return view('portal_pages.candidates.add_resume');
     }
 
-    // 💾 Store resume + related data
-public function store(Request $request)
-{
-    $data = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email',
-        'profession_title' => 'nullable|string|max:255',
-        'location' => 'nullable|string|max:255',
-        'web' => 'nullable|string|max:255',
-        'pre_hour' => 'nullable|string|max:255',
-        'age' => 'nullable|integer',
-        'cover_image' => 'nullable|image|mimes:jpg,jpeg,png',
-    ]);
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'profession_title' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'web' => 'nullable|string|max:255',
+            'pre_hour' => 'nullable|string|max:255',
+            'age' => 'nullable|integer',
+            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-    // Upload cover image
-    if ($request->hasFile('cover_image')) {
-        $data['cover_image'] = $request->file('cover_image')->store('covers', 'public');
-    }
+        $data['user_id'] = Auth::id();
 
-    // Create Resume
-    $resume = Resume::create($data);
+        if ($request->hasFile('cover_image')) {
+            $data['cover_image'] = $request->file('cover_image')->store('covers', 'public');
+        }
 
-    // Education entries
-    if ($request->has('educations')) {
-        foreach ($request->educations as $edu) {
-            $eduData = [
-                'resume_id' => $resume->id,
-                'degree' => $edu['degree'] ?? null,
-                'field_of_study' => $edu['field_of_study'] ?? null,
-                'school' => $edu['school'] ?? null,
-                'edu_from' => $edu['edu_from'] ?? null,
-                'edu_to' => $edu['edu_to'] ?? null,
-                'edu_description' => $edu['edu_description'] ?? null,
-            ];
-            if (isset($edu['edu_logo']) && $edu['edu_logo'] instanceof \Illuminate\Http\UploadedFile) {
-                $eduData['edu_logo'] = $edu['edu_logo']->store('edu_logos', 'public');
+        $resume = Resume::create($data);
+
+        // Education
+        if ($request->filled('educations')) {
+            foreach ($request->educations as $edu) {
+                if (!empty($edu['degree'])) {
+                    if (isset($edu['edu_logo']) && $edu['edu_logo'] instanceof \Illuminate\Http\UploadedFile) {
+                        $edu['edu_logo'] = $edu['edu_logo']->store('edu_logos', 'public');
+                    }
+                    $resume->educations()->create($edu);
+                }
             }
-            Education::create($eduData);
         }
-    }
 
-    // Experience entries
-    if ($request->has('experiences')) {
-        foreach ($request->experiences as $exp) {
-            $expData = [
-                'resume_id' => $resume->id,
-                'company_name' => $exp['company_name'] ?? null,
-                'title' => $exp['title'] ?? null,
-                'exp_from' => $exp['exp_from'] ?? null,
-                'exp_to' => $exp['exp_to'] ?? null,
-                'exp_description' => $exp['exp_description'] ?? null,
-            ];
-            if (isset($exp['exp_logo']) && $exp['exp_logo'] instanceof \Illuminate\Http\UploadedFile) {
-                $expData['exp_logo'] = $exp['exp_logo']->store('exp_logos', 'public');
+        // Experience
+        if ($request->filled('experiences')) {
+            foreach ($request->experiences as $exp) {
+                if (!empty($exp['company_name'])) {
+                    if (isset($exp['exp_logo']) && $exp['exp_logo'] instanceof \Illuminate\Http\UploadedFile) {
+                        $exp['exp_logo'] = $exp['exp_logo']->store('exp_logos', 'public');
+                    }
+                    $resume->experiences()->create($exp);
+                }
             }
-            Experience::create($expData);
         }
-    }
 
-    // Skills entries
-    if ($request->has('skills')) {
-        foreach ($request->skills as $skill) {
-            Skill::create([
-                'resume_id' => $resume->id,
-                'skill_name' => $skill['skill_name'] ?? null,
-                'skill_percent' => $skill['skill_percent'] ?? null,
-            ]);
+        // Skills
+        if ($request->filled('skills')) {
+            foreach ($request->skills as $skill) {
+                if (!empty($skill['skill_name'])) {
+                    $resume->skills()->create($skill);
+                }
+            }
         }
-    }
 
-return redirect()->back()->with('success', 'Resume has Successfully Created.');
-}
+        return redirect()->route('resume.create')->with('success', 'Resume has been successfully created.');
+    }
 }

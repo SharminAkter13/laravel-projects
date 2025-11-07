@@ -28,7 +28,7 @@
                     <a href="#">Services </a>
                     <ul class="dropdown">
                       <li><a href="{{ route('browse-jobs') }}">Browse Jobs</a></li>
-                      <li><a href="{{ route('browse-categories') }}">Job Categories</a></li>
+                      <li><a href="{{ route('browse.categories') }}">Job Categories</a></li>
                       <li><a href="{{ route('add-resume') }}">Add Resume</a></li>
                       <li><a href="{{ route('manage-resume') }}">Manage Resumes</a></li>
                       <li><a href="{{ route('job-alert') }}">Job Alerts</a></li>
