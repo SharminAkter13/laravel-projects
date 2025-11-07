@@ -1,5 +1,4 @@
-<div class="container-fluid p-4">
-
+<div class="container-fluid messenger-app" >
     <div class="row gx-0" style="min-height: 70vh; border: 1px solid #ddd; border-radius: 8px;">
 
         {{-- Conversation List --}}

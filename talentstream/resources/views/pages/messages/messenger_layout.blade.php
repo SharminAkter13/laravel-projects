@@ -1,8 +1,6 @@
-@extends('master') 
+// resources/views/messenger_layout.blade.php
+@extends('layouts.plain') // <-- CHANGE THIS LINE
 
 @section('page')
-@vite(['resources/js/app.js'])
-@livewireScripts
-
     @livewire('messenger')
 @endsection
