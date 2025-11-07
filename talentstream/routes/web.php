@@ -29,7 +29,8 @@ use App\Http\Controllers\{
     JobLocationController,
     MessageController,
     PackageController,
-    PortalJobController
+    PortalJobController,
+    ResumePortalController
 };
 
 /*
@@ -245,3 +246,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat', Messenger::class)->name('chat.index');
     
 });
+// add resume
+Route::middleware(['auth', 'candidate'])->group(function () {
+    Route::get('/add-resume', [ResumePortalController::class, 'create'])->name('portal.add.resume');
+    Route::post('/add-resume', [ResumePortalController::class, 'store'])->name('portal.store.resume');
+});
+
