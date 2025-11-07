@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Livewire\Messenger;
 
 // Controllers
 use App\Http\Controllers\{
@@ -238,12 +239,9 @@ Route::middleware(['auth', 'employer'])->group(function () {
     Route::post('/post-job', [PortalJobController::class, 'store'])->name('portal.job.store');
 });
 
-// Message Route
+// Messenger
 
 Route::middleware('auth')->group(function () {
-    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
-    Route::get('/messages/{id}', [MessageController::class, 'show'])->name('messages.show');
-    Route::post('/messages/send', [MessageController::class, 'send'])->name('messages.send');
-    Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');
-    Route::post('/messages/{message}/read', [MessageController::class, 'markAsRead'])->name('messages.read');
+    Route::get('/chat', Messenger::class)->name('chat.index');
+    
 });

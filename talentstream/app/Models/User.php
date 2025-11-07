@@ -69,7 +69,7 @@ class User extends Authenticatable
             'admin' => route('admin.dashboard'),
             'candidate' => route('candidate.dashboard'),
             'employer' => route('employer.dashboard'),
-            default => route('login'), // fallback if no role matched
+            default => route('login'),
         };
     }
 
@@ -94,14 +94,28 @@ class User extends Authenticatable
         }
     }
 
+    // Messages relationships using conversations
     public function sentMessages()
-{
-    return $this->hasMany(Message::class, 'sender_id');
-}
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
 
-public function receivedMessages()
-{
-    return $this->hasMany(Message::class, 'receiver_id');
-}
+    public function conversations()
+    {
+        return Conversation::where('user_one', $this->id)
+            ->orWhere('user_two', $this->id)
+            ->get();
+    }
 
+    // Get all messages received by this user (through conversations)
+    public function receivedMessages()
+    {
+        $userId = $this->id;
+
+        return Message::whereHas('conversation', function ($q) use ($userId) {
+            $q->where('user_one', $userId)
+              ->orWhere('user_two', $userId);
+        })
+        ->where('sender_id', '!=', $userId);
+    }
 }

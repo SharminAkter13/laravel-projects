@@ -137,6 +137,11 @@
        <i class="ni ni-paper-diploma text-danger"></i> My Resume
       </a>
      </li>
+     <li class="nav-item">
+      <a class="nav-link {{ request()->is('chat*') ? 'active' : '' }}" href="{{ route('chat.index') }}">
+          <i class="fas fa-comments text-primary"></i> Messenger
+      </a>
+    </li>
 
     @elseif($role === 'employer')
      {{-- ----------------- EMPLOYER MENU ----------------- --}}
@@ -160,6 +165,12 @@
        <i class="ni ni-box-2 text-info"></i> My Packages
       </a>
      </li>
+          <li class="nav-item">
+      <a class="nav-link {{ request()->is('chat*') ? 'active' : '' }}" href="{{ route('chat.index') }}">
+          <i class="fas fa-comments text-primary"></i> Messenger
+      </a>
+    </li>
+
     @endif
    </ul>
 
