@@ -233,16 +233,16 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
-
-// All chat routes should require authentication
+// message route
 
 Route::middleware('auth')->group(function () {
-    // This route serves the main chat interface (chat.blade.php)
-    // The link in your sidebar uses this named route: route('chat.index')
     Route::get('/chat', [MessageController::class, 'index'])->name('chat.index');
+    Route::get('/chat/contacts', [MessageController::class, 'getContacts']);
+    Route::get('/chat/messages/{otherUserId}', [MessageController::class, 'getMessages']);
+    Route::post('/chat/send', [MessageController::class, 'sendMessage']);
 });
 
+// job post route
 Route::middleware(['auth', 'employer'])->group(function () {
     Route::get('/post-job', [PortalJobController::class, 'create'])->name('portal.job.create');
     Route::post('/post-job', [PortalJobController::class, 'store'])->name('portal.job.store');

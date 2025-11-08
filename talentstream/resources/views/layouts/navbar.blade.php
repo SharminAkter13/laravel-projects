@@ -1,8 +1,14 @@
-php
+@php
 use App\Models\Notification;
 use App\Models\Message;
-use Illuminate\Support\Str;
+use App\Models\Conversation;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
+$unreadCount = 0;
+$latestNotifications = collect([]);
+$unreadMessages = 0;
+$latestMessages = collect([]);
 
 if (Auth::check()) {
     // 🔔 Notifications
@@ -15,12 +21,18 @@ if (Auth::check()) {
         ->take(5)
         ->get();
 
-    // 💬 Messages
-    $unreadMessages = Message::where('receiver_id', Auth::id())
+    // 💬 Messages (fixed)
+    $conversationIds = Conversation::where('user_one', Auth::id())
+        ->orWhere('user_two', Auth::id())
+        ->pluck('id');
+
+    $unreadMessages = Message::whereIn('conversation_id', $conversationIds)
+        ->where('sender_id', '!=', Auth::id()) // only messages sent by others
         ->where('is_read', false)
         ->count();
 
-    $latestMessages = Message::where('receiver_id', Auth::id())
+    $latestMessages = Message::whereIn('conversation_id', $conversationIds)
+        ->where('sender_id', '!=', Auth::id())
         ->with('sender')
         ->latest()
         ->take(5)
@@ -31,12 +43,10 @@ if (Auth::check()) {
 <nav class="navbar navbar-top navbar-expand-md navbar-light bg-light fixed-top shadow-sm" id="navbar-main">
   <div class="container-fluid">
 
-    <!-- Brand -->
     <a class="h4 mb-0 text-dark text-uppercase d-none d-lg-inline-block nav-link fw-bold" href="{{ url('/dashboard') }}">
       Dashboard
     </a>
 
-    <!-- Search Form -->
     <form class="navbar-search navbar-search-light form-inline mr-3 d-none d-md-flex ml-lg-auto">
       <div class="form-group mb-0">
         <div class="input-group input-group-alternative">
@@ -48,7 +58,6 @@ if (Auth::check()) {
       </div>
     </form>
 
-    <!-- Right Side Navbar -->
     <ul class="navbar-nav align-items-center d-none d-md-flex">
       @guest
         <li class="nav-item">
@@ -61,13 +70,8 @@ if (Auth::check()) {
         @endif
       @else
 
-        <!-- 💬 Message Icon -->
-        <li class="nav-item dropdown mx-2">
-          <a class="nav-link position-relative" href="#" id="navbarDropdownMessages" role="button"
-             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-             data-bs-placement="bottom" title="Messages">
-
-            <i class="fas fa-envelope fa-lg text-dark"></i>
+        <li class="nav-item mx-2"> <a class="nav-link position-relative" href="{{ route('chat.index') }}" id="navbarDropdownMessages" role="button"
+             data-bs-placement="bottom" title="Messages"> <i class="fas fa-envelope fa-lg text-dark"></i>
 
             @if($unreadMessages > 0)
               <span class="badge bg-danger position-absolute top-0 start-100 translate-middle p-1 rounded-circle">
@@ -75,39 +79,7 @@ if (Auth::check()) {
               </span>
             @endif
           </a>
-
-          <div class="dropdown-menu dropdown-menu-end shadow-sm"
-               aria-labelledby="navbarDropdownMessages" style="width: 450px;">
-
-            <h6 class="dropdown-header">Messages</h6>
-
-            @forelse($latestMessages as $message)
-              <a href="{{ route('messages.show', $message->sender_id) }}"
-                 class="dropdown-item d-flex align-items-start message-mark-read {{ $message->is_read ? 'text-muted' : 'fw-bold' }}"
-                 data-id="{{ $message->id }}">
-                <div class="me-2">
-                  <i class="ni ni-chat-round text-primary"></i>
-                </div>
-                <div>
-                  <div class="small text-muted">{{ $message->created_at->diffForHumans() }}</div>
-                  <span>{{ Str::limit($message->message, 50) }}</span>
-                  <div class="small text-secondary">from {{ $message->sender->name ?? 'Unknown' }}</div>
-                </div>
-              </a>
-            @empty
-              <div class="dropdown-item text-center text-muted">
-                No new messages
-              </div>
-            @endforelse
-
-            <div class="dropdown-divider"></div>
-            <a href="{{ route('messages.index') }}" class="dropdown-item text-center text-primary fw-bold">
-              View all messages
-            </a>
-          </div>
         </li>
-
-        <!-- 🔔 Notification Bell -->
         <li class="nav-item dropdown mx-2">
           <a class="nav-link position-relative" href="#" id="navbarDropdownNotifications" role="button"
              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -139,19 +111,6 @@ if (Auth::check()) {
                   <span class="{{ $notification->is_read ? 'text-muted' : 'fw-bold' }}">
                     {{ Str::limit($notification->message, 60) }}
                   </span>
-    <div class="container-fluid">
-
-        <a class="h4 mb-0 text-dark text-uppercase d-none d-lg-inline-block nav-link fw-bold" href="{{ url('/dashboard') }}">
-            Dashboard
-        </a>
-
-        <form class="navbar-search navbar-search-light form-inline mr-3 d-none d-md-flex ml-lg-auto">
-            <div class="form-group mb-0">
-                <div class="input-group input-group-alternative">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    </div>
-                    <input class="form-control" placeholder="Search" type="text">
                 </div>
               </a>
             @empty
@@ -167,7 +126,6 @@ if (Auth::check()) {
           </div>
         </li>
 
-        <!-- 👤 User Dropdown -->
         <li class="nav-item dropdown">
           <a class="nav-link pr-0" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="media align-items-center">
@@ -182,7 +140,6 @@ if (Auth::check()) {
               </div>
             </div>
           </a>
-        </form>
 
           <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow shadow-sm">
             <div class="dropdown-header noti-title">
@@ -214,15 +171,11 @@ if (Auth::check()) {
       @endguest
     </ul>
   </div>
-        <livewire:notification-badge />
-        
-    </div>
+
 </nav>
 
-<!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<!-- Enable tooltips & AJAX mark-as-read -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     // Enable Bootstrap tooltips
@@ -248,6 +201,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 💬 AJAX Mark As Read (Messages)
+    // NOTE: This logic for messages is now only relevant if you want to click a specific message
+    // inside the chat area to mark it read, not for the icon itself. The icon now navigates.
     document.querySelectorAll('.message-mark-read').forEach(item => {
         item.addEventListener('click', function (e) {
             e.preventDefault();
@@ -277,22 +232,12 @@ Echo.private('chat.{{ Auth::id() }}')
             const newBadge = document.createElement('span');
             newBadge.className = 'badge bg-danger position-absolute top-0 start-100 translate-middle p-1 rounded-circle';
             newBadge.textContent = '1';
+            // The message icon link still uses the ID 'navbarDropdownMessages'
             document.querySelector('#navbarDropdownMessages').appendChild(newBadge);
         } else {
             badge.textContent = parseInt(badge.textContent.trim()) + 1;
         }
 
-        const dropdown = document.querySelector('#navbarDropdownMessages + .dropdown-menu');
-        dropdown.insertAdjacentHTML('afterbegin', `
-            <a href="/messages/${e.message.sender_id}" class="dropdown-item d-flex align-items-start fw-bold">
-                <div class="me-2"><i class="ni ni-chat-round text-primary"></i></div>
-                <div>
-                    <div class="small text-muted">just now</div>
-                    <span>${e.message.message}</span>
-                    <div class="small text-secondary">from ${e.message.sender.name}</div>
-                </div>
-            </a>
-        `);
     });
 @endif
 </script>

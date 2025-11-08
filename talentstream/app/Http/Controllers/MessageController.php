@@ -7,52 +7,66 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class MessageController extends Controller
 {
-    /**
-     * Show the main chat interface view.
-     */
     public function index()
     {
-        // This will load the Blade file where the JavaScript resides.
-        return view('chat');
+        return view('pages.messages.index');
     }
 
     /**
-     * Get a list of users (contacts) to chat with.
-     * Assuming 'role' is a field on the User model.
+     * Fetch chat contacts based on user role
      */
     public function getContacts()
     {
         $user = Auth::user();
 
-        // Determine the target role (Employer chats with Candidate, and vice-versa)
-        $targetRole = ($user->role === 'Candidate') ? 'Employer' : 'Candidate';
+        // Define role IDs (adjust if different in your DB)
+        $ROLE_ADMIN     = 1;
+        $ROLE_CANDIDATE = 2;
+        $ROLE_EMPLOYER  = 3;
 
-        // Fetch contacts who have the target role, excluding the current user.
-        $contacts = User::where('role', $targetRole)
-            ->where('id', '!=', $user->id)
-            ->select('id', 'name', 'role') // Only select necessary fields
-            ->get();
+        // Determine which contacts the user can see
+        if ($user->role_id == $ROLE_CANDIDATE) {
+            // Candidate sees Employers
+            $contacts = User::where('role_id', $ROLE_EMPLOYER)
+                ->where('id', '!=', $user->id)
+                ->select('id', 'name', 'role_id')
+                ->get();
+        } elseif ($user->role_id == $ROLE_EMPLOYER) {
+            // Employer sees Candidates
+            $contacts = User::where('role_id', $ROLE_CANDIDATE)
+                ->where('id', '!=', $user->id)
+                ->select('id', 'name', 'role_id')
+                ->get();
+        } elseif ($user->role_id == $ROLE_ADMIN) {
+            // Admin sees everyone except themselves
+            $contacts = User::where('id', '!=', $user->id)
+                ->select('id', 'name', 'role_id')
+                ->get();
+        } else {
+            $contacts = collect(); // Empty collection
+        }
 
         return response()->json($contacts);
     }
 
     /**
-     * Get messages for a specific conversation ID (or create conversation if needed).
+     * Retrieve all messages for a conversation between two users
      */
     public function getMessages($otherUserId)
     {
         $currentUserId = Auth::id();
 
-        // Find existing conversation (user_one, user_two or user_two, user_one)
+        // Find existing conversation between two users
         $conversation = Conversation::where(function ($q) use ($currentUserId, $otherUserId) {
-                $q->where('user_one', $currentUserId)->where('user_two', $otherUserId);
+                $q->where('user_one', $currentUserId)
+                  ->where('user_two', $otherUserId);
             })
             ->orWhere(function ($q) use ($currentUserId, $otherUserId) {
-                $q->where('user_one', $otherUserId)->where('user_two', $currentUserId);
+                $q->where('user_one', $otherUserId)
+                  ->where('user_two', $currentUserId);
             })
             ->first();
 
@@ -61,13 +75,10 @@ class MessageController extends Controller
 
         if ($conversation) {
             $conversationId = $conversation->id;
-            // Eager load sender relationship
             $messages = $conversation->messages()
                 ->with('sender:id,name')
-                ->latest() // Get newest messages last
-                ->get()
-                ->sortBy('created_at')
-                ->values(); // Re-index keys
+                ->orderBy('created_at', 'asc')
+                ->get();
         }
 
         return response()->json([
@@ -77,7 +88,7 @@ class MessageController extends Controller
     }
 
     /**
-     * Send a new message.
+     * Send a new message and create a conversation if needed
      */
     public function sendMessage(Request $request)
     {
@@ -90,26 +101,27 @@ class MessageController extends Controller
         $receiverId = $request->receiver_id;
         $text = $request->text;
 
-        // 1. Find or Create Conversation
+        // Find or create conversation
         $conversation = Conversation::where(function ($q) use ($currentUserId, $receiverId) {
-                $q->where('user_one', $currentUserId)->where('user_two', $receiverId);
+                $q->where('user_one', $currentUserId)
+                  ->where('user_two', $receiverId);
             })
             ->orWhere(function ($q) use ($currentUserId, $receiverId) {
-                $q->where('user_one', $receiverId)->where('user_two', $currentUserId);
+                $q->where('user_one', $receiverId)
+                  ->where('user_two', $currentUserId);
             })
             ->first();
 
-        // If conversation doesn't exist, create it (sorted IDs for consistency)
         if (!$conversation) {
             $ids = [$currentUserId, $receiverId];
-            sort($ids);
+            sort($ids); // Ensure consistent order
             $conversation = Conversation::create([
                 'user_one' => $ids[0],
                 'user_two' => $ids[1],
             ]);
         }
 
-        // 2. Create Message
+        // Create and store message
         $message = Message::create([
             'conversation_id' => $conversation->id,
             'sender_id' => $currentUserId,
@@ -117,10 +129,9 @@ class MessageController extends Controller
             'is_read' => false,
         ]);
 
-        // Return the new message data for immediate display on the client
         return response()->json([
             'status' => 'success',
-            'message' => $message->load('sender:id,name'), // Load sender for display
+            'message' => $message->load('sender:id,name'),
         ]);
     }
 }

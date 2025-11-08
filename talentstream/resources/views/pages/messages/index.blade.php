@@ -1,173 +1,133 @@
 @extends('master')
 
 @section('page')
-<div class="container-fluid py-4 h-100">
-    <div id="app-container" class="bg-white rounded-3 shadow-lg overflow-hidden d-flex flex-column flex-md-row" style="min-height: 80vh;">
-        <!-- Sidebar (Contacts) -->
-        <div class="col-md-3 bg-light border-end d-flex flex-column" style="min-width: 250px;">
-            <div class="p-3 border-bottom bg-primary text-white shadow-sm">
-                <h3 class="h5 fw-bold mb-1">Chat Contacts</h3>
-                <p class="small m-0 text-white opacity-75">{{ auth()->user()->name }} ({{ auth()->user()->role }})</p>
-            </div>
-            <div id="contact-list" class="flex-grow-1 overflow-y-auto">
-                <div class="p-4 text-secondary small">Loading contacts...</div>
-            </div>
+<div class="container-fluid m-5 p-5">
+    <div class="row">
+        <!-- Contact list -->
+        <div class="col-md-4 border-end" style="height: 80vh; overflow-y: auto;">
+            <h5 class="text-center bg-primary text-white py-2">Chat Contacts</h5>
+            <ul id="contactList" class="list-group list-group-flush"></ul>
+            <div id="contactError" class="text-danger text-center mt-2" style="display:none;">Error loading contacts.</div>
         </div>
 
-        <!-- Main Chat Area -->
-        <div id="main-chat" class="col-md-9 d-flex flex-column">
-            <div id="chat-header" class="p-3 border-bottom bg-white shadow-sm">
-                <h3 class="h5 fw-bold text-secondary m-0">Select a contact to start chatting!</h3>
+        <!-- Chat area -->
+        <div class="col-md-8" style="height: 80vh;">
+            <div id="chatHeader" class="p-3 border-bottom">
+                <h5 id="chatUserName" class="mb-0 text-muted">Select a contact to start chatting!</h5>
             </div>
-            <div id="chat-content" class="flex-grow-1 d-flex align-items-center justify-content-center bg-light p-4">
-                <div class="text-secondary text-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-chat-dots d-block mx-auto mb-2" viewBox="0 0 16 16">
-                        <path d="M5 13H1.5a.5.5 0 0 1 0-1H5v1zm6.5 0h-2a.5.5 0 0 1 0-1h2v1zM11 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m0 2v1h1v-1z"/>
-                        <path d="M12.186 16c-.722 0-1.12.355-1.189.593-.11.378.118.823.5 1.096.345.244.757.382 1.258.382 1.34 0 2.2-.67 2.2-2.176 0-1.177-.662-1.93-1.636-2.126.96-.28 1.57-.96 1.57-1.898 0-1.29-.86-2.115-1.895-2.115-.815 0-1.378.375-1.618.73-.257.387-.197.87.168 1.137.318.238.74.37 1.258.37 1.11 0 1.63.498 1.63 1.328 0 .848-.485 1.323-1.282 1.323-.465 0-.825-.133-1.155-.38l-.134-.1-.137-.095c-.347-.238-.6-.395-1.01-.395-.91 0-1.46.61-1.46 1.48 0 .89.59 1.48 1.46 1.48.51 0 .85-.14 1.15-.38z"/>
-                    </svg>
+
+            <div id="chatMessages" class="p-3" style="height: 60vh; overflow-y: auto;">
+                <div class="text-center text-muted mt-5">
+                    <i class="bi bi-chat-dots" style="font-size: 3rem;"></i>
                     <p>Your contacts will appear on the left.</p>
                 </div>
+            </div>
+
+            <div class="p-3 border-top d-flex">
+                <input type="text" id="messageInput" class="form-control me-2" placeholder="Type a message..." disabled>
+                <button id="sendButton" class="btn btn-primary" disabled>Send</button>
             </div>
         </div>
     </div>
 </div>
 
-{{-- Axios CDN --}}
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
 <script>
-const userId = {{ auth()->id() }};
-let currentReceiver = null;
+document.addEventListener('DOMContentLoaded', () => {
+    const contactList = document.getElementById('contactList');
+    const chatUserName = document.getElementById('chatUserName');
+    const chatMessages = document.getElementById('chatMessages');
+    const messageInput = document.getElementById('messageInput');
+    const sendButton = document.getElementById('sendButton');
+    const contactError = document.getElementById('contactError');
 
-// Load contacts on page load
-document.addEventListener('DOMContentLoaded', loadContacts);
+    let currentReceiverId = null;
+    let conversationId = null;
 
-// Fetch contacts
-function loadContacts() {
-    axios.get('/chat/contacts')
-        .then(res => {
-            const contacts = res.data;
-            const list = document.getElementById('contact-list');
-            if (!contacts.length) {
-                list.innerHTML = `<div class="p-4 text-secondary small">No contacts available.</div>`;
+    // ✅ Load contacts
+    fetch('{{ url("/chat/contacts") }}')
+        .then(response => response.json())
+        .then(data => {
+            contactList.innerHTML = '';
+            if (!Array.isArray(data) || data.length === 0) {
+                contactList.innerHTML = '<li class="list-group-item text-muted text-center">No contacts found</li>';
                 return;
             }
 
-            let html = '<div class="list-group list-group-flush">';
-            contacts.forEach(c => {
-                html += `
-                    <button type="button" class="list-group-item list-group-item-action border-bottom"
-                        data-id="${c.id}" data-name="${c.name}">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                                ${c.name.charAt(0).toUpperCase()}
-                            </div>
-                            <div class="flex-grow-1">
-                                <div class="fw-semibold text-dark">${c.name}</div>
-                                <div class="small text-secondary">${c.role}</div>
-                            </div>
-                        </div>
-                    </button>`;
-            });
-            html += '</div>';
-            list.innerHTML = html;
-
-            // Add click listeners
-            list.querySelectorAll('button').forEach(btn => {
-                btn.addEventListener('click', () => openChat(btn.dataset.id, btn.dataset.name));
+            data.forEach(contact => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item list-group-item-action';
+                li.textContent = contact.name;
+                li.style.cursor = 'pointer';
+                li.addEventListener('click', () => loadMessages(contact));
+                contactList.appendChild(li);
             });
         })
-        .catch(err => {
-            console.error(err);
-            document.getElementById('contact-list').innerHTML = `<div class="p-4 text-danger small">Error loading contacts.</div>`;
+        .catch(() => {
+            contactError.style.display = 'block';
         });
-}
 
-// Open a chat with selected contact
-function openChat(id, name) {
-    currentReceiver = id;
-    document.getElementById('chat-header').innerHTML = `<h5 class="fw-bold text-dark m-0">${name}</h5>`;
-    document.getElementById('chat-content').innerHTML = `
-        <div id="chat-history" class="flex-grow-1 p-4 overflow-y-auto"></div>
-        <div class="p-3 bg-white border-top">
-            <div class="input-group">
-                <input type="text" id="message-input" class="form-control rounded-start-pill shadow-sm" placeholder="Type a message..." />
-                <button id="send-btn" class="btn btn-primary rounded-end-pill shadow-sm">Send</button>
-            </div>
-        </div>
-    `;
-    loadMessages(id);
-    attachSendHandler();
-}
+    // ✅ Load messages for selected contact
+    function loadMessages(contact) {
+        currentReceiverId = contact.id;
+        chatUserName.textContent = contact.name;
+        messageInput.disabled = false;
+        sendButton.disabled = false;
+        chatMessages.innerHTML = '<p class="text-center text-muted">Loading messages...</p>';
 
-// Load existing messages
-function loadMessages(otherId) {
-    axios.get(`/chat/messages/${otherId}`)
-        .then(res => {
-            const messages = res.data.messages || [];
-            const chatHistory = document.getElementById('chat-history');
-            if (!messages.length) {
-                chatHistory.innerHTML = '<div class="text-center text-secondary mt-4">No messages yet.</div>';
-                return;
+        fetch(`/chat/messages/${contact.id}`)
+            .then(response => response.json())
+            .then(data => {
+                conversationId = data.conversation_id;
+                chatMessages.innerHTML = '';
+
+                if (!data.messages || data.messages.length === 0) {
+                    chatMessages.innerHTML = '<p class="text-center text-muted">No messages yet. Start the conversation!</p>';
+                    return;
+                }
+
+                data.messages.forEach(msg => {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = msg.sender_id === {{ Auth::id() }} 
+                        ? 'text-end mb-2' 
+                        : 'text-start mb-2';
+
+                    msgDiv.innerHTML = `
+                        <span class="p-2 rounded ${msg.sender_id === {{ Auth::id() }} ? 'bg-primary text-white' : 'bg-light'}">
+                            ${msg.message}
+                        </span>
+                    `;
+                    chatMessages.appendChild(msgDiv);
+                });
+
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            });
+    }
+
+    // ✅ Send message
+    sendButton.addEventListener('click', () => {
+        const text = messageInput.value.trim();
+        if (!text || !currentReceiverId) return;
+
+        fetch(`/chat/send`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ receiver_id: currentReceiverId, text })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'text-end mb-2';
+                msgDiv.innerHTML = `<span class="p-2 rounded bg-primary text-white">${data.message.message}</span>`;
+                chatMessages.appendChild(msgDiv);
+                messageInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
-            chatHistory.innerHTML = messages.map(msg => renderMessage(msg, msg.sender_id === userId)).join('');
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-        })
-        .catch(err => console.error('Error loading messages:', err));
-}
-
-// Send new message
-function attachSendHandler() {
-    const input = document.getElementById('message-input');
-    const sendBtn = document.getElementById('send-btn');
-
-    sendBtn.addEventListener('click', sendMessage);
-    input.addEventListener('keypress', e => {
-        if (e.key === 'Enter') sendMessage();
+        });
     });
-}
-
-function sendMessage() {
-    const input = document.getElementById('message-input');
-    const text = input.value.trim();
-    if (!text || !currentReceiver) return;
-
-    axios.post('/chat/send', { receiver_id: currentReceiver, text })
-        .then(res => {
-            const msg = res.data.message;
-            appendMessage(msg, true);
-            input.value = '';
-        })
-        .catch(err => console.error('Send error:', err));
-}
-
-// Render single message
-function renderMessage(msg, isMine) {
-    const alignment = isMine ? 'justify-content-end' : 'justify-content-start';
-    const bg = isMine ? 'bg-primary text-white' : 'bg-light border';
-    const sender = isMine ? 'You' : (msg.sender?.name || 'User');
-    const time = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    return `
-        <div class="d-flex ${alignment} mb-3">
-            <div class="rounded-3 p-3 shadow-sm ${bg}" style="max-width: 75%;">
-                <div class="fw-bold small mb-1 ${isMine ? 'text-white-50' : 'text-secondary'}">${sender}</div>
-                <div class="small">${msg.message}</div>
-                <div class="text-end small mt-1 ${isMine ? 'text-white-50' : 'text-secondary'}">${time}</div>
-            </div>
-        </div>
-    `;
-}
-
-// Append message to chat
-function appendMessage(msg, isMine) {
-    const chatHistory = document.getElementById('chat-history');
-    chatHistory.insertAdjacentHTML('beforeend', renderMessage(msg, isMine));
-    chatHistory.scrollTop = chatHistory.scrollHeight;
-}
+});
 </script>
-
-<style>
-#contact-list { max-height: 70vh; }
-#chat-history { height: 60vh; overflow-y: auto; }
-</style>
 @endsection
