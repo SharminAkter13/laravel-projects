@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Livewire\Messenger;
 
 // Controllers
 use App\Http\Controllers\{
@@ -235,17 +234,21 @@ Route::middleware('auth')->group(function () {
 
 
 
+
+// All chat routes should require authentication
+
+Route::middleware('auth')->group(function () {
+    // This route serves the main chat interface (chat.blade.php)
+    // The link in your sidebar uses this named route: route('chat.index')
+    Route::get('/chat', [MessageController::class, 'index'])->name('chat.index');
+});
+
 Route::middleware(['auth', 'employer'])->group(function () {
     Route::get('/post-job', [PortalJobController::class, 'create'])->name('portal.job.create');
     Route::post('/post-job', [PortalJobController::class, 'store'])->name('portal.job.store');
 });
 
-// Messenger
 
-Route::middleware('auth')->group(function () {
-    Route::get('/chat', Messenger::class)->name('chat.index');
-    
-});
 
 // Resume
 
