@@ -1,7 +1,6 @@
 @extends('main')
 @section('content')
 
-<!-- Page Header -->
 <div class="page-header" style="background:url('{{ asset('portal/assets/img/banner1.jpg') }}');">
     <div class="container">
         <div class="row">         
@@ -18,7 +17,6 @@
     </div>
 </div>
 
-<!-- Job Browse Section -->
 <section class="job-browse section">
     <div class="container">
         <div class="row">
@@ -33,14 +31,14 @@
                         <div class="job-list-content">
                             <h4>
                                 <a href="{{ route('jobs.show', $job->id) }}">{{ $job->title }}</a>
-                                <span class="{{ strtolower(str_replace(' ', '-', $job->type)) }}">{{ $job->type }}</span>
+                                <span class="{{ strtolower(str_replace(' ', '-', $job->jobType->name ?? 'Unknown')) }}">{{ $job->jobType->name ?? 'Unknown' }}</span>
                             </h4>
                             <p>{{ \Illuminate\Support\Str::limit($job->description, 150) }}</p>
                             <div class="job-tag">
                                 <div class="pull-left">
                                     <div class="meta-tag">
-                                        <span><i class="ti-briefcase"></i> {{ $job->category }}</span>
-                                        <span><i class="ti-location-pin"></i> {{ $job->location }}</span>
+                                        <span><i class="ti-briefcase"></i> {{ $job->category->name ?? 'N/A' }}</span>
+                                        <span><i class="ti-location-pin"></i> {{ $job->jobLocation->address_and_city ?? $job->location }}</span>
                                         <span><i class="ti-time"></i> {{ $job->salary ?? 'Negotiable' }}</span>
                                     </div>
                                 </div>
@@ -48,18 +46,16 @@
                                     <div class="icon">
                                         <i class="ti-heart"></i>
                                     </div>
-                                    <a href="{{ route('jobs.apply', $job->id) }}" class="btn btn-common btn-rm">Apply Job</a>
+                                    <a href="{{ route('applications.create', $job->id) }}" class="btn btn-common btn-rm">Apply Job</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 @endforeach
 
-                <!-- Pagination -->
                 {{ $jobs->links('vendor.pagination.bootstrap-4') }}
             </div>
 
-            <!-- Sidebar -->
             <div class="col-md-3 col-sm-4">
                 <aside>
                     <div class="sidebar">
@@ -79,7 +75,7 @@
                             <ul class="cat-list">
                                 @foreach($types as $type)
                                     <li>
-                                        <a href="#">{{ $type->type }} <span class="num-posts">{{ Job::where('type', $type->type)->count() }} Jobs</span></a>
+                                        <a href="#">{{ $type->name }} <span class="num-posts">{{ $type->jobs_count }} Jobs</span></a>
                                     </li>
                                 @endforeach
                             </ul>
@@ -90,7 +86,10 @@
                             <ul class="cat-list">
                                 @foreach($locations as $location)
                                     <li>
-                                        <a href="#">{{ $location->location }} <span class="num-posts">{{ Job::where('location', $location->location)->count() }} Jobs</span></a>
+                                        <a href="#">
+                                            {{ $location->address_and_city }}
+                                            <span class="num-posts">{{ $location->jobs_count }} Jobs</span>
+                                        </a>
                                     </li>
                                 @endforeach
                             </ul>

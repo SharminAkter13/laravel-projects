@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Job;
+use App\Models\JobLocation;
+use App\Models\JobType;
 use Illuminate\Http\Request;
 
 class BrowseJobController extends Controller
 {
-     public function index()
+   public function index()
     {
-        $jobs = Job::latest()->paginate(10); // paginate jobs
+        $jobs = Job::with(['category', 'jobType', 'jobLocation'])->latest()->paginate(10); 
         $categories = Category::all();
-        $locations = Job::select('location')->distinct()->get();
-        $types = Job::select('type')->distinct()->get();
+        $locations = JobLocation::has('jobs')->withCount('jobs')->get();
+        $types = JobType::withCount('jobs')->get();
 
         return view('portal_pages.candidates.browse_jobs', compact('jobs', 'categories', 'locations', 'types'));
     }

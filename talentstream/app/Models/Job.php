@@ -35,4 +35,15 @@ public function employers()
         return $this->hasMany(Application::class, 'job_id');
     }
 
+    public function jobType() 
+{
+
+    return $this->belongsTo(JobType::class); 
+}
+public function jobLocation() 
+{
+
+    return $this->belongsTo(JobLocation::class); 
+}
+
 }

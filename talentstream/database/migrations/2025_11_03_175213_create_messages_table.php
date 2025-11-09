@@ -14,7 +14,8 @@ Schema::create('messages', function (Blueprint $table) {
     $table->text('message');
     $table->boolean('is_read')->default(false);
     $table->timestamps();
-});    }
+});    
+}
 
     public function down(): void
     {

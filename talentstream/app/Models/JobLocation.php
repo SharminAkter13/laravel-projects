@@ -16,4 +16,17 @@ class JobLocation extends Model
         'address',
         'postal_code',
     ];
+
+    public function jobs()
+    {
+        return $this->hasMany(Job::class);
+    }
+    public function getAddressAndCityAttribute()
+    {
+        $parts = array_filter([
+            $this->address,
+            $this->city,
+        ]);
+        return implode(', ', $parts);
+    }
 }
