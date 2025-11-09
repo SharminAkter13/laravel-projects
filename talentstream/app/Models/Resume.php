@@ -31,4 +31,10 @@ class Resume extends Model
     {
         return $this->hasMany(Skill::class);
     }
+
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -26,17 +26,21 @@
           <div class="inner-box">
             <h4>Manage Account</h4>
             <ul class="lest item">
-              <li><a href="{{ route('resumes.resume') }}">My Resume</a></li>
+              {{-- ✅ FIXED: Remove or safely link resume route --}}
+              {{-- If you have $resume object, you can use: route('resumes.show', $resume->id) --}}
+              <li><a href="{{ route('resumes.index') }}">My Resume</a></li>
               <li><a href="#">Bookmarked Jobs</a></li>
-              <li><a href="#"><span>Notifications</span></a></li>
+              <li><a href="{{ route('notifications.index') }}"><span>Notifications</span></a></li>
             </ul>
+
             <h4>Manage Job</h4>
             <ul class="lest item">
               <li><a href="{{ route('applications.index') }}">Manage Applications</a></li>
               <li><a class="active" href="{{ route('job.alerts') }}">Job Alerts</a></li>
             </ul>
+
             <ul class="lest">
-              <li><a href="{{ route('password.change') }}">Change Password</a></li>
+              <li><a href="{{ route('password.request') }}">Change Password</a></li>
               <li><a href="{{ route('logout') }}">Sign Out</a></li>
             </ul>
           </div>

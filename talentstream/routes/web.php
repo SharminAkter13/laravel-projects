@@ -32,7 +32,8 @@ use App\Http\Controllers\{
     ResumePortalController,
     BrowseCategoryController,
     BrowseJobController,
-    PortalJobAlertsController
+    PortalJobAlertsController,
+    PortalResumeController
 };
 
 /*
@@ -271,5 +272,10 @@ Route::get('/browse-jobs', [BrowseJobController::class, 'index'])->name('browse.
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/job-alerts', [PortalJobAlertsController::class, 'index'])->name('job.alerts');
+});
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/manage-resumes', [PortalResumeController::class, 'index'])->name('manage.resumes');
 });
 
