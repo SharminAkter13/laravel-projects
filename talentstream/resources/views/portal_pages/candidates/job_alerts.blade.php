@@ -1,153 +1,97 @@
 @extends('main')
+
 @section('content')
-    <!-- Page Header Start -->
-      <div class="page-header" style="background:url('{{ asset('portal/assets/img/banner1.jpg') }}');">
-        <div class="container">
-          <div class="row">         
-            <div class="col-md-12">
-              <div class="breadcrumb-wrapper">
-                <h2 class="product-title">Job Alerts</h2>
-                <ol class="breadcrumb">
-                  <li><a href="#"><i class="ti-home"></i> Home</a></li>
-                  <li class="current">Job Alerts</li>
-                </ol>
-              </div>
-            </div>
+<div class="page-header" style="background:url('{{ asset('portal/assets/img/banner1.jpg') }}');">
+  <div class="container">
+    <div class="row">         
+      <div class="col-md-12">
+        <div class="breadcrumb-wrapper">
+          <h2 class="product-title">Job Alerts</h2>
+          <ol class="breadcrumb">
+            <li><a href="{{ url('/') }}"><i class="ti-home"></i> Home</a></li>
+            <li class="current">Job Alerts</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="content">
+  <div class="container">        
+    <div class="row">
+      {{-- Sidebar --}}
+      <div class="col-md-4 col-sm-4 col-xs-12">
+        <div class="right-sideabr">
+          <div class="inner-box">
+            <h4>Manage Account</h4>
+            <ul class="lest item">
+              <li><a href="{{ route('resumes.resume') }}">My Resume</a></li>
+              <li><a href="#">Bookmarked Jobs</a></li>
+              <li><a href="#"><span>Notifications</span></a></li>
+            </ul>
+            <h4>Manage Job</h4>
+            <ul class="lest item">
+              <li><a href="{{ route('applications.index') }}">Manage Applications</a></li>
+              <li><a class="active" href="{{ route('job.alerts') }}">Job Alerts</a></li>
+            </ul>
+            <ul class="lest">
+              <li><a href="{{ route('password.change') }}">Change Password</a></li>
+              <li><a href="{{ route('logout') }}">Sign Out</a></li>
+            </ul>
           </div>
         </div>
       </div>
-      <!-- Page Header End --> 
 
-  <!-- Start Content -->
-      <div id="content">
-        <div class="container">        
-          <div class="row">
-            <div class="col-md-4 col-sm-4 col-xs-12">
-              <div class="right-sideabr">
-                <div class="inner-box">
-                  <h4>Manage Account</h4>
-                  <ul class="lest item">
-                    <li><a href="resume.html">My Resume</a></li>
-                    <li><a href="bookmarked.html">Bookmarked Jobs</a></li>
-                    <li><a href="notifications.html">Notifications <span class="notinumber">2</span></a></li>
-                  </ul>
-                  <h4>Manage Job</h4>
-                  <ul class="lest item">
-                    <li><a href="manage-applications.html">Manage Applications</a></li>
-                    <li><a class="active" href="job-alerts.html">Job Alerts</a></li>
-                  </ul>
-                  <ul class="lest">
-                    <li><a href="change-password.html">Change Password</a></li>
-                    <li><a href="index.html">Sing Out</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-8 col-sm-8 col-xs-12">
-              <div class="job-alerts-item">
-                <h3 class="alerts-title">Job Alerts</h3>
-                <div class="alerts-list">
-                  <div class="row">
-                    <div class="col-md-3">
-                      <p>Name</p>
-                    </div>
-                    <div class="col-md-3">
-                      <p>Keywords</p>
-                    </div>
-                    <div class="col-md-3">
-                      <p>Contract Type</p>
-                    </div>
-                    <div class="col-md-3">
-                      <p>Frequency</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="alerts-content">
-                  <div class="row">
-                    <div class="col-md-3">
-                      <h3>Web Designer</h3>
-                      <span class="location"><i class="ti-location-pin"></i> Manhattan, NYC</span>
-                    </div>
-                    <div class="col-md-3">
-                      <p>Web Designer</p>
-                    </div>
-                    <div class="col-md-3">
-                      <p><span class="full-time">Full-Time</span></p>
-                    </div>
-                    <div class="col-md-3">
-                      <p>Daily</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="alerts-content">
-                  <div class="row">
-                    <div class="col-md-3">
-                      <h3>UI/UX designer</h3>
-                      <span class="location"><i class="ti-location-pin"></i> Manhattan, NYC</span>
-                    </div>
-                    <div class="col-md-3">
-                      <p>UI/UX designer</p>
-                    </div>
-                    <div class="col-md-3">
-                      <p><span class="full-time">Full-Time</span></p>
-                    </div>
-                    <div class="col-md-3">
-                      <p>Daily</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="alerts-content">
-                  <div class="row">
-                    <div class="col-md-3">
-                      <h3>Developer</h3>
-                      <span class="location"><i class="ti-location-pin"></i> Manhattan, NYC</span>
-                    </div>
-                    <div class="col-md-3">
-                      <p>Developer</p>
-                    </div>
-                    <div class="col-md-3">
-                      <p><span class="part-time">Part-Time</span></p>
-                    </div>
-                    <div class="col-md-3">
-                      <p>Daily</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="alerts-content">
-                  <div class="row">
-                    <div class="col-md-3">
-                      <h3>Senior UX Designer</h3>
-                      <span class="location"><i class="ti-location-pin"></i> Manhattan, NYC</span>
-                    </div>
-                    <div class="col-md-3">
-                      <p>Senior UX Designer</p>
-                    </div>
-                    <div class="col-md-3">
-                      <p><span class="full-time">Full-Time</span></p>
-                    </div>
-                    <div class="col-md-3">
-                      <p>Daily</p>
-                    </div>
-                  </div>
-                </div>
-                <!-- Start Pagination -->
-                <br>
-                <ul class="pagination">              
-                  <li class="active"><a href="#" class="btn btn-common" ><i class="ti-angle-left"></i> prev</a></li>
-                  <li><a href="#">1</a></li>
-                  <li><a href="#">2</a></li>
-                  <li><a href="#">3</a></li>
-                  <li><a href="#">4</a></li>
-                  <li><a href="#">5</a></li>
-                  <li class="active"><a href="#" class="btn btn-common">Next <i class="ti-angle-right"></i></a></li>
-                </ul>
-                <!-- End Pagination -->
-              </div>
+      {{-- Main Content --}}
+      <div class="col-md-8 col-sm-8 col-xs-12">
+        <div class="job-alerts-item">
+          <h3 class="alerts-title">Job Alerts</h3>
+
+          <div class="alerts-list">
+            <div class="row">
+              <div class="col-md-3"><p>Name</p></div>
+              <div class="col-md-3"><p>Keywords</p></div>
+              <div class="col-md-3"><p>Contract Type</p></div>
+              <div class="col-md-3"><p>Frequency</p></div>
             </div>
           </div>
-        </div>      
+
+          @forelse ($jobAlerts as $alert)
+            <div class="alerts-content">
+              <div class="row">
+                <div class="col-md-3">
+                  <h3>{{ $alert->title }}</h3>
+                  <span class="location">
+                    <i class="ti-location-pin"></i> {{ $alert->location ?? 'N/A' }}
+                  </span>
+                </div>
+                <div class="col-md-3">
+                  <p>{{ $alert->keywords ?? '—' }}</p>
+                </div>
+                <div class="col-md-3">
+                  @if (strtolower($alert->contract_type) === 'full-time')
+                    <p><span class="full-time">Full-Time</span></p>
+                  @else
+                    <p><span class="part-time">Part-Time</span></p>
+                  @endif
+                </div>
+                <div class="col-md-3">
+                  <p>{{ ucfirst($alert->frequency) }}</p>
+                </div>
+              </div>
+            </div>
+          @empty
+            <div class="text-center mt-4">
+              <p>No job alerts found.</p>
+            </div>
+          @endforelse
+
+          {{-- Pagination Example (if needed) --}}
+          {{-- {{ $jobAlerts->links() }} --}}
+        </div>
       </div>
-      <!-- End Content -->
-
-
+    </div>
+  </div>      
+</div>
 @endsection

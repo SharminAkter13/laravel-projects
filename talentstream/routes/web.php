@@ -31,7 +31,8 @@ use App\Http\Controllers\{
     PortalJobController,
     ResumePortalController,
     BrowseCategoryController,
-    BrowseJobController
+    BrowseJobController,
+    PortalJobAlertsController
 };
 
 /*
@@ -57,7 +58,6 @@ Route::view('/master', 'master')->name('master');
 Route::prefix('portal_pages')->group(function () {
     // Candidate Views
     Route::view('/add-resume', 'portal_pages.candidates.add_resume')->name('add-resume');
-    Route::view('/job-alert', 'portal_pages.candidates.job_alert')->name('job-alert');
     Route::view('/manage-resume', 'portal_pages.candidates.manage_resume')->name('manage-resume');
 
     // Employer Views
@@ -267,4 +267,9 @@ Route::middleware('auth')->group(function() {
 Route::get('/browse-jobs', [BrowseJobController::class, 'index'])->name('browse.jobs');
 });
 
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/job-alerts', [PortalJobAlertsController::class, 'index'])->name('job.alerts');
+});
 
