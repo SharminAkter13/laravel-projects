@@ -37,7 +37,7 @@
               <li><a class="active" href="{{ route('manage.resumes') }}">Manage Resume</a></li>
             </ul>
             <ul class="lest">
-              <li><a href="{{ route('password.change') }}">Change Password</a></li>
+              <li><a href="{{ route('password.request') }}">Change Password</a></li>
               <li><a href="{{ route('logout') }}">Sign Out</a></li>
             </ul>
           </div>

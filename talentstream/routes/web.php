@@ -59,7 +59,6 @@ Route::view('/master', 'master')->name('master');
 Route::prefix('portal_pages')->group(function () {
     // Candidate Views
     Route::view('/add-resume', 'portal_pages.candidates.add_resume')->name('add-resume');
-    Route::view('/manage-resume', 'portal_pages.candidates.manage_resume')->name('manage-resume');
 
     // Employer Views
     Route::view('/browse-resume', 'portal_pages.employers.browse_resume')->name('browse-resume');

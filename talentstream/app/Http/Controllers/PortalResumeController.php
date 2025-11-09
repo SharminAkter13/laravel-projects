@@ -18,6 +18,6 @@ class PortalResumeController extends Controller
             ->where('user_id', Auth::id())
             ->get();
 
-        return view('portal_pages.candidates.manage_resumes', compact('resumes'));
+        return view('portal_pages.candidates.manage_resume', compact('resumes'));
     }
 }

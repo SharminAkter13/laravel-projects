@@ -30,7 +30,7 @@
                       <li><a href="{{ route('browse.jobs') }}">Browse Jobs</a></li>
                       <li><a href="{{ route('browse.categories') }}">Job Categories</a></li>
                       <li><a href="{{ route('add-resume') }}">Add Resume</a></li>
-                      <li><a href="{{ route('manage-resume') }}">Manage Resumes</a></li>
+                      <li><a href="{{ route('manage.resumes') }}">Manage Resumes</a></li>
                       <li><a href="{{ route('job.alerts') }}">Job Alerts</a></li>
                       <li><a href="{{ route('manage-application') }}">My Applications</a></li>
                     </ul>
