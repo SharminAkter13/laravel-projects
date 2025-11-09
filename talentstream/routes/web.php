@@ -240,6 +240,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat/contacts', [MessageController::class, 'getContacts']);
     Route::get('/chat/messages/{otherUserId}', [MessageController::class, 'getMessages']);
     Route::post('/chat/send', [MessageController::class, 'sendMessage']);
+    Route::post('/chat/{conversation}/read', [MessageController::class, 'markAsRead']);
+
 });
 
 // job post route

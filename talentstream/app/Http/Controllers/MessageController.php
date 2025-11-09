@@ -18,39 +18,36 @@ class MessageController extends Controller
     /**
      * Fetch chat contacts based on user role
      */
-    public function getContacts()
-    {
-        $user = Auth::user();
+public function getContacts()
+{
+    $user = Auth::user();
 
-        // Define role IDs (adjust if different in your DB)
-        $ROLE_ADMIN     = 1;
-        $ROLE_CANDIDATE = 2;
-        $ROLE_EMPLOYER  = 3;
+    $contacts = User::where('id', '!=', $user->id)
+        ->when($user->role_id == 2, fn($q) => $q->where('role_id', 3)) // Candidate sees Employer
+        ->when($user->role_id == 3, fn($q) => $q->where('role_id', 2)) // Employer sees Candidate
+        ->select('id', 'name', 'role_id')
+        ->get();
 
-        // Determine which contacts the user can see
-        if ($user->role_id == $ROLE_CANDIDATE) {
-            // Candidate sees Employers
-            $contacts = User::where('role_id', $ROLE_EMPLOYER)
-                ->where('id', '!=', $user->id)
-                ->select('id', 'name', 'role_id')
-                ->get();
-        } elseif ($user->role_id == $ROLE_EMPLOYER) {
-            // Employer sees Candidates
-            $contacts = User::where('role_id', $ROLE_CANDIDATE)
-                ->where('id', '!=', $user->id)
-                ->select('id', 'name', 'role_id')
-                ->get();
-        } elseif ($user->role_id == $ROLE_ADMIN) {
-            // Admin sees everyone except themselves
-            $contacts = User::where('id', '!=', $user->id)
-                ->select('id', 'name', 'role_id')
-                ->get();
-        } else {
-            $contacts = collect(); // Empty collection
+    // Add unread messages count for each contact
+    foreach ($contacts as $contact) {
+        $conversation = Conversation::where(function ($q) use ($user, $contact) {
+            $q->where('user_one', $user->id)->where('user_two', $contact->id);
+        })->orWhere(function ($q) use ($user, $contact) {
+            $q->where('user_one', $contact->id)->where('user_two', $user->id);
+        })->first();
+
+        $contact->unread_count = 0;
+
+        if ($conversation) {
+            $contact->unread_count = Message::where('conversation_id', $conversation->id)
+                ->where('sender_id', '!=', $user->id)
+                ->where('is_read', false)
+                ->count();
         }
-
-        return response()->json($contacts);
     }
+
+    return response()->json($contacts);
+}
 
     /**
      * Retrieve all messages for a conversation between two users
@@ -134,4 +131,13 @@ class MessageController extends Controller
             'message' => $message->load('sender:id,name'),
         ]);
     }
+
+    public function markAsRead(Conversation $conversation)
+{
+    Message::where('conversation_id', $conversation->id)
+        ->where('sender_id', '!=', Auth::id())
+        ->update(['is_read' => true]);
+
+    return response()->json(['status' => 'success']);
+}
 }
