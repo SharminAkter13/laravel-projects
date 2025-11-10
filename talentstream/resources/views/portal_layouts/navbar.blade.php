@@ -47,7 +47,7 @@
                       <li><a href="{{ route('portal.job.create') }}">Post New Job</a></li>
                       <li><a href="{{ route('manage-job') }}">Manage Jobs</a></li>
                       <li><a href="{{ route('manage-application') }}">View Applications</a></li>
-                      <li><a href="{{ route('browse-resume') }}">Browse Resumes</a></li>
+                      <li><a href="{{ route('browse.resumes') }}">Browse Resumes</a></li>
                     </ul>
                   </li>
                 @endif
@@ -59,7 +59,7 @@
                   <a href="#">Explore</a>
                   <ul class="dropdown">
                     <li><a href="{{ route('browse.jobs') }}">Browse Jobs</a></li>
-                    <li><a href="{{ route('browse-resume') }}">Browse Resumes</a></li>
+                    <li><a href="{{ route('browse.resumes') }}">Browse Resumes</a></li>
                     <li><a href="{{ route('browse.categories') }}">Job Categories</a></li>
                   </ul>
                 </li>

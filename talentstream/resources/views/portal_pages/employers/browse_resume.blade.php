@@ -1,171 +1,61 @@
 @extends('main')
 @section('content')
 
-<!-- Page Header Start -->
 <div class="page-header" style="background:url('{{ asset('portal/assets/img/banner1.jpg') }}');">
     <div class="container">
         <div class="row">         
             <div class="col-md-12">
                 <div class="breadcrumb-wrapper">
-                    <h2 class="product-title">Browse resumes</h2>
+                    <h2 class="product-title">Browse Resumes</h2>
                     <ol class="breadcrumb">
                         <li><a href="#"><i class="ti-home"></i> Home</a></li>
-                        <li class="current">Browse resumes</li>
+                        <li class="current">Browse Resumes</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Page Header End --> 
 
-<!-- Start Content -->
 <div id="content">
     <div class="container">        
         <div class="row">
-            <!-- Resume Item 1 -->
-            <div class="col-md-12 col-sm-6 col-xs-12">
+            @forelse ($resumes as $resume)
+            <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="manager-resumes-item">
                     <div class="manager-content">
-                        <a href="resume.html"><img class="resume-thumb" src="{{ asset('portal/assets/img/jobs/avatar.jpg') }}" alt=""></a>
+                        <a href="{{ route('browse.resumes.show', $resume->id) }}">
+                            <img class="resume-thumb" 
+                                 src="{{ $resume->cover_image ? asset('storage/' . $resume->cover_image) : asset('portal/assets/img/jobs/default-avatar.jpg') }}" 
+                                 alt="{{ $resume->name }}">
+                        </a>
                         <div class="manager-info">
                             <div class="manager-name">
-                                <h4><a href="#">John Doe</a></h4>
-                                <h5>Front-end developer</h5>
+                                <h4><a href="{{ route('browse.resumes.show', $resume->id) }}">{{ $resume->name }}</a></h4>
+                                <h5>{{ $resume->profession_title }}</h5>
                             </div>
                             <div class="manager-meta">
-                                <span class="location"><i class="ti-location-pin"></i> Cupertino, CA, USA</span>
-                                <span class="rate"><i class="ti-time"></i> $55 per hour</span>
+                                <span class="location"><i class="ti-location-pin"></i> {{ $resume->location }}</span>
+                                <span class="rate"><i class="ti-time"></i> ${{ $resume->pre_hour }} per hour</span>
                             </div>
                         </div>                    
                     </div>
                     <div class="item-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                        <p>Email: {{ $resume->email }}</p>
+                        <p>Website: <a href="{{ $resume->web }}" target="_blank">{{ $resume->web }}</a></p>
                         <div class="tag-list">
-                            <span>HTML5</span>
-                            <span>CSS3</span>
-                            <span>Bootstrap</span>
-                            <span>Wordpress</span>
+                            @foreach ($resume->skills as $skill)
+                                <span>{{ $skill->skill_name }}</span>
+                            @endforeach
                         </div>
                     </div>
-                </div>   
+                </div> 
             </div>
-
-            <!-- Resume Item 2 -->
-            <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="manager-resumes-item">
-                    <div class="manager-content">
-                        <a href="resume.html"><img class="resume-thumb" src="{{ asset('portal/assets/img/jobs/avatar-1.jpg') }}" alt=""></a>
-                        <div class="manager-info">
-                            <div class="manager-name">
-                                <h4><a href="#">Bikesh Soltaniane</a></h4>
-                                <h5>Java developer</h5>
-                            </div>
-                            <div class="manager-meta">
-                                <span class="location"><i class="ti-location-pin"></i> Cupertino, CA, USA</span>
-                                <span class="rate"><i class="ti-time"></i> $55 per hour</span>
-                            </div>
-                        </div>                    
-                    </div>
-                    <div class="item-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                        <div class="tag-list">
-                            <span>HTML5</span>
-                            <span>CSS3</span>
-                            <span>Bootstrap</span>
-                            <span>Wordpress</span>
-                        </div>
-                    </div>
-                </div> 
-            </div> 
-
-            <!-- Resume Item 3 -->
-            <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="manager-resumes-item">
-                    <div class="manager-content">
-                        <a href="resume.html"><img class="resume-thumb" src="{{ asset('portal/assets/img/jobs/avatar-2.jpg') }}" alt=""></a>
-                        <div class="manager-info">
-                            <div class="manager-name">
-                                <h4><a href="#">Chris Hernandeziyan</a></h4>
-                                <h5>.Net developer</h5>
-                            </div>
-                            <div class="manager-meta">
-                                <span class="location"><i class="ti-location-pin"></i> Cupertino, CA, USA</span>
-                                <span class="rate"><i class="ti-time"></i> $55 per hour</span>
-                            </div>
-                        </div>                    
-                    </div>
-                    <div class="item-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                        <div class="tag-list">
-                            <span>HTML5</span>
-                            <span>CSS3</span>
-                            <span>Bootstrap</span>
-                            <span>Wordpress</span>
-                        </div>
-                    </div>
-                </div> 
-            </div> 
-
-            <!-- Resume Item 4 -->
-            <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="manager-resumes-item">
-                    <div class="manager-content">
-                        <a href="resume.html"><img class="resume-thumb" src="{{ asset('portal/assets/img/jobs/avatar-3.jpg') }}" alt=""></a>
-                        <div class="manager-info">
-                            <div class="manager-name">
-                                <h4><a href="#">Mary Amiri</a></h4>
-                                <h5>Quality assurance</h5>
-                            </div>
-                            <div class="manager-meta">
-                                <span class="location"><i class="ti-location-pin"></i> Cupertino, CA, USA</span>
-                                <span class="rate"><i class="ti-time"></i> $55 per hour</span>
-                            </div>
-                        </div>                    
-                    </div>
-                    <div class="item-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                        <div class="tag-list">
-                            <span>HTML5</span>
-                            <span>CSS3</span>
-                            <span>Bootstrap</span>
-                            <span>Wordpress</span>
-                        </div>
-                    </div>
-                </div> 
-            </div> 
-
-            <!-- Resume Item 5 -->
-            <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="manager-resumes-item">
-                    <div class="manager-content">
-                        <a href="resume.html"><img class="resume-thumb" src="{{ asset('portal/assets/img/jobs/avatar-4.jpg') }}" alt=""></a>
-                        <div class="manager-info">
-                            <div class="manager-name">
-                                <h4><a href="#">Sarah Luizgarden</a></h4>
-                                <h5>UI/UX developer</h5>
-                            </div>
-                            <div class="manager-meta">
-                                <span class="location"><i class="ti-location-pin"></i> Cupertino, CA, USA</span>
-                                <span class="rate"><i class="ti-time"></i> $55 per hour</span>
-                            </div>
-                        </div>                    
-                    </div>
-                    <div class="item-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-                        <div class="tag-list">
-                            <span>HTML5</span>
-                            <span>CSS3</span>
-                            <span>Bootstrap</span>
-                            <span>Wordpress</span>
-                        </div>
-                    </div>
-                </div> 
-            </div> 
-
+            @empty
+                <p class="text-center">No resumes available at the moment.</p>
+            @endforelse
         </div>
     </div>      
 </div>
-<!-- End Content -->
 
 @endsection

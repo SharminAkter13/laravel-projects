@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('user_email');
             $table->foreignId('employer_id')->nullable()->constrained('employers')->nullOnDelete();
             $table->string('title');
-            $table->string('location')->nullable();
+            $table->foreignId('job_location_id')->nullable()->constrained('categories')->nullOnDelete();
+            $table->foreignId('job_type_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->string('tags')->nullable();
             $table->text('description');
