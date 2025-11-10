@@ -7,6 +7,20 @@ use Illuminate\Support\Facades\Auth;
 
 class PortalJobController extends Controller
 {
+
+     public function index()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please login to manage your jobs.');
+        }
+
+        // Get jobs posted by the logged-in employer
+        $jobs = Job::where('employer_id', Auth::id())
+            ->latest()
+            ->paginate(10);
+
+        return view('portal_pages.employers.manage_job', compact('jobs'));
+    }
     // Show form
     public function create() {
         return view('portal_pages.employers.add_job'); // Your blade file

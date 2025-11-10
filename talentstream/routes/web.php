@@ -63,7 +63,6 @@ Route::prefix('portal_pages')->group(function () {
 
     // Employer Views
     Route::view('/manage-application', 'portal_pages.employers.manage_application')->name('manage-application');
-    Route::view('/manage-job', 'portal_pages.employers.manage_job')->name('manage-job');
 });
 
 /*
@@ -248,6 +247,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'employer'])->group(function () {
     Route::get('/post-job', [PortalJobController::class, 'create'])->name('portal.job.create');
     Route::post('/post-job', [PortalJobController::class, 'store'])->name('portal.job.store');
+     Route::get('/manage-jobs', [PortalJobController::class, 'index'])->name('manage.jobs');
 });
 
 
