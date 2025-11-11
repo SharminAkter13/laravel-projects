@@ -60,6 +60,11 @@
       </a>
      </li>
      <li class="nav-item">
+      <a class="nav-link {{ request()->is('companies*') ? 'active' : '' }}" href="{{ route('companies.index') }}">
+       <i class="ni ni-hat-3 text-yellow"></i> Company
+      </a>
+     </li>
+     <li class="nav-item">
       <a class="nav-link {{ request()->is('employers*') ? 'active' : '' }}" href="{{ route('employers.index') }}">
        <i class="ni ni-briefcase-24 text-teal"></i> Employers
       </a>

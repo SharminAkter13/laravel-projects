@@ -17,9 +17,9 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Image</th> {{-- Changed from Icon --}}
-                        <th>Active</th> {{-- New column: Is Active --}}
-                        <th>Order</th> {{-- New column: Sort Order --}}
+                        <th>Image</th> 
+                        <th>Active</th> 
+                        <th>Order</th> 
                         <th>Jobs Count</th>
                         <th>Actions</th>
                     </tr>
