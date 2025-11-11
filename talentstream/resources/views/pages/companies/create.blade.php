@@ -1,37 +1,55 @@
 @extends('master')
-
 @section('page')
-<div class="card bg-primary-subtle p-5 w-100">
-  <!-- Full-width background container -->
-  <div class="bg-info-subtle p-5 rounded w-100 mt-5">
-    
-    <!-- Centered form inside full-width container -->
-    <div class="d-flex justify-content-center">
-      <form method="POST" action="{{ route('userStore') }}" class="w-100" style="max-width: 500px;">
+<div class="container mt-4 p-5">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Create New Company</h4>
+      <a href="{{ route('companies.index') }}" class="btn btn-secondary btn-sm">Back to Companies</a>
+    </div>
+    <div class="card-body">
+      <form action="{{ route('companies.store') }}" method="POST">
         @csrf
-        <h1 class="text-center mb-4">Add Users</h1>
 
         <div class="mb-3">
-          <label class="form-label">Name</label>
-          <input type="text" name="name" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Email</label>
-          <input type="email" name="email" class="form-control" required>
+          <label for="name">Company Name <span class="text-danger">*</span></label>
+          <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
+          @error('name')<div class="text-danger">{{ $message }}</div>@enderror
         </div>
 
         <div class="mb-3">
-          <label class="form-label">PASSWORD</label>
-          <input type="number" name="password" class="form-control" required>
+          <label for="industry">Industry</label>
+          <input type="text" name="industry" id="industry" class="form-control" value="{{ old('industry') }}">
         </div>
 
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary form-control">Submit</button>
+        <div class="mb-3">
+          <label for="website">Website (URL)</label>
+          <input type="url" name="website" id="website" class="form-control" value="{{ old('website') }}">
         </div>
+
+        <div class="mb-3">
+          <label for="contact_phone">Contact Phone</label>
+          <input type="text" name="contact_phone" id="contact_phone" class="form-control" value="{{ old('contact_phone') }}">
+        </div>
+
+        <div class="mb-3">
+          <label for="contact_email">Contact Email</label>
+          <input type="email" name="contact_email" id="contact_email" class="form-control" value="{{ old('contact_email') }}">
+        </div>
+
+        <div class="mb-3">
+          <label for="address">Address</label>
+          <input type="text" name="address" id="address" class="form-control" value="{{ old('address') }}">
+        </div>
+
+        <div class="mb-3">
+          <label for="description">Description</label>
+          <textarea name="description" id="description" class="form-control" rows="3">{{ old('description') }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Company</button>
+        <a href="{{ route('companies.index') }}" class="btn btn-secondary">Cancel</a>
       </form>
     </div>
-
   </div>
 </div>
 @endsection

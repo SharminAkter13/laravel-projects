@@ -1,70 +1,52 @@
 @extends('master')
 @section('page')
-<div class="card">
-<div class="header pb-5 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 50px; background-image: url(../assets/img/theme/profile-cover.jpg); background-size: cover; background-position: center top;">
-  <!-- Mask -->
-  <span class="mask bg-gradient-default opacity-8"></span>
-  <!-- Header container -->
-  <div class="container-fluid d-flex align-items-center">
-    <div class="row align-items-center">
-    <div class="col-lg-12 col-md-10 text-center">
-        <h1 class="display-2 text-white text-center"> Interview List</h1>
-        <a href="{{ route('userCreate') }}" class="btn btn-info">Add Interview</a>
+<div class="container mt-4 p-5">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Companies Management</h4>
+      <a href="{{ route('companies.create') }}" class="btn btn-primary btn-sm">Add Company</a>
     </div>
-</div>
+
+    <div class="card-body">
+      @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+      @endif
+            @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+      @endif
+
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Name</th>
+            <th>Industry</th>
+            <th>Website</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($companies as $company)
+          <tr>
+            <td>{{ $company->name }}</td>
+            <td>{{ $company->industry }}</td>
+            <td>{{ $company->website }}</td>
+            <td>{{ $company->contact_phone }}</td>
+            <td>{{ $company->address }}</td>
+            <td style="width: 150px;">
+              <a href="{{ route('companies.edit', $company->id) }}" class="btn btn-sm btn-warning">Edit</a>
+              <form action="{{ route('companies.destroy', $company->id) }}" method="POST" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete {{ $company->name }}?')">Delete</button>
+              </form>
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
-
-<div>
-
-
-<table class="table table-striped">
-
-</table>
-      <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Password</th>
-     <th scope="col">Action</th>
-
-    </tr>
-  </thead>
-    <tbody>
-            @foreach ($user as $u)
-
-    <tr>
-      <th scope="row">{{$loop->iteration}}</th>
-      <td>{{$u->name }}</td>
-      <td>{{$u->email }}</td>
-      <td>{{$u->password }}</td>
-      <td>
-          <div class="btn-group">
-                      <a href="{{ route('userEdit', $u->id) }}">
-                        <button class="btn btn-md btn-success me-1 p-1"><i class="bi bi-pencil-square"></i></button>
-                      </a>
-
-                      <form action="{{route('delete')}}" method="POST">
-                        @method('DELETE')
-                        @csrf
-                        <input type="text" name="user_id" value="{{ $u->id }}" hidden>
-                      <button class="btn btn-md btn-danger  p-1"><i class="bi bi-trash3-fill"></i></button>
-                </form>
-
-
-                    </div>
-
-      </td>
-    </tr>
-     @endforeach
-    
-  </tbody>
-
-
-
-</div>
-</div>
-
 @endsection
