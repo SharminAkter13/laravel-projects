@@ -32,6 +32,7 @@ use App\Http\Controllers\{
     ResumePortalController,
     BrowseCategoryController,
     BrowseJobController,
+    CompanyController,
     EmployerResumeController,
     PortalJobAlertsController,
     PortalResumeController
@@ -146,6 +147,14 @@ Route::resource('candidates', CandidateController::class)->except(['show']);
 */
 Route::resource('employers', EmployerController::class)->except(['show']);
 
+/*
+|--------------------------------------------------------------------------
+|Company CRUD
+|--------------------------------------------------------------------------
+*/
+Route::resource('companies', CompanyController::class);
+Route::get('/companies/{company}/details', [CompanyController::class, 'getCompanyDetails'])
+    ->name('companies.details');
 /*
 |--------------------------------------------------------------------------
 | Job Alerts (Requires Auth)

@@ -62,7 +62,6 @@
         const phoneInput = document.getElementById('phone');
         const addressInput = document.getElementById('address');
         
-        // Define the function to clear the fields
         function clearFields() {
             websiteInput.value = '';
             phoneInput.value = '';
@@ -71,33 +70,29 @@
 
         companySelect.addEventListener('change', function () {
             const companyId = this.value;
-            clearFields(); // Clear fields initially
+            clearFields(); 
 
             if (!companyId) {
-                return; // Do nothing if no company is selected
+                return; 
             }
 
-            // Fetch company details from a Laravel API endpoint
-            // NOTE: You must create the route named 'api.company.details'
-            const url = `/api/companies/${companyId}`; 
+         
+            const url = `/companies/${companyId}/details`;
 
             fetch(url)
                 .then(response => {
-                    // Check if the request was successful
                     if (!response.ok) {
                         throw new Error('Company not found or network error.');
                     }
                     return response.json();
                 })
                 .then(data => {
-                    // Assuming the API returns data with 'website', 'phone', and 'address' keys
                     websiteInput.value = data.website || 'N/A';
                     phoneInput.value = data.phone || 'N/A';
                     addressInput.value = data.address || 'N/A';
                 })
                 .catch(error => {
                     console.error('Error fetching company details:', error);
-                    // You might want to display an error message to the user here
                 });
         });
     });
