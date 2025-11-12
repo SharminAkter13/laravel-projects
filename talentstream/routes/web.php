@@ -35,7 +35,8 @@ use App\Http\Controllers\{
     CompanyController,
     EmployerResumeController,
     PortalJobAlertsController,
-    PortalResumeController
+    PortalResumeController,
+    ManageApplicationController
 };
 
 /*
@@ -288,8 +289,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/manage-resumes', [PortalResumeController::class, 'index'])->name('manage.resumes');
 });
 
+// manage Resume
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/browse-resumes', [EmployerResumeController::class, 'index'])->name('browse.resumes');
     Route::get('/browse-resumes/{id}', [EmployerResumeController::class, 'show'])->name('browse.resumes.show');
+});
+
+// Manage Application
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/applications/manage', [ManageApplicationController::class, 'manageApplications'])
+        ->name('applications.manage');
 });

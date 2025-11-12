@@ -1,188 +1,106 @@
 @extends('main')
+
 @section('content')
- <!-- Page Header Start -->
-      <div class="page-header" style="background:url('{{ asset('portal/assets/img/banner1.jpg') }}');">
-        <div class="container">
-          <div class="row">         
+<!-- Page Header Start -->
+<div class="page-header" style="background:url('{{ asset('portal/assets/img/banner1.jpg') }}');">
+    <div class="container">
+        <div class="row">         
             <div class="col-md-12">
-              <div class="breadcrumb-wrapper">
-                <h2 class="product-title">Manage Applications</h2>
-                <ol class="breadcrumb">
-                  <li><a href="#"><i class="ti-home"></i> Home</a></li>
-                  <li class="current">Manage Applications</li>
-                </ol>
-              </div>
+                <div class="breadcrumb-wrapper">
+                    <h2 class="product-title">Manage Applications</h2>
+                    <ol class="breadcrumb">
+                        <li><a href="{{ route('portal.home') }}"><i class="ti-home"></i> Home</a></li>
+                        <li class="current">Manage Applications</li>
+                    </ol>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-      <!-- Page Header End --> 
-  <!-- Start Content -->
-      <div id="content">
-        <div class="container">        
-          <div class="row">
+    </div>
+</div>
+<!-- Page Header End --> 
+
+<!-- Start Content -->
+<div id="content">
+    <div class="container">        
+        <div class="row">
+
+            <!-- Sidebar -->
             <div class="col-md-4 col-sm-4 col-xs-12">
-              <div class="right-sideabr">
-                <div class="inner-box">
-                  <h4>Manage Account</h4>
-                  <ul class="lest item">
-                    <li><a href="resume.html">My Resume</a></li>
-                    <li><a href="bookmarked.html">Bookmarked Jobs</a></li>
-                    <li><a href="notifications.html">Notifications <span class="notinumber">2</span></a></li>
-                  </ul>
-                  <h4>Manage Job</h4>
-                  <ul class="lest item">
-                    <li><a class="active" href="manage-applications.html">Manage Applications</a></li>
-                    <li><a href="job-alerts.html">Job Alerts</a></li>
-                  </ul>
-                  <ul class="lest">
-                    <li><a href="change-password.html">Change Password</a></li>
-                    <li><a href="index.html">Sing Out</a></li>
-                  </ul>
+                <div class="right-sideabr">
+                    <div class="inner-box">
+                        <h4>Manage Account</h4>
+                        <ul class="lest item">
+                            <li><a href="{{ route('resumes.index') }}">My Resume</a></li>
+                            <li><a href="{{ route('bookmarks.index') }}">Bookmarked Jobs</a></li>
+                            <li>
+                                <a href="{{ route('notifications.index') }}">
+                                    Notifications 
+                                    <span class="notinumber">{{ auth()->user()->unreadNotifications->count() }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <h4>Manage Job</h4>
+                        <ul class="lest item">
+                            <li><a class="active" href="{{ route('applications.manage') }}">Manage Applications</a></li>
+                            <li><a href="{{ route('job.alerts') }}">Job Alerts</a></li>
+                        </ul>
+                        <ul class="lest">
+                            <li><a href="{{ route('password.change') }}">Change Password</a></li>
+                            <li><a href="{{ route('logout') }}"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                   Sign Out
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-              </div>
             </div>
+
+            <!-- Applications List -->
             <div class="col-md-8 col-sm-8 col-xs-12">
-              <div class="job-alerts-item">
-                <h3 class="alerts-title">Manage applications</h3>
-                <div class="applications-content">
-                  <div class="row">
-                    <div class="col-md-5">
-                      <div class="thums">
-                        <img src="portal/assets/img/jobs/img-1.jpg" alt="">
-                      </div>
-                      <h3>Web Designer Meeded</h3>
-                      <span>Quick Studio</span>
+                <div class="job-alerts-item">
+                    <h3 class="alerts-title">Manage Applications</h3>
+
+                    @forelse($applications as $application)
+                    <div class="applications-content">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="thums">
+                                    <img src="{{ $application->job->cover_image ? asset('storage/'.$application->job->cover_image) : asset('portal/assets/img/jobs/default.jpg') }}" alt="">
+                                </div>
+                                <h3>{{ $application->job->title }}</h3>
+                                <span>{{ $application->job->company_name }}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <p>
+                                    <span class="{{ strtolower($application->job->jobType->name ?? '') == 'full-time' ? 'full-time' : 'part-time' }}">
+                                        {{ $application->job->jobType->name ?? 'N/A' }}
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-md-2">
+                                <p>{{ \Carbon\Carbon::parse($application->applied_date)->format('M d, Y') }}</p>
+                            </div>                   
+                            <div class="col-md-2">
+                                <p>{{ ucfirst($application->status) }}</p>
+                            </div>
+                        </div>
                     </div>
-                     <div class="col-md-3">
-                      <p><span class="full-time">Full-Time</span></p>
-                    </div>
-                    <div class="col-md-2">
-                      <p>Nov 14th, 2017</p>
-                    </div>                   
-                    <div class="col-md-2">
-                      <p>Rejected</p>
-                    </div>
-                  </div>
+                    @empty
+                    <p>No applications found.</p>
+                    @endforelse
+
+                    <!-- Pagination -->
+                    <br>
+                    {{ $applications->links('pagination::bootstrap-4') }}
                 </div>
-                <div class="applications-content">
-                  <div class="row">
-                    <div class="col-md-5">
-                      <div class="thums">
-                        <img src="portal/assets/img/jobs/img-1.jpg" alt="">
-                      </div>
-                      <h3>Front-end developer needed</h3>
-                      <span>Quick Studio</span>
-                    </div>
-                     <div class="col-md-3">
-                      <p><span class="full-time">Full-Time</span></p>
-                    </div>
-                    <div class="col-md-2">
-                      <p>Nov 14th, 2017</p>
-                    </div>                   
-                    <div class="col-md-2">
-                      <p>Processed</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="applications-content">
-                  <div class="row">
-                    <div class="col-md-5">
-                      <div class="thums">
-                        <img src="portal/assets/img/jobs/img-1.jpg" alt="">
-                      </div>
-                      <h3>We're looking for an Art Director</h3>
-                      <span>Quick Studio</span>
-                    </div>
-                     <div class="col-md-3">
-                      <p><span class="part-time">Part-Time</span></p>
-                    </div>
-                    <div class="col-md-2">
-                      <p>Nov 14th, 2017</p>
-                    </div>                   
-                    <div class="col-md-2">
-                      <p>Rejected</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="applications-content">
-                  <div class="row">
-                    <div class="col-md-5">
-                      <div class="thums">
-                        <img src="portal/assets/img/jobs/img-1.jpg" alt="">
-                      </div>
-                      <h3>Web designer needed</h3>
-                      <span>Quick Studio</span>
-                    </div>
-                     <div class="col-md-3">
-                      <p><span class="full-time">Full-Time</span></p>
-                    </div>
-                    <div class="col-md-2">
-                      <p>Nov 14th, 2017</p>
-                    </div>                   
-                    <div class="col-md-2">
-                      <p>Approved</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="applications-content">
-                  <div class="row">
-                    <div class="col-md-5">
-                      <div class="thums">
-                        <img src="portal/assets/img/jobs/img-1.jpg" alt="">
-                      </div>
-                      <h3>Looking for a Project Leader</h3>
-                      <span>Quick Studio</span>
-                    </div>
-                     <div class="col-md-3">
-                      <p><span class="full-time">Full-Time</span></p>
-                    </div>
-                    <div class="col-md-2">
-                      <p>Nov 14th, 2017</p>
-                    </div>                   
-                    <div class="col-md-2">
-                      <p>Rejected</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="applications-content">
-                  <div class="row">
-                    <div class="col-md-5">
-                      <div class="thums">
-                        <img src="portal/assets/img/jobs/img-1.jpg" alt="">
-                      </div>
-                      <h3>We're hiring an fullstack designer</h3>
-                      <span>Quick Studio</span>
-                    </div>
-                     <div class="col-md-3">
-                      <p><span class="part-time">Part-Time</span></p>
-                    </div>
-                    <div class="col-md-2">
-                      <p>Nov 14th, 2017</p>
-                    </div>                   
-                    <div class="col-md-2">
-                      <p>Rejected</p>
-                    </div>
-                  </div>
-                </div>
-                <!-- Start Pagination -->
-                <br>
-                <ul class="pagination">              
-                  <li class="active"><a href="#" class="btn btn-common" ><i class="ti-angle-left"></i> prev</a></li>
-                  <li><a href="#">1</a></li>
-                  <li><a href="#">2</a></li>
-                  <li><a href="#">3</a></li>
-                  <li><a href="#">4</a></li>
-                  <li><a href="#">5</a></li>
-                  <li class="active"><a href="#" class="btn btn-common">Next <i class="ti-angle-right"></i></a></li>
-                </ul>
-                <!-- End Pagination -->
-              </div>
             </div>
-          </div>
-        </div>      
-      </div>
-      <!-- End Content -->
 
-
+        </div>
+    </div>      
+</div>
+<!-- End Content -->
 @endsection
