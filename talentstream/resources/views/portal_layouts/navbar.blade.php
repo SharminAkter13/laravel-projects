@@ -3,6 +3,7 @@
     <div class="logo-menu">
       <nav class="navbar navbar-default main-navigation" role="navigation" data-spy="affix" data-offset-top="50">
         <div class="container">
+          {{-- Brand + Toggler --}}
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
               <span class="sr-only">Toggle navigation</span>
@@ -17,16 +18,19 @@
             </a>
           </div>
 
+          {{-- Collapsible Nav --}}
           <div class="collapse navbar-collapse" id="navbar">
             <ul class="nav navbar-nav">
-              <li><a class="active" href="{{ route('portal.home') }}">Home</a></li>
+              <li class="{{ request()->routeIs('portal.home') ? 'active' : '' }}">
+                <a href="{{ route('portal.home') }}">Home</a>
+              </li>
 
               {{-- Candidate Menu --}}
               @auth
                 @if(auth()->user()->role?->name === 'candidate')
-                  <li>
-                    <a href="#">Services </a>
-                    <ul class="dropdown">
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Services <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
                       <li><a href="{{ route('browse.jobs') }}">Browse Jobs</a></li>
                       <li><a href="{{ route('browse.categories') }}">Job Categories</a></li>
                       <li><a href="{{ route('resume.create') }}">Add Resume</a></li>
@@ -41,12 +45,12 @@
               {{-- Employer Menu --}}
               @auth
                 @if(auth()->user()->role?->name === 'employer')
-                  <li>
-                    <a href="#">Services</a>
-                    <ul class="dropdown">
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Services <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
                       <li><a href="{{ route('portal.job.create') }}">Post New Job</a></li>
                       <li><a href="{{ route('manage.jobs') }}">Manage Jobs</a></li>
-                      <li><a href="{{ route('manage-application') }}">View Applications</a></li>
+                      <li><a href="{{ route('applications.manage') }}">View Applications</a></li>
                       <li><a href="{{ route('browse.resumes') }}">Browse Resumes</a></li>
                     </ul>
                   </li>
@@ -55,9 +59,9 @@
 
               {{-- Guest Menu --}}
               @guest
-                <li>
-                  <a href="#">Explore</a>
-                  <ul class="dropdown">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Explore <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
                     <li><a href="{{ route('browse.jobs') }}">Browse Jobs</a></li>
                     <li><a href="{{ route('browse.resumes') }}">Browse Resumes</a></li>
                     <li><a href="{{ route('browse.categories') }}">Job Categories</a></li>
@@ -69,10 +73,11 @@
               <li><a href="{{ route('contact') }}">Contact</a></li>
             </ul>
 
-            <ul class="nav navbar-nav navbar-right float-right">
+            {{-- Right side --}}
+            <ul class="nav navbar-nav navbar-right">
               {{-- Post Job Button --}}
               @auth
-                @if(auth()->user()->role === 'employer')
+                @if(auth()->user()->role?->name === 'employer')
                   <li class="left"><a href="{{ route('portal.job.create') }}"><i class="ti-pencil-alt"></i> Post A Job</a></li>
                 @endif
               @else
@@ -83,23 +88,27 @@
               @guest
                 <li class="right"><a href="{{ route('login') }}"><i class="ti-lock"></i> Log In</a></li>
               @else
-                <li class="right">
-                  <a href="{{ route('my-account') }}"><i class="ti-user"></i> My Account</a>
-                  <ul class="dropdown">
-                    {{-- ✅ Role-Based Dashboard --}}
+                <li class="dropdown right">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="ti-user"></i> My Account <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    {{-- Role-Based Dashboard --}}
                     @if(auth()->user()->role?->name === 'admin')
-                        <li><a href="{{ route('admin.dashboard') }}"> Dashboard</a></li>
+                      <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                     @elseif(auth()->user()->role?->name === 'candidate')
-                        <li><a href="{{ route('candidate.dashboard') }}"> Dashboard</a></li>
+                      <li><a href="{{ route('candidate.dashboard') }}">Dashboard</a></li>
                     @elseif(auth()->user()->role?->name === 'employer')
-                        <li><a href="{{ route('employer.dashboard') }}"> Dashboard</a></li>
+                      <li><a href="{{ route('employer.dashboard') }}">Dashboard</a></li>
                     @endif
+
+                    <li class="divider"></li>
                     <li>
                       <a href="{{ route('logout') }}"
                          onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="ti-power-off"></i> {{ __('Logout') }}
                       </a>
-                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
                         @csrf
                       </form>
                     </li>
@@ -113,3 +122,15 @@
     </div>
   </section>
 </div>
+
+{{-- Small CSS fix for logo alignment --}}
+<style>
+  .logo-img {
+    height: 40px;
+    margin-right: 8px;
+  }
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+  }
+</style>

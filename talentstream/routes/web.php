@@ -56,18 +56,6 @@ Route::view('/master', 'master')->name('master');
 
 /*
 |--------------------------------------------------------------------------
-| Portal (Candidates + Employers) Pages
-|--------------------------------------------------------------------------
-*/
-Route::prefix('portal_pages')->group(function () {
-    // Candidate Views
-
-    // Employer Views
-    Route::view('/manage-application', 'portal_pages.employers.manage_application')->name('manage-application');
-});
-
-/*
-|--------------------------------------------------------------------------
 | Authentication & Account
 |--------------------------------------------------------------------------
 */
@@ -297,7 +285,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Manage Application
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/applications/manage', [ManageApplicationController::class, 'manageApplications'])
         ->name('applications.manage');

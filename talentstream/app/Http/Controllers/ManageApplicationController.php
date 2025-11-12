@@ -14,7 +14,7 @@ class ManageApplicationController extends Controller
         ->orderBy('applied_date', 'desc')
         ->paginate(10);
 
-    return view('portal_pages.employers.manage-application', compact('applications'));
+    return view('portal_pages.employers.manage_application', compact('applications'));
 }
 
 }
