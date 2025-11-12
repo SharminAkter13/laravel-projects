@@ -169,7 +169,7 @@ public function store(Request $request)
             }
         }
 
-        return Redirect()->route('resumes')->with('success', 'Resume updated successfully!');
+        return Redirect()->route('resumes.resume')->with('success', 'Resume updated successfully!');
     }
 
     // 🗑️ Delete resume and related data
@@ -186,6 +186,6 @@ public function store(Request $request)
         $resume->skills()->delete();
         $resume->delete();
 
-        return Redirect()->route('resumes')->with('success', 'Resume deleted successfully.');
+        return Redirect()->route('resumes.resume')->with('success', 'Resume deleted successfully.');
     }
 }

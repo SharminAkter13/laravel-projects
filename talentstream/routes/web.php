@@ -60,7 +60,6 @@ Route::view('/master', 'master')->name('master');
 */
 Route::prefix('portal_pages')->group(function () {
     // Candidate Views
-    Route::view('/add-resume', 'portal_pages.candidates.add_resume')->name('add-resume');
 
     // Employer Views
     Route::view('/manage-application', 'portal_pages.employers.manage_application')->name('manage-application');
