@@ -83,7 +83,7 @@
                         </div>
                         <div class="form-group">
                         <label class="mb-2 font-weight-bold">Cover Image</label>
-                        <div class="row border rounded p-3" style="height: 130px; border: 2px solid gray;margin:10px;">
+                        <div class="row border rounded p-3" style="height: 100px; border: 2px solid lightgray;margin:8px;">
 
                             <!-- Left column: Upload field -->
                             <div class="col-md-4  text-white rounded-left d-flex flex-column justify-content-center align-items-center" style="height: 75%; margin-left:20px;text-align: center;">
