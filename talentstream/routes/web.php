@@ -225,7 +225,10 @@ Route::middleware('auth')->group(function () {
     Route::get('applications', [ApplicationController::class, 'index'])->name('applications.index');
     Route::get('applications/create/{jobId}', [ApplicationController::class, 'create'])->name('applications.create');
     Route::get('applications/{id}', [ApplicationController::class, 'show'])->name('applications.show');
-      Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('applications.store');
+    Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('applications.store');
+     Route::get('/applications/manage', [ManageApplicationController::class, 'manageApplications'])
+        ->name('applications.manage');
+
 });
 
 
@@ -284,8 +287,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/browse-resumes/{id}', [EmployerResumeController::class, 'show'])->name('browse.resumes.show');
 });
 
-// Manage Application
-Route::middleware(['auth'])->group(function () {
-    Route::get('/applications/manage', [ManageApplicationController::class, 'manageApplications'])
-        ->name('applications.manage');
-});
