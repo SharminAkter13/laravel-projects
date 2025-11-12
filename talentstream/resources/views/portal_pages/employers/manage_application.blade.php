@@ -29,24 +29,36 @@
                 <div class="right-sideabr">
                     <div class="inner-box">
                         <h4>Manage Account</h4>
+
+                        @php
+                            $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
+                                ->where('is_read', false)
+                                ->count();
+                        @endphp
+
                         <ul class="lest item">
                             <li><a href="{{ route('resumes.index') }}">My Resume</a></li>
                             <li><a href="{{ route('bookmarks.index') }}">Bookmarked Jobs</a></li>
                             <li>
                                 <a href="{{ route('notifications.index') }}">
-                                    Notifications 
-                                    <span class="notinumber">{{ auth()->user()->unreadNotifications->count() }}</span>
+                                    Notifications
+                                    @if($unreadCount > 0)
+                                        <span class="notinumber">{{ $unreadCount }}</span>
+                                    @endif
                                 </a>
                             </li>
                         </ul>
+
                         <h4>Manage Job</h4>
                         <ul class="lest item">
                             <li><a class="active" href="{{ route('applications.manage') }}">Manage Applications</a></li>
                             <li><a href="{{ route('job.alerts') }}">Job Alerts</a></li>
                         </ul>
+
                         <ul class="lest">
-                            <li><a href="{{ route('password.change') }}">Change Password</a></li>
-                            <li><a href="{{ route('logout') }}"
+                            <li><a href="{{ route('password.request') }}">Change Password</a></li>
+                            <li>
+                                <a href="{{ route('logout') }}"
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                    Sign Out
                                 </a>
