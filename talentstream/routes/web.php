@@ -293,10 +293,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/candidate/manage-applications', [CandidateManageApplicationController::class, 'index'])
         ->name('candidate.manage.applications');
 
-    // Employer side
-    Route::get('/employer/manage-jobs', [EmployerManageJobController::class, 'index'])
-        ->name('employer.manage.jobs');
-
+  
     // Employer view applications for specific job
     Route::get('/employer/job/{jobId}/applications', [EmployerManageJobController::class, 'viewApplications'])
         ->name('employer.job.applications');

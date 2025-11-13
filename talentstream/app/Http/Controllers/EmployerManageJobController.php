@@ -14,7 +14,7 @@ class EmployerManageJobController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('portal_pages.employers.manage-jobs', compact('jobs'));
+        return view('portal_pages.employers.manage_job_application', compact('jobs'));
     }
 
     // Optional: view all applications for a specific job
