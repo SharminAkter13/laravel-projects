@@ -156,7 +156,7 @@
       </a>
      </li>
      <li class="nav-item">
-      <a class="nav-link {{ request()->is('portal_pages/manage-job*') ? 'active' : '' }}" href="{{ url('portal_pages/manage-job') }}">
+      <a class="nav-link {{ request()->is('jobs*') ? 'active' : '' }}" href="{{ url('jobs') }}">
        <i class="ni ni-folder-17 text-indigo"></i> Manage Jobs
       </a>
      </li>

@@ -15,6 +15,7 @@ Schema::create('applications', function (Blueprint $table) {
             $table->id(); 
             $table->foreignId('job_id')->constrained('jobs')->onDelete('cascade');
             $table->foreignId('candidate_id')->constrained('users')->onDelete('cascade'); 
+            $table->foreignId('employer_id')->constrained('users')->onDelete('cascade'); 
             $table->dateTime('applied_date');
             $table->enum('status', ['active', 'expired', 'closed'])->default('active');
             $table->dateTime('resume_submitted');

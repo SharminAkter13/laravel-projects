@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Application;
 
-class ManageApplicationController extends Controller
+class CandidateManageApplicationController extends Controller
 {
     public function index()
     {
@@ -14,6 +14,6 @@ class ManageApplicationController extends Controller
             ->orderBy('applied_date', 'desc')
             ->paginate(10);
 
-        return view('portal_pages.candidates.manage-applications', compact('applications'));
+        return view('portal_pages.candidates.manage_application', compact('applications'));
     }
 }

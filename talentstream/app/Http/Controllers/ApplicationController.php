@@ -10,12 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ApplicationController extends Controller
 {
-    /**
-     * Display a listing of the applications.
-     * Admin: sees all
-     * Candidate: sees only their own
-     * Employer (optional): sees applications for their jobs
-     */
+   
     public function index()
     {
         $user = Auth::user();

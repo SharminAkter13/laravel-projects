@@ -36,7 +36,9 @@ use App\Http\Controllers\{
     EmployerResumeController,
     PortalJobAlertsController,
     PortalResumeController,
-    ManageApplicationController
+    CandidateManageApplicationController,
+    EmployerManageJobController
+
 };
 
 /*
@@ -226,8 +228,6 @@ Route::middleware('auth')->group(function () {
     Route::get('applications/create/{jobId}', [ApplicationController::class, 'create'])->name('applications.create');
     Route::get('applications/{id}', [ApplicationController::class, 'show'])->name('applications.show');
     Route::post('/jobs/{job}/apply', [ApplicationController::class, 'store'])->name('applications.store');
-     Route::get('/applications/manage', [ManageApplicationController::class, 'manageApplications'])
-        ->name('applications.manage');
 
 });
 
@@ -287,3 +287,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/browse-resumes/{id}', [EmployerResumeController::class, 'show'])->name('browse.resumes.show');
 });
 
+Route::middleware(['auth'])->group(function () {
+
+    // Candidate side
+    Route::get('/candidate/manage-applications', [CandidateManageApplicationController::class, 'index'])
+        ->name('candidate.manage.applications');
+
+    // Employer side
+    Route::get('/employer/manage-jobs', [EmployerManageJobController::class, 'index'])
+        ->name('employer.manage.jobs');
+
+    // Employer view applications for specific job
+    Route::get('/employer/job/{jobId}/applications', [EmployerManageJobController::class, 'viewApplications'])
+        ->name('employer.job.applications');
+});
