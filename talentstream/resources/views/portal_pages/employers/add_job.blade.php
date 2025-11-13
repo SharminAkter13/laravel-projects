@@ -1,4 +1,5 @@
 @extends('main')
+
 @section('content')
 
 <!-- Page Header Start -->
@@ -9,7 +10,7 @@
                 <div class="breadcrumb-wrapper">
                     <h2 class="product-title">Post A Job</h2>
                     <ol class="breadcrumb">
-                        <li><a href="#"><i class="ti-home"></i> Home</a></li>
+                        <li><a href="{{ url('/') }}"><i class="ti-home"></i> Home</a></li>
                         <li class="current">Post A Job</li>
                     </ol>
                 </div>
@@ -24,32 +25,14 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-9 col-md-offset-2">
-                
+
                 @if(session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
 
-                <fieldset>
-                    <label>Have an account?</label>
-                    <div class="field account-sign-in">
-                        <p>
-                            <a class="btn btn-common btn-sm" href="{{ route('login') }}"><i class="ti-key"></i> Sign in</a>
-                        </p>                      
-                        <div class="alert alert-info alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="fa fa-times"></i></button>
-                            If you don’t have an account you can create one below by entering your email address. A password will be automatically emailed to you.        
-                        </div>
-                    </div>
-                </fieldset>
-
                 <div class="page-ads box">
                     <form class="form-ad" method="POST" action="{{ route('portal.job.store') }}" enctype="multipart/form-data">
                         @csrf
-
-                        <div class="form-group">
-                            <label class="control-label">Your Email</label>
-                            <input type="email" name="user_email" class="form-control" placeholder="mail@example.com" required>
-                        </div>
 
                         <div class="form-group">
                             <label class="control-label">Job Title</label>
@@ -63,33 +46,29 @@
 
                         <div class="form-group">
                             <label class="control-label">Category</label>
-                            <div class="search-category-container">
-                                <label class="styled-select">
-                                    <select name="category" class="dropdown-product selectpicker" required>
-                                        <option value="">All Categories</option>
-                                        <option value="Finance">Finance</option>
-                                        <option value="IT & Engineering">IT & Engineering</option>
-                                        <option value="Education/Training">Education/Training</option>
-                                        <option value="Art/Design">Art/Design</option>
-                                        <option value="Sale/Marketing">Sale/Marketing</option>
-                                        <option value="Healthcare">Healthcare</option>
-                                        <option value="Science">Science</option>                              
-                                        <option value="Food Services">Food Services</option>
-                                    </select>
-                                </label>
-                            </div>
+                            <select name="category" class="form-control" required>
+                                <option value="">Select Category</option>
+                                <option value="Finance">Finance</option>
+                                <option value="IT & Engineering">IT & Engineering</option>
+                                <option value="Education/Training">Education/Training</option>
+                                <option value="Art/Design">Art/Design</option>
+                                <option value="Sale/Marketing">Sale/Marketing</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Science">Science</option>                              
+                                <option value="Food Services">Food Services</option>
+                            </select>
                         </div> 
 
                         <div class="form-group">
                             <label class="control-label">Job Tags <span>(optional)</span></label>
                             <input type="text" name="tags" class="form-control" placeholder="e.g. PHP, Social Media, Management">
-                            <p class="note">Comma separate tags, such as required skills or technologies, for this job.</p>
+                            <p class="note">Comma separate tags for skills or technologies.</p>
                         </div>  
 
                         <div class="form-group">
                             <label class="control-label">Description</label>
                             <textarea id="summernote" name="description" class="form-control" rows="10" required>
-                                Your Description Here .....
+                                Your Description Here...
                             </textarea>
                         </div>                
 
@@ -101,25 +80,30 @@
                         <div class="form-group">
                             <label class="control-label">Closing Date <span>(optional)</span></label>
                             <input type="date" name="closing_date" class="form-control">
-                            <p class="note">Deadline for new applicants.</p>
                         </div> 
 
                         <div class="divider"><h3>Company Details</h3></div>
 
                         <div class="form-group">
                             <label class="control-label">Company Name</label>
-                            <input type="text" name="company_name" class="form-control" placeholder="Enter the name of the company" required>
+                            <input type="text" name="company_name" class="form-control" 
+                                   value="{{ $company->name ?? '' }}" required>
                         </div> 
 
                         <div class="form-group">
                             <label class="control-label">Website <span>(optional)</span></label>
-                            <input type="url" name="website" class="form-control" placeholder="http://">
+                            <input type="url" name="website" class="form-control" value="{{ $company->website ?? '' }}">
                         </div> 
 
                         <div class="form-group">
-                            <label class="control-label">Tagline <span>(optional)</span></label>
-                            <input type="text" name="tagline" class="form-control" placeholder="Briefly describe your company">
-                        </div> 
+                            <label class="control-label">Phone <span>(optional)</span></label>
+                            <input type="text" name="phone" class="form-control" value="{{ $company->contact_phone ?? '' }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Address <span>(optional)</span></label>
+                            <input type="text" name="address" class="form-control" value="{{ $company->address ?? '' }}">
+                        </div>
 
                         <div class="form-group">
                             <label class="control-label">Company Cover Image <span>(optional)</span></label>

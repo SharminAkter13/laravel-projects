@@ -1,33 +1,42 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Job;
+use App\Models\Company;
+use App\Models\Employer;
 use Illuminate\Support\Facades\Auth;
 
 class PortalJobController extends Controller
 {
-
-     public function index()
+    // Show jobs posted by employer
+    public function index()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Please login to manage your jobs.');
-        }
-
-        // Get jobs posted by the logged-in employer
         $jobs = Job::where('employer_id', Auth::id())
             ->latest()
             ->paginate(10);
 
         return view('portal_pages.employers.manage_job', compact('jobs'));
     }
-    // Show form
-    public function create() {
-        return view('portal_pages.employers.add_job'); // Your blade file
+
+    // Show form with company info pre-filled
+    public function create()
+    {
+        $user = Auth::user();
+
+        // Fetch employer record
+        $employer = Employer::where('user_id', $user->id)->first();
+
+        // Fetch company record via employer->company_id
+        $company = $employer ? Company::find($employer->company_id) : null;
+
+        return view('portal_pages.employers.add_job', compact('company', 'user'));
     }
 
     // Store job
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $request->validate([
             'title' => 'required|string|max:255',
             'location' => 'nullable|string|max:255',
@@ -52,7 +61,7 @@ class PortalJobController extends Controller
         $job->company_name = $request->company_name;
         $job->website = $request->website;
 
-        // Upload cover image
+        // Upload cover image if exists
         if ($request->hasFile('cover_img_file')) {
             $file = $request->file('cover_img_file');
             $filename = time().'_'.$file->getClientOriginalName();
