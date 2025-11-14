@@ -6,7 +6,7 @@ use App\Models\EmployerPackage;
 use App\Models\Employer;
 use App\Models\Package;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth; // <-- **REQUIRED: Import Auth Facade**
 class EmployerPackageController extends Controller
 {
     public function index()
@@ -15,13 +15,25 @@ class EmployerPackageController extends Controller
         return view('pages.employer_packages.index', compact('employerPackages'));
     }
 
+
+
     public function create()
     {
-        $employers = Employer::all();
-        $packages = Package::all();
-        return view('pages.employer_packages.create', compact('employers', 'packages'));
-    }
+        $loggedInEmployer = Auth::guard('employer')->user();
+        
+        $packages = Package::select('id', 'name', 'duration_days')
+                           ->where('status', 'active') 
+                           ->get();
 
+        $employers = Employer::all(); 
+
+        return view('pages.employer_packages.create', [
+            'packages' => $packages,
+            'employers' => $employers, 
+            'loggedInEmployer' => $loggedInEmployer, 
+        ]);
+    }  
+    
     public function store(Request $request)
     {
         $request->validate([
