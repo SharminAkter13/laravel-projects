@@ -186,11 +186,7 @@
       <i class="ni ni-single-02 text-pink"></i> My Profile
      </a>
     </li>
-    <li class="nav-item">
-     <a class="nav-link" href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-      <i class="ni ni-user-run text-dark"></i> Logout
-     </a>
-    </li>
+   
    </ul>
   </div>
  </div>
