@@ -46,4 +46,6 @@ public function jobLocation()
     return $this->belongsTo(JobLocation::class); 
 }
 
+
+
 }

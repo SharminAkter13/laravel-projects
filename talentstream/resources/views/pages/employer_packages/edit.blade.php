@@ -1,7 +1,8 @@
 @extends('master')
 
 @section('page')
-<div class="container p-5">
+{{-- Changed the container to occupy the full width and added internal padding --}}
+<div class="container-fluid p-4 mt-5"> 
     <div class="card shadow-sm">
         <div class="card-header">
             <h3 class="mb-0">Edit Employer Package</h3>
@@ -43,7 +44,9 @@
                     <label>End Date</label>
                     <input type="datetime-local" name="end_date" class="form-control" value="{{ old('end_date', $employerPackage->end_date ? date('Y-m-d\TH:i', strtotime($employerPackage->end_date)) : '') }}">
                 </div>
-
+                
+                {{-- These fields might correspond to the AM/PM fields in the image, 
+                     but are just generic text inputs in your code. --}}
                 <div class="mb-3">
                     <label>Status</label>
                     <input type="text" name="status" class="form-control" value="{{ old('status', $employerPackage->status) }}">
@@ -51,3 +54,9 @@
 
                 <div class="d-flex gap-2">
                     <button class="btn btn-success">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection

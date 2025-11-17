@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('package_id')->constrained('packages')->cascadeOnDelete();
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
-            $table->string('status', 50)->nullable();
+            $table->enum('status', ['paid', 'due'])->default('due');
             $table->timestamps();
         });
     }

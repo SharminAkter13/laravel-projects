@@ -2,7 +2,6 @@
 
 @section('content')
 
-<!-- Page Header Start -->
 <div class="page-header" style="background:url('{{ asset('portal/assets/img/banner1.jpg') }}');">
     <div class="container">
         <div class="row">         
@@ -18,9 +17,8 @@
         </div>
     </div>
 </div>
-<!-- Page Header End -->    
 
-<!-- Content section Start --> 
+
 <section id="content">
     <div class="container">
         <div class="row">
@@ -34,102 +32,117 @@
                     <form class="form-ad" method="POST" action="{{ route('portal.job.store') }}" enctype="multipart/form-data">
                         @csrf
 
+                        <!-- Job Title -->
                         <div class="form-group">
                             <label class="control-label">Job Title</label>
-                            <input type="text" name="title" class="form-control" placeholder="Job Title" required>
-                        </div> 
+                            <input type="text" name="title" class="form-control" required>
+                        </div>
 
+                        <!-- Job Location -->
                         <div class="form-group">
-                            <label class="control-label">Location <span>(optional)</span></label>
-                            <input type="text" name="location" class="form-control" placeholder="e.g. London">
-                        </div> 
+                            <label class="control-label">Location</label>
+                            <select name="job_location_id" class="form-control" required>
+                                <option value="">Select Location</option>
+                                @foreach($jobLocations as $loc)
+                                    <option value="{{ $loc->id }}">{{ $loc->city	 }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
+                        <!-- Job Type -->
+                        <div class="form-group">
+                            <label class="control-label">Job Type</label>
+                            <select name="job_type_id" class="form-control" required>
+                                <option value="">Select Job Type</option>
+                                @foreach($jobTypes as $type)
+                                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Category -->
                         <div class="form-group">
                             <label class="control-label">Category</label>
-                            <select name="category" class="form-control" required>
+                            <select name="category_id" class="form-control" required>
                                 <option value="">Select Category</option>
-                                <option value="Finance">Finance</option>
-                                <option value="IT & Engineering">IT & Engineering</option>
-                                <option value="Education/Training">Education/Training</option>
-                                <option value="Art/Design">Art/Design</option>
-                                <option value="Sale/Marketing">Sale/Marketing</option>
-                                <option value="Healthcare">Healthcare</option>
-                                <option value="Science">Science</option>                              
-                                <option value="Food Services">Food Services</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @endforeach
                             </select>
-                        </div> 
+                        </div>
 
+                        <!-- Tags -->
                         <div class="form-group">
-                            <label class="control-label">Job Tags <span>(optional)</span></label>
-                            <input type="text" name="tags" class="form-control" placeholder="e.g. PHP, Social Media, Management">
-                            <p class="note">Comma separate tags for skills or technologies.</p>
-                        </div>  
+                            <label class="control-label">Job Tags (optional)</label>
+                            <input type="text" name="tags" class="form-control" placeholder="e.g. PHP, Manager">
+                        </div>
 
+                        <!-- Description -->
                         <div class="form-group">
                             <label class="control-label">Description</label>
                             <textarea id="summernote" name="description" class="form-control" rows="10" required>
-                                Your Description Here...
                             </textarea>
-                        </div>                
-
-                        <div class="form-group">
-                            <label class="control-label">Application email / URL</label>
-                            <input type="text" name="application_email" class="form-control" placeholder="Enter an email address or website URL" required>
                         </div>
 
+                        <!-- Apply Email / URL -->
                         <div class="form-group">
-                            <label class="control-label">Closing Date <span>(optional)</span></label>
+                            <label class="control-label">Application email / URL</label>
+                            <input type="text" name="application_email" class="form-control">
+                            <input type="text" name="application_url" class="form-control mt-2">
+                        </div>
+
+                        <!-- Closing Date -->
+                        <div class="form-group">
+                            <label class="control-label">Closing Date</label>
                             <input type="date" name="closing_date" class="form-control">
-                        </div> 
+                        </div>
 
                         <div class="divider"><h3>Company Details</h3></div>
 
+                        <!-- Company Name -->
                         <div class="form-group">
                             <label class="control-label">Company Name</label>
-                            <input type="text" name="company_name" class="form-control" 
-                                   value="{{ $company->name ?? '' }}" required>
-                        </div> 
+                            <input type="text" name="company_name" class="form-control" value="{{ $company->name ?? '' }}" required>
+                        </div>
 
+                        <!-- Website -->
                         <div class="form-group">
-                            <label class="control-label">Website <span>(optional)</span></label>
+                            <label class="control-label">Website</label>
                             <input type="url" name="website" class="form-control" value="{{ $company->website ?? '' }}">
-                        </div> 
-
-                        <div class="form-group">
-                            <label class="control-label">Phone <span>(optional)</span></label>
-                            <input type="text" name="phone" class="form-control" value="{{ $company->contact_phone ?? '' }}">
                         </div>
 
+                        <!-- Tagline -->
                         <div class="form-group">
-                            <label class="control-label">Address <span>(optional)</span></label>
-                            <input type="text" name="address" class="form-control" value="{{ $company->address ?? '' }}">
+                            <label class="control-label">Tagline (optional)</label>
+                            <input type="text" name="tagline" class="form-control" value="{{ $company->tagline ?? '' }}">
                         </div>
 
+                        <!-- Cover Image -->
                         <div class="form-group">
-                            <label class="control-label">Company Cover Image <span>(optional)</span></label>
-                            <input type="file" name="cover_img_file" class="form-control" id="cover_img_file">
-                        </div> 
+                            <label class="control-label">Company Cover Image</label>
+                            <input type="file" name="cover_img_file" class="form-control">
+                        </div>
 
                         <button type="submit" class="btn btn-common">Submit your job</button>
+
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
 </section>
-<!-- Content section End -->         
 
 @endsection
 
+
 @push('scripts')
 <script>
-    $(document).ready(function() {
-        $('#summernote').summernote({
-            height: 250,
-            minHeight: null,
-            maxHeight: null,
-            focus: true
-        });
+$(document).ready(function() {
+    $('#summernote').summernote({
+        height: 250,
+        focus: true
     });
+});
 </script>
 @endpush
