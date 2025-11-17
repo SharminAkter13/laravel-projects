@@ -60,14 +60,15 @@ class JobController extends Controller
     public function create()
     {
         $user = auth()->user();
-        $company = $user->company ?? null; // Assuming User hasOne Company
+    $employer = $user->employer;          // Get employer row
+    $company  = $employer->company ?? null; // Get employer's company
 
-        return view('pages.jobs.create', [
-            'categories' => Category::all(),
-            'locations'  => JobLocation::all(),
-            'types'      => JobType::all(),
-            'company'    => $company,
-        ]);
+    return view('pages.jobs.create', [
+        'categories' => Category::all(),
+        'locations'  => JobLocation::all(),
+        'types'      => JobType::all(),
+        'company'    => $company,
+    ]);
     }
 
     /* ============================
