@@ -28,18 +28,39 @@
                     <tbody>
                         @forelse($employerPackages as $ep)
                         <tr>
-                            <td>{{ $ep->employer->name ?? 'N/A' }}</td>
+                            {{-- Employer Name from the company table --}}
+                            <td>{{ $ep->employer->company->name ?? 'No Company' }}</td>
+
+                            {{-- Package Name --}}
                             <td>{{ $ep->package->name ?? 'N/A' }}</td>
+
+                            {{-- Dates --}}
                             <td>{{ $ep->start_date }}</td>
                             <td>{{ $ep->end_date }}</td>
-                            <td>{{ $ep->status }}</td>
-                            <td>
-                                <a href="{{ route('employer_packages.edit', $ep->id) }}" class="btn btn-sm btn-warning">Edit</a>
 
-                                <form action="{{ route('employer_packages.destroy', $ep->id) }}" method="POST" class="d-inline"
+                            {{-- Status --}}
+                            <td>
+                                <span class="badge 
+                                    @if($ep->status=='active') bg-success
+                                    @elseif($ep->status=='expired') bg-danger
+                                    @else bg-secondary @endif">
+                                    {{ ucfirst($ep->status) }}
+                                </span>
+                            </td>
+
+                            {{-- Actions --}}
+                            <td>
+                                <a href="{{ route('employer_packages.edit', $ep->id) }}" 
+                                   class="btn btn-sm btn-warning">Edit</a>
+
+                                <form action="{{ route('employer_packages.destroy', $ep->id) }}"
+                                      method="POST"
+                                      class="d-inline"
                                       onsubmit="return confirm('Are you sure?');">
+
                                     @csrf
                                     @method('DELETE')
+
                                     <button class="btn btn-sm btn-danger">Delete</button>
                                 </form>
                             </td>

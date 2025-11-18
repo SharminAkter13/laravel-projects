@@ -1,5 +1,5 @@
-@extends('main')
-@section('content')
+@extends('master')
+@section('page')
 <div class="container mt-4 p-5">
     <div class="card shadow-lg mb-5">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">

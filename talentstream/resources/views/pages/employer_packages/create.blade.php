@@ -16,25 +16,37 @@
                     {{-- Logged-in employer (auto-filled) --}}
                     <div class="mb-3">
                         <label>Employer</label>
-                        <input type="text" class="form-control" value="{{ $employer->company_name ?? $employer->name }}" readonly>
+
+                        <input type="text" 
+                               class="form-control"
+                               value="{{ $employer->company->name ?? 'No company found' }}"
+                               readonly>
+
                         <input type="hidden" name="employer_id" value="{{ $employer->id }}">
                     </div>
+
                 @else
                     {{-- Admin selecting employer --}}
                     <div class="mb-3">
                         <label>Employer <span class="text-danger">*</span></label>
+
                         <select name="employer_id" class="form-control" required>
                             <option value="">-- Select Employer --</option>
+                            
                             @foreach($employers as $em)
-                                <option value="{{ $em->id }}" {{ old('employer_id') == $em->id ? 'selected' : '' }}>
-                                    {{ $em->company_name ?? $em->name }}
+                                <option value="{{ $em->id }}" 
+                                        {{ old('employer_id') == $em->id ? 'selected' : '' }}>
+                                    {{ $em->company->name ?? 'No company assigned' }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('employer_id')<small class="text-danger">{{ $message }}</small>@enderror
+
+                        @error('employer_id')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
                 @endif
-                
+
                 <hr>
 
                 {{-- Package Dropdown --}}
@@ -42,84 +54,72 @@
                     <label>Package <span class="text-danger">*</span></label>
                     <select name="package_id" id="package_id" class="form-control" required>
                         <option value="">-- Select Package --</option>
-                        @foreach($packages as $package) 
-                            <option 
-                                value="{{ $package->id }}" 
+                        @foreach($packages as $package)
+                            <option value="{{ $package->id }}"
                                 data-duration="{{ $package->duration_days }}"
-                                {{ old('package_id') == $package->id ? 'selected' : '' }}
-                            >
+                                {{ old('package_id') == $package->id ? 'selected' : '' }}>
                                 {{ $package->name }} ({{ $package->duration_days }} days)
                             </option>
                         @endforeach
                     </select>
-                    @error('package_id')<small class="text-danger">{{ $message }}</small>@enderror
                 </div>
 
                 {{-- Start Date --}}
                 <div class="mb-3">
                     <label>Start Date</label>
-                    <input 
-                        type="datetime-local" 
-                        name="start_date" 
-                        id="start_date" 
-                        class="form-control"
-                        value="{{ old('start_date', now()->format('Y-m-d\TH:i')) }}"
-                    >
+                    <input type="datetime-local" 
+                           name="start_date" 
+                           id="start_date" 
+                           class="form-control"
+                           value="{{ old('start_date', now()->format('Y-m-d\TH:i')) }}">
                 </div>
 
                 {{-- End Date --}}
                 <div class="mb-3">
                     <label>End Date</label>
-                    <input 
-                        type="datetime-local" 
-                        name="end_date" 
-                        id="end_date" 
-                        class="form-control"
-                        value="{{ old('end_date') }}"
-                        readonly
-                    >
+                    <input type="datetime-local" 
+                           name="end_date" 
+                           id="end_date" 
+                           class="form-control"
+                           value="{{ old('end_date') }}"
+                           readonly>
                 </div>
 
                 <div class="d-flex gap-2">
                     <button class="btn btn-success">Save</button>
                     <a href="{{ route('employer_packages.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
+
             </form>
         </div>
     </div>
 </div>
 
-{{-- JS for auto-calculating end date --}}
+{{-- Auto date JS --}}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const packageSelect = document.getElementById('package_id');
-        const startDateInput = document.getElementById('start_date');
-        const endDateInput = document.getElementById('end_date');
+document.addEventListener('DOMContentLoaded', function () {
+    const packageSelect = document.getElementById('package_id');
+    const startDateInput = document.getElementById('start_date');
+    const endDateInput = document.getElementById('end_date');
 
-        function formatForDatetimeLocal(date) {
-            return date.toISOString().slice(0, 16);
+    function format(d) { return d.toISOString().slice(0, 16); }
+
+    function calcEnd() {
+        const duration = parseInt(packageSelect.selectedOptions[0]?.dataset.duration);
+        const start = new Date(startDateInput.value);
+
+        if (!isNaN(start) && duration) {
+            const end = new Date(start);
+            end.setDate(end.getDate() + duration);
+            endDateInput.value = format(end);
         }
+    }
 
-        function calculateEndDate() {
-            const option = packageSelect.options[packageSelect.selectedIndex];
-            const durationDays = parseInt(option.getAttribute('data-duration'));
-            const startDate = new Date(startDateInput.value);
+    packageSelect.addEventListener('change', calcEnd);
+    startDateInput.addEventListener('change', calcEnd);
 
-            if (!isNaN(startDate) && durationDays) {
-                const endDate = new Date(startDate);
-                endDate.setDate(endDate.getDate() + durationDays);
-                endDateInput.value = formatForDatetimeLocal(endDate);
-            } else {
-                endDateInput.value = "";
-            }
-        }
-
-        packageSelect.addEventListener("change", calculateEndDate);
-        startDateInput.addEventListener("change", calculateEndDate);
-
-        // Run on page load if old() exists
-        calculateEndDate();
-    });
+    calcEnd();
+});
 </script>
 
 @endsection

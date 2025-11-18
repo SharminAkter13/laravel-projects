@@ -7,7 +7,7 @@
     <form action="{{ route('jobs.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        {{-- Employer Email (Auto-filled, Readonly) --}}
+        {{-- Employer Email --}}
         <div class="mb-3">
             <label class="fw-bold">Employer Email</label>
             <input type="email" name="user_email" class="form-control"
@@ -20,7 +20,7 @@
             <input type="text" name="title" class="form-control" required>
         </div>
 
-        {{-- Job Category --}}
+        {{-- Category --}}
         <div class="mb-3">
             <label class="fw-bold">Category</label>
             <select name="category_id" class="form-control" required>
@@ -53,19 +53,19 @@
             </select>
         </div>
 
-{{-- Company Name --}}
-<div class="mb-3">
-    <label class="fw-bold">Company Name</label>
-    <input type="text" class="form-control" 
-           value="{{ $company->name ?? '' }}" readonly>
-</div>
+        {{-- Company Name --}}
+        <div class="mb-3">
+            <label class="fw-bold">Company Name</label>
+            <input type="text" name="company_name" class="form-control"
+                   value="{{ $company->name ?? '' }}" readonly>
+        </div>
 
-{{-- Company Website --}}
-<div class="mb-3">
-    <label class="fw-bold">Company Website</label>
-    <input type="text" class="form-control" 
-           value="{{ $company->website ?? '' }}" readonly>
-</div>
+        {{-- Company Website --}}
+        <div class="mb-3">
+            <label class="fw-bold">Company Website</label>
+            <input type="text" name="website" class="form-control"
+                   value="{{ $company->website ?? '' }}" readonly>
+        </div>
 
         {{-- Tagline --}}
         <div class="mb-3">
