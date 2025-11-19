@@ -1,6 +1,6 @@
-@extends('master')
+@extends('main')
 
-@section('page')
+@section('content')
 <!-- Page Header -->
 <div class="page-header" style="background: url({{ asset('portal/assets/img/banner1.jpg') }});">
     <div class="container">

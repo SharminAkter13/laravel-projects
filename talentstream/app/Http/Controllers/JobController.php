@@ -61,7 +61,7 @@ public function index()
             ->limit(6)
             ->get();
 
-        return view('jobs.show', compact(
+        return view('pages.jobs.show', compact(
             'job',
             'relatedJobs',
             'featuredJobs',
