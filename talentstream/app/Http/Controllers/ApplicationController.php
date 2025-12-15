@@ -10,44 +10,44 @@ use Illuminate\Support\Facades\Storage;
 
 class ApplicationController extends Controller
 {
-   
+    
     public function index()
     {
         $user = Auth::user();
 
         // Admin: can see all applications
         if ($user->role?->name === 'admin') {
-            $applications = Application::with(['job', 'candidate'])
+            $applications = Application::with(['job', 'candidate.user']) // Corrected: eager load candidate.user
                 ->latest()
                 ->paginate(10);
         }
         // Candidate: can see only their own
         elseif ($user->role?->name === 'candidate') {
-            $candidate = $user->candidate;
+            $candidate = $user->candidate; // <-- RE-ADDED missing candidate profile retrieval
 
             if (!$candidate) {
                 return back()->with('error', 'No candidate profile found.');
             }
 
-            $applications = Application::with(['job', 'candidate'])
+            $applications = Application::with(['job', 'candidate.user']) // Corrected: eager load candidate.user
                 ->where('candidate_id', $candidate->id)
                 ->latest()
                 ->paginate(10);
         }
         // Employer (optional): see applications for their jobs
         elseif ($user->role?->name === 'employer') {
-            $employer = $user->employer;
+            $employer = $user->employer; // <-- RE-ADDED missing employer profile retrieval
 
             if (!$employer) {
                 return back()->with('error', 'No employer profile found.');
             }
 
-            $applications = Application::with(['job', 'candidate'])
+            $applications = Application::with(['job', 'candidate.user']) // Corrected: eager load candidate.user
                 ->whereHas('job', fn($q) => $q->where('employer_id', $employer->id))
                 ->latest()
                 ->paginate(10);
         }
-        // Anyone else — deny access
+        // Anyone else — deny access <-- RE-ADDED missing unauthorized access block
         else {
             abort(403, 'Unauthorized access.');
         }
@@ -113,7 +113,7 @@ class ApplicationController extends Controller
      */
     public function show($id)
     {
-        $application = Application::with(['job', 'candidate'])->findOrFail($id);
+        $application = Application::with(['job', 'candidate.user'])->findOrFail($id); // Added eager load here too
         $user = Auth::user();
 
         // Candidate: can only see their own

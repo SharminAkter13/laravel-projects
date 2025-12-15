@@ -14,21 +14,24 @@ class JobController extends Controller
     /* ============================
        LIST ALL JOBS (index page)
        ============================ */
+
 public function index()
 {
     $user = Auth::user();
+    
 
     $jobsQuery = Job::with(['category', 'jobLocation', 'jobType', 'employer'])
                     ->orderBy('created_at', 'desc');
 
+    // Non-admin users only see their own jobs
     if ($user->role !== 'admin') {
-        $employerId = $user->employer ? $user->employer->id : null;
+        $employer = $user->employer;
 
-        if ($employerId) {
-            $jobsQuery->where('employer_id', $employerId);
+        if ($employer) {
+            $jobsQuery->where('employer_id', $employer->id);
         } else {
-            // No employer related to user, so no jobs to show
-            $jobsQuery->whereRaw('0 = 1'); // always false condition
+            // If the user doesn't have an employer, show empty
+            $jobsQuery->whereRaw('0 = 1'); 
         }
     }
 

@@ -78,14 +78,12 @@ class User extends Authenticatable
     {
         if ($this->role->name === 'candidate' && !$this->candidate) {
             $this->candidate()->create([
-                'name'    => $this->name,
                 'resume'  => null,
                 'phone'   => null,
                 'address' => null,
             ]);
         } elseif ($this->role->name === 'employer' && !$this->employer) {
             $this->employer()->create([
-                'name'         => $this->name,
                 'company_name' => null,
                 'website'      => null,
                 'phone'        => null,

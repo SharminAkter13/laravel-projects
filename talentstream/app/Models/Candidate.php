@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Application;
 
 class Candidate extends Model
 {
@@ -13,8 +14,9 @@ class Candidate extends Model
     }
 
     
-    public function application()
-    {
-        return $this->hasMany(application::class);
-    }
+   public function applications()
+{
+    return $this->hasMany(Application::class, 'candidate_id');
+}
+
 }

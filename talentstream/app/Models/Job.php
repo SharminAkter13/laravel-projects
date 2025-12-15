@@ -42,4 +42,12 @@ class Job extends Model
     {
         return $this->hasMany(Application::class, 'job_id');
     }
+    public function viewers()
+{
+    return $this->belongsToMany(User::class, 'job_views', 'job_id', 'user_id')
+                ->withTimestamps()
+                ->withPivot('viewed_at');
+}
+
+
 }

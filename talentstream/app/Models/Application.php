@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; // Import the relationship type
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Candidate;
+
 
 class Application extends Model
 {
@@ -27,10 +29,11 @@ class Application extends Model
     }
 
 
-    public function candidate()
-    {
-        return $this->belongsTo(User::class, 'candidate_id');
-    }
+   public function candidate()
+{
+    return $this->belongsTo(Candidate::class, 'candidate_id');
+}
+
 
     
 }
