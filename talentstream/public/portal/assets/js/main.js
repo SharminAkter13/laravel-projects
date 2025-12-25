@@ -15,17 +15,15 @@ $(window).load(function() {
 
  /* Slicknav Mobile Menu
 ========================================================*/
-  $(document).ready(function(){
-    $('.wpb-mobile-menu').slicknav({
-      prependTo: '.navbar-header',
-      parentTag: 'jobs',
-      allowParentLinks: true,
-      duplicate: true,
-      label: '',
-      closedSymbol: '<i class="fa fa-angle-right"></i>',
-      openedSymbol: '<i class="fa fa-angle-down"></i>',
+$(document).ready(function(){
+    $('.navbar-nav').slicknav({
+        prependTo: '.logo-menu .container', // Keeps it inside your header container
+        label: '',                          // REMOVES THE "MENU" TEXT
+        closedSymbol: '&#9660;',            // Optional: right arrow
+        openedSymbol: '&#9660;',            // Optional: down arrow
+        allowParentLinks: true
     });
-  });
+});
 
  // Nav Menu & Search
   $(".nav > li:has(ul)").addClass("drop");

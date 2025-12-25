@@ -4,12 +4,6 @@
       <nav class="navbar navbar-default main-navigation" role="navigation" data-spy="affix" data-offset-top="50">
         <div class="container">
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
 
             <a class="navbar-brand d-flex align-items-center mt-2" href="{{ route('portal.home') }}">
               <img src="{{ asset('portal/assets/img/favicon.ico') }}" alt="TalentStream Logo" class="me-2 logo-img">
@@ -18,14 +12,15 @@
           </div>
 
           <div class="collapse navbar-collapse" id="navbar">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav navbar-right">
+              {{-- 1. Standard Links --}}
               <li><a class="active" href="{{ route('portal.home') }}">Home</a></li>
 
-              {{-- Candidate Menu --}}
+              {{-- 2. Role-Based Services --}}
               @auth
                 @if(auth()->user()->role?->name === 'candidate')
                   <li>
-                    <a href="#">Services </a>
+                    <a href="#">Services <i class="fa fa-angle-down"></i></a>
                     <ul class="dropdown">
                       <li><a href="{{ route('browse.jobs') }}">Browse Jobs</a></li>
                       <li><a href="{{ route('browse.categories') }}">Job Categories</a></li>
@@ -35,14 +30,9 @@
                       <li><a href="{{ route('candidate.manage.applications') }}">My Applications</a></li>
                     </ul>
                   </li>
-                @endif
-              @endauth
-
-              {{-- Employer Menu --}}
-              @auth
-                @if(auth()->user()->role?->name === 'employer')
+                @elseif(auth()->user()->role?->name === 'employer')
                   <li>
-                    <a href="#">Services</a>
+                    <a href="#">Services <i class="fa fa-angle-down"></i></a>
                     <ul class="dropdown">
                       <li><a href="{{ route('portal.job.create') }}">Post New Job</a></li>
                       <li><a href="{{ route('manage.jobs') }}">Manage Jobs</a></li>
@@ -53,10 +43,10 @@
                 @endif
               @endauth
 
-              {{-- Guest Menu --}}
+              {{-- 3. Guest Explore --}}
               @guest
                 <li>
-                  <a href="#">Explore</a>
+                  <a href="#">Explore <i class="fa fa-angle-down"></i></a>
                   <ul class="dropdown">
                     <li><a href="{{ route('browse.jobs') }}">Browse Jobs</a></li>
                     <li><a href="{{ route('browse.resumes') }}">Browse Resumes</a></li>
@@ -67,49 +57,43 @@
 
               <li><a href="{{ route('about') }}">About</a></li>
               <li><a href="{{ route('contact') }}">Contact</a></li>
-            </ul>
 
-            <ul class="nav navbar-nav navbar-right float-right">
-              {{-- Post Job Button --}}
-              @auth
-                @if(auth()->user()->role === 'employer')
-                  <li class="left"><a href="{{ route('portal.job.create') }}"><i class="ti-pencil-alt"></i> Post A Job</a></li>
-                @endif
-              @else
-                <li class="left"><a href="{{ route('portal.job.create') }}"><i class="ti-pencil-alt"></i> Post A Job</a></li>
-              @endauth
+              {{-- 4. Unified Action Button (Post Job) --}}
+              @if(!auth()->check() || (auth()->check() && auth()->user()->role?->name === 'employer'))
+                <li><a href="{{ route('portal.job.create') }}"><i class="ti-pencil-alt"></i> Post A Job</a></li>
+              @endif
 
-              {{-- Authentication Links --}}
+              {{-- 5. Authentication --}}
               @guest
-                <li class="right"><a href="{{ route('login') }}"><i class="ti-lock"></i> Log In</a></li>
+                <li><a href="{{ route('login') }}"><i class="ti-lock"></i> Log In</a></li>
               @else
-                <li class="right">
-                  <a href="{{ route('my-account') }}"><i class="ti-user"></i> My Account</a>
+                <li>
+                  <a href="#"><i class="ti-user"></i> My Account <i class="fa fa-angle-down"></i></a>
                   <ul class="dropdown">
-                    {{-- ✅ Role-Based Dashboard --}}
                     @if(auth()->user()->role?->name === 'admin')
-                        <li><a href="{{ route('admin.dashboard') }}"> Dashboard</a></li>
+                        <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                     @elseif(auth()->user()->role?->name === 'candidate')
-                        <li><a href="{{ route('candidate.dashboard') }}"> Dashboard</a></li>
+                        <li><a href="{{ route('candidate.dashboard') }}">Dashboard</a></li>
                     @elseif(auth()->user()->role?->name === 'employer')
-                        <li><a href="{{ route('employer.dashboard') }}"> Dashboard</a></li>
+                        <li><a href="{{ route('employer.dashboard') }}">Dashboard</a></li>
                     @endif
                     <li>
-                      <a href="{{ route('logout') }}"
-                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="ti-power-off"></i> {{ __('Logout') }}
+                      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="ti-power-off"></i> Logout
                       </a>
-                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                      </form>
                     </li>
                   </ul>
                 </li>
               @endguest
             </ul>
+
+            {{-- Hidden Logout Form --}}
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
           </div>
         </div>
       </nav>
     </div>
   </section>
-</div> 
+</div>

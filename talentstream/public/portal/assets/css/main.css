@@ -690,28 +690,56 @@ a:focus {
   color:red;
 }
 
+/* --- 2. MOBILE RULES (Phones) --- */
 @media screen and (max-width: 767px) {
-  .navbar-brand {
-    position: absolute;
-    top: 0;
+  /* Hide the original desktop lists */
+  .navbar-collapse, 
+  .navbar-toggle,
+  .navbar-nav {
+    display: none !important;
   }
-  .tbtn {
-    display: none;
-  }
-  /* #menu is the original menu */
+  
+  /* 1. Position the Slicknav toggle to the right of the logo */
   .slicknav_menu {
-    display: block;
+    display: block !important;
+    background: transparent !important; /* Makes it sit cleanly in the header */
+    position: absolute;
+    right: 10px;
+    top: 15px;
+    z-index: 9999;
+    width: auto;
   }
-}
-@media screen and (max-width: 768px) {
-  .navbar-toggle {
-    display: none;
+
+  /* 2. Hide the "MENU" text specifically */
+  .slicknav_menutxt {
+    display: none !important;
   }
-  .tbtn {
-    display: none;
+
+  /* 3. Style the button icon (The Hamburger) */
+  .slicknav_btn {
+    background-color: #ff4f57 !important; /* Match your brand red */
+    margin: 0;
+    padding: 8px 10px;
+    color:#fff;
   }
-}
-.tbtn {
+
+  /* 4. Ensure the actual dropdown menu stays full width */
+  .slicknav_nav {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    top: 60px; /* Adjust based on your header height */
+    background: #ffffff !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .slicknav_nav a {
+    color: #444 !important;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+}.tbtn {
   color: #FFF !important;
   font-size: 30px;
   height: 42px;
