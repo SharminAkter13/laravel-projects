@@ -10,13 +10,21 @@ use App\Models\JobLocation;
 use App\Models\JobType;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File; // Added for file management
 
 class PortalJobController extends Controller
 {
     // Show jobs posted by employer
     public function index()
     {
-        $jobs = Job::where('employer_id', Auth::id())
+        $user = Auth::user();
+        $employer = $user->employer()->first();
+
+        if (!$employer) {
+            return view('portal_pages.employers.manage_job', ['jobs' => collect([])]);
+        }
+
+        $jobs = Job::where('employer_id', $employer->id)
             ->latest()
             ->paginate(10);
 
@@ -27,14 +35,9 @@ class PortalJobController extends Controller
     public function create()
     {
         $user = Auth::user();
+        $employer = $user->employer; 
+        $company = $employer->company ?? null; 
 
-        // Employer record
-        $employer = Employer::where('user_id', $user->id)->first();
-
-        // Company record
-        $company = $employer ? Company::find($employer->company_id) : null;
-
-        // Required dropdown data
         $jobLocations = JobLocation::all();
         $jobTypes     = JobType::all();
         $categories   = Category::all();
@@ -50,20 +53,34 @@ class PortalJobController extends Controller
     {
         $request->validate([
             'title'             => 'required|string|max:255',
-            'job_location_id'   => 'required|integer',
-            'job_type_id'       => 'required|integer',
-            'category_id'       => 'required|integer',
+            'job_location_id'   => 'required|integer|exists:job_locations,id',
+            'job_type_id'       => 'required|integer|exists:job_types,id',
+            'category_id'       => 'required|integer|exists:categories,id',
             'description'       => 'required|string',
-            'application_email' => 'required|email',
+            'application_email' => 'nullable|email|max:255',
+            'application_url'   => 'nullable|url|max:255',
             'closing_date'      => 'nullable|date',
-            'company_name'      => 'required|string|max:255',
-            'website'           => 'nullable|url',
-            'cover_img_file'    => 'nullable|image|max:2048',
+            'cover_img_file'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'tagline'           => 'nullable|string|max:255',
+            'status'            => 'nullable|string',
         ]);
 
+        $user = Auth::user();
+        $employer = $user->employer()->first();
+
+        if (!$employer) {
+            return redirect()->back()->with('error', 'Employer profile not found.');
+        }
+
+        $company = $employer->company ?? null;
+
         $job = new Job();
-        $job->user_email        = Auth::user()->email;
-        $job->employer_id       = Auth::id();
+        
+        $job->user_email = $user->email;
+        $job->employer_id = $employer->id;
+        $job->company_name = $company->name ?? $request->company_name;
+        $job->website = $company->website ?? $request->website;
+
         $job->title             = $request->title;
         $job->job_location_id   = $request->job_location_id;
         $job->job_type_id       = $request->job_type_id;
@@ -73,14 +90,28 @@ class PortalJobController extends Controller
         $job->application_email = $request->application_email;
         $job->application_url   = $request->application_url;
         $job->closing_date      = $request->closing_date;
-        $job->company_name      = $request->company_name;
-        $job->website           = $request->website;
+        $job->tagline           = $request->tagline;
+        $job->status            = $request->status ?? 'active';
 
-        // Upload cover if exists
+        // --- FIXED IMAGE UPLOAD LOGIC ---
         if ($request->hasFile('cover_img_file')) {
             $file = $request->file('cover_img_file');
+            
+            // Generate unique filename
             $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/job_covers'), $filename);
+            
+            // Define the path: public/uploads/jobs
+            $uploadPath = public_path('uploads/jobs');
+
+            // Create folder if it doesn't exist
+            if (!File::isDirectory($uploadPath)) {
+                File::makeDirectory($uploadPath, 0777, true, true);
+            }
+
+            // Move the file
+            $file->move($uploadPath, $filename);
+            
+            // Save ONLY the filename to the database
             $job->cover_image = $filename;
         }
 

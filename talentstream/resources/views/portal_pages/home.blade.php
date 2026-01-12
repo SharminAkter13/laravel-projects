@@ -131,8 +131,8 @@
               <div class="job-list d-flex align-items-start flex-wrap border rounded p-3 mb-4">
                 <div class="thumb me-3">
                   <a href="{{ route('jobs.show', $job->id) }}">
-                    <img src="{{ $job->cover_image ? asset('storage/' . $job->cover_image) : asset('images/default-job.png') }}"
-                        alt="{{ $job->title }}" class="job-thumb">
+                   <img src="{{ $job->cover_image ? asset($job->cover_image) : asset('images/default-job.png') }}" 
+     class="job-thumb">
                   </a>
                 </div>
 
